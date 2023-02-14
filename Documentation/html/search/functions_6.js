@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['log_0',['Log',['../class_x_e_n_1_1_core_1_1_g_logger.html#a5be6af07ba25f9176ed3ac5005db720d',1,'XEN::Core::GLogger::Log(ELoggerClass LogClass, std::string Message)'],['../class_x_e_n_1_1_core_1_1_g_logger.html#a69bc4e67c6efe835d6fa787c9f29c257',1,'XEN::Core::GLogger::Log(ELoggerClass LogClass, std::string Message, ELogEntrySeverity Severity)'],['../class_x_e_n_1_1_core_1_1_g_logger.html#a1d730cc67a64ec0ce8cbd07298155123',1,'XEN::Core::GLogger::Log(ELoggerClass LogClass, std::string Message, std::string FileName, unsigned int FileLine)'],['../class_x_e_n_1_1_core_1_1_g_logger.html#ac576b5b5fa3c9ac277e8afdf3022075f',1,'XEN::Core::GLogger::Log(ELoggerClass LogClass, std::string Message, std::string FileName, unsigned int FileLine, ELogEntrySeverity Severity)'],['../class_x_e_n_1_1_core_1_1_g_logger.html#ad4568bed2ac9dd629880fc7cfea707c2',1,'XEN::Core::GLogger::Log(FLogEntry &amp;Entry)']]]
+];
