@@ -1,0 +1,49 @@
+﻿#pragma once
+
+#include "Core.h"
+#include <string>
+#include <vector>
+
+namespace XEN::Core {
+
+    struct CORE_API FColor {
+        // Constructors
+        FColor() : R(0), G(0), B(0), A(255) {}
+        explicit FColor(uint8 V) : R(V), G(V), B(V), A(255) {}
+        FColor(uint8 V, uint8 A) : R(V), G(V), B(V), A(A) {}
+        FColor(uint8 R, uint8 G, uint8 B) : R(R), G(G), B(B), A(255) {}
+        FColor(uint8 R, uint8 G, uint8 B, uint8 A) : R(R), G(G), B(B), A(A) {}
+        explicit FColor(float V);
+        FColor(float V, float A);
+        FColor(float R, float G, float B);
+        FColor(float R, float G, float B, float A);
+        explicit FColor(const char* Hex);
+        explicit FColor(const std::string& Hex) : FColor(Hex.c_str()) {}
+
+        // Getters / Setters
+        void SetRed(uint8 Value);
+        void SetGreen(uint8 Value);
+        void SetBlue(uint8 Value);
+        void SetAlpha(uint8 Value);
+        [[nodiscard]] inline uint8 GetRed() const   { return R; };
+        [[nodiscard]] inline uint8 GetGreen() const { return G; };
+        [[nodiscard]] inline uint8 GetBlue() const  { return B; };
+        [[nodiscard]] inline uint8 GetAlpha() const { return A; };
+
+        // Utilities
+        char* AsHexCode();
+        [[nodiscard]] std::string AsHexCodeStr() const;
+        [[nodiscard]] std::vector<float> AsFloatVec() const;
+        [[nodiscard]] std::vector<uint8> AsIntVec() const;
+        float* AsFloatArray();
+        uint8* AsIntArray();
+
+    private:
+        // Store color RGBA values as 8 bit unsigned integers (0-255)
+        uint8 R;
+        uint8 G;
+        uint8 B;
+        uint8 A;
+    };
+
+}
