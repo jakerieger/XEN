@@ -112,12 +112,12 @@ std::vector<uint8> FColor::AsIntVec() const {
     return outVec;
 }
 
-float* FColor::AsFloatArray() {
+float* FColor::AsFloatArray() const {
     static float outArray[4] = { this->R / 255.f, this->G / 255.f, this->B / 255.f, this->A / 255.f };
     return outArray;
 }
 
-uint8* FColor::AsIntArray() {
+uint8* FColor::AsIntArray() const {
     static uint8 outArray[4] = { this->R, this->G, this->B, this->A };
     return outArray;
 }

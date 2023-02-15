@@ -16,10 +16,8 @@
 
 #pragma once
 
-#define XEN_SUCCESS true
-#define XEN_FAILED false
-#define XEN_RESULT bool
-
-#define XEN_USE_NAMESPACE_CORE using namespace XEN::Core;
-#define XEN_USE_NAMESPACE_PLATFORM using namespace XEN::Platform;
-#define XEN_USE_NAMESPACE_RHI using namespace XEN::RHI;
+#ifdef XENENGINE_RHI_EXPORTS
+#define RHI_API __declspec(dllexport)
+#else
+#define RHI_API __declspec(dllimport)
+#endif

@@ -16,10 +16,22 @@
 
 #pragma once
 
-#define XEN_SUCCESS true
-#define XEN_FAILED false
-#define XEN_RESULT bool
+#include "Platform.h"
+#include "RHITypes.h"
+#include <functional>
 
-#define XEN_USE_NAMESPACE_CORE using namespace XEN::Core;
-#define XEN_USE_NAMESPACE_PLATFORM using namespace XEN::Platform;
-#define XEN_USE_NAMESPACE_RHI using namespace XEN::RHI;
+namespace XEN::Platform {
+
+using RHI::ERHI;
+    
+class PLATFORM_API GenericPlatform {
+public:
+    virtual void Initialize(ERHI rhi) = 0;
+    virtual void Run(std::function<void()> RunHook) = 0;
+    virtual void Shutdown() = 0;
+    virtual void* GetWindowHandle() = 0;
+    
+    virtual ~GenericPlatform() = default;
+};
+  
+}

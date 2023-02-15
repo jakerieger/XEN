@@ -15,11 +15,21 @@
  */
 
 #pragma once
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "winmm.lib")
 
-#define XEN_SUCCESS true
-#define XEN_FAILED false
-#define XEN_RESULT bool
+#define NOMINMAX
 
-#define XEN_USE_NAMESPACE_CORE using namespace XEN::Core;
-#define XEN_USE_NAMESPACE_PLATFORM using namespace XEN::Platform;
-#define XEN_USE_NAMESPACE_RHI using namespace XEN::RHI;
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <DirectXColors.h>
+#include <DirectXMath.h>
+
+enum EConstantBuffer {
+  CB_APPLICATION,
+  CB_FRAME,
+  CB_OBJECT,
+  NUM_CONSTANT_BUFFERS
+};

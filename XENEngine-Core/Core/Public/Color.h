@@ -51,8 +51,8 @@ namespace XEN::Core {
         [[nodiscard]] std::string AsHexCodeStr() const;
         [[nodiscard]] std::vector<float> AsFloatVec() const;
         [[nodiscard]] std::vector<uint8> AsIntVec() const;
-        float* AsFloatArray();
-        uint8* AsIntArray();
+        [[nodiscard]] float* AsFloatArray() const;
+        [[nodiscard]] uint8* AsIntArray() const;
 
     private:
         // Store color RGBA values as 8 bit unsigned integers (0-255)

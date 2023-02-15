@@ -17,6 +17,7 @@
 #pragma once
 
 #include "Core.h"
+#include "Vector2D.h"
 #include "Vector3D.h"
 
 namespace XEN::Core::FMath {
@@ -27,8 +28,12 @@ struct CORE_API FTransform {
     FVector3D Translation;
     FVector3D Rotation;
     FVector3D Scale;
+};
 
-    FTransform() : Translation(FVector3D()), Rotation(FVector3D()), Scale(FVector3D(1.f)) {}
+struct CORE_API FVertex {
+    FVector3D Position;
+    FVector3D Normals;
+    FVector2D TexCoords;
 };
     
 }

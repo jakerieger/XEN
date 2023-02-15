@@ -110,7 +110,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\XENEngine-Core\Core\Public;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\XENEngine-Core\Core\Public;$(SolutionDir)\XENEngine-Platform\Platform\Public;$(SolutionDir)\XENEngine-RHI\RHI\Public;$(ProjectDir)\Vendor\imgui-docking;$(ProjectDir)\Public;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,6 +156,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Vendor\imgui-docking\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Vendor\imgui-docking\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Vendor\imgui-docking\imgui.cpp" />
+    <ClCompile Include="Vendor\imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="Vendor\imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="Vendor\imgui-docking\imgui_tables.cpp" />
+    <ClCompile Include="Vendor\imgui-docking\imgui_widgets.cpp" />
+    <ClCompile Include="Vendor\imgui-docking\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="XENEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +171,47 @@
       <Project>{aa0eb6c9-b3c9-45b0-92f7-5e6033682dc5}</Project>
       <Name>XENEngine-Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XENEngine-Platform\XENEngine-Platform.vcxproj">
+      <Project>{0ab5620a-dd5a-47be-b0c2-e42ecf6c322a}</Project>
+      <Name>XENEngine-Platform</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XENEngine-RHI\XENEngine-RHI.vcxproj">
+      <Project>{99f49240-1033-4d0c-b1a8-35c5643e3b6a}</Project>
+      <Name>XENEngine-RHI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Vendor\imgui-docking\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="Vendor\imgui-docking\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Vendor\imgui-docking\imconfig.h" />
+    <ClInclude Include="Vendor\imgui-docking\imgui.h" />
+    <ClInclude Include="Vendor\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="Vendor\imgui-docking\imstb_rectpack.h" />
+    <ClInclude Include="Vendor\imgui-docking\imstb_textedit.h" />
+    <ClInclude Include="Vendor\imgui-docking\imstb_truetype.h" />
+    <ClInclude Include="Vendor\imgui-docking\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="Vendor\imgui-docking\misc\single_file\imgui_single_file.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Vendor\imgui-docking\LICENSE.txt" />
+    <Content Include="Vendor\imgui-docking\misc\cpp\README.txt" />
+    <Content Include="Vendor\imgui-docking\misc\debuggers\imgui.gdb" />
+    <Content Include="Vendor\imgui-docking\misc\debuggers\imgui.natstepfilter" />
+    <Content Include="Vendor\imgui-docking\misc\debuggers\README.txt" />
+    <Content Include="Vendor\imgui-docking\misc\fonts\Cousine-Regular.ttf" />
+    <Content Include="Vendor\imgui-docking\misc\fonts\DroidSans.ttf" />
+    <Content Include="Vendor\imgui-docking\misc\fonts\Karla-Regular.ttf" />
+    <Content Include="Vendor\imgui-docking\misc\fonts\ProggyClean.ttf" />
+    <Content Include="Vendor\imgui-docking\misc\fonts\ProggyTiny.ttf" />
+    <Content Include="Vendor\imgui-docking\misc\fonts\Roboto-Medium.ttf" />
+    <Content Include="Vendor\imgui-docking\misc\README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Vendor\imgui-docking\misc\debuggers\imgui.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Private" />
+    <Folder Include="Public" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

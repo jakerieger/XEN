@@ -14,12 +14,27 @@
  * limitations under the License.
  */
 
-#pragma once
+#include "Windows/WindowsClock.h"
+#include <Windows.h>
 
-#define XEN_SUCCESS true
-#define XEN_FAILED false
-#define XEN_RESULT bool
+namespace XEN::Platform {
 
-#define XEN_USE_NAMESPACE_CORE using namespace XEN::Core;
-#define XEN_USE_NAMESPACE_PLATFORM using namespace XEN::Platform;
-#define XEN_USE_NAMESPACE_RHI using namespace XEN::RHI;
+void WindowsClock::StartClock() {
+    LARGE_INTEGER li;
+    if (!QueryPerformanceFrequency(&li)) {
+        return;
+    }
+
+    mClockFreq = double(li.QuadPart)/1000.0;
+
+    QueryPerformanceCounter(&li);
+    mClockStart = li.QuadPart;
+}
+
+double WindowsClock::GetTime() {
+    LARGE_INTEGER li;
+    QueryPerformanceCounter(&li);
+    return double(li.QuadPart - mClockStart) / mClockFreq;
+}
+    
+}

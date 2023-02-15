@@ -16,10 +16,20 @@
 
 #pragma once
 
-#define XEN_SUCCESS true
-#define XEN_FAILED false
-#define XEN_RESULT bool
+#include <cstdint>
+#include "Platform.h"
 
-#define XEN_USE_NAMESPACE_CORE using namespace XEN::Core;
-#define XEN_USE_NAMESPACE_PLATFORM using namespace XEN::Platform;
-#define XEN_USE_NAMESPACE_RHI using namespace XEN::RHI;
+namespace XEN::Platform {
+
+class PLATFORM_API WindowsClock {
+public:
+    void StartClock();
+    [[nodiscard]] double GetTime();
+    double mLastTime = 0.0;
+    
+private:
+    double mClockFreq = 0.0;
+    int64_t mClockStart = 0;
+};
+    
+}
