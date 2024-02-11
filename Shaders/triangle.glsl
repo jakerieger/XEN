@@ -9,7 +9,10 @@ void main() {
 
 #define FRAGMENT
 #version 330 core
+
+uniform vec4 ourColor;
+
 void main() {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragColor = ourColor;
 }
 #undef FRAGMENT
