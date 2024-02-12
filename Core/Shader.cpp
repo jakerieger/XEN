@@ -24,7 +24,7 @@ static auto CheckCompileErrors(
 static auto
 ReadShader(
     const char* path) noexcept -> cpp::result<
-    const ShaderSource, ReadShaderError> {
+    const FShaderSource, EReadShaderError> {
     const auto VERTEX_START   = "#define VERTEX\n";
     const auto VERTEX_END     = "#undef VERTEX\n";
     const auto FRAGMENT_START = "#define FRAGMENT\n";
@@ -41,38 +41,38 @@ ReadShader(
     // =======================
     size_t vertStart = strSource.find(VERTEX_START);
     if (vertStart == std::string::npos) {
-        return cpp::fail(ReadShaderError::READ_SHADER_ERROR_SYNTAX_VS);
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_VS);
     }
     vertStart += strlen(VERTEX_START);
 
     size_t vertEnd = strSource.find(VERTEX_END);
     if (vertEnd == std::string::npos) {
-        return cpp::fail(ReadShaderError::READ_SHADER_ERROR_SYNTAX_VS);
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_VS);
     }
     vertEnd = vertEnd - vertStart;
 
     size_t fragStart = strSource.find(FRAGMENT_START);
     if (fragStart == std::string::npos) {
-        return cpp::fail(ReadShaderError::READ_SHADER_ERROR_SYNTAX_FS);
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_FS);
     }
     fragStart += strlen(FRAGMENT_START);
 
     size_t fragEnd = strSource.find(FRAGMENT_END);
     if (fragEnd == std::string::npos) {
-        return cpp::fail(ReadShaderError::READ_SHADER_ERROR_SYNTAX_FS);
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_FS);
     }
     fragEnd = fragEnd - fragStart;
 
     std::string vertexCode   = strSource.substr(vertStart, vertEnd);
     std::string fragmentCode = strSource.substr(fragStart, fragEnd);
 
-    return ShaderSource{
+    return FShaderSource{
         vertexCode,
         fragmentCode,
     };
 }
 
-void Shader::CompileShaders(const ShaderSource& sources) {
+void AShader::CompileShaders(const FShaderSource& sources) {
     const char* vertexCode   = sources.m_Vertex.c_str();
     const char* fragmentCode = sources.m_Fragment.c_str();
 
@@ -122,7 +122,7 @@ void Shader::CompileShaders(const ShaderSource& sources) {
     glDeleteShader(fragmentShader);
 }
 
-Shader::Shader(const char* path) {
+AShader::AShader(const char* path) {
     const auto sources = ReadShader(path);
     if (sources.has_error()) {
         fprintf(stderr, "ERROR::SHADER::READ - %d\n", (int)sources.error());
@@ -132,54 +132,54 @@ Shader::Shader(const char* path) {
     CompileShaders(sources.value());
 }
 
-void Shader::Use() {
+void AShader::Use() {
     glUseProgram(m_ShaderProgram);
 }
 
-void Shader::Destroy() {
+void AShader::Destroy() {
     glDeleteProgram(m_ShaderProgram);
 }
 
-void Shader::SetBool(const std::string& name, bool value) const {
+void AShader::SetBool(const std::string& name, bool value) const {
     glUniform1i(glGetUniformLocation(m_ShaderProgram, name.c_str()),
                 (int)value);
 }
 
-void Shader::SetInt(const std::string& name, int value) const {
+void AShader::SetInt(const std::string& name, int value) const {
     glUniform1i(glGetUniformLocation(m_ShaderProgram, name.c_str()), value);
 }
 
-void Shader::SetFloat(const std::string& name, float value) const {
+void AShader::SetFloat(const std::string& name, float value) const {
     glUniform1f(glGetUniformLocation(m_ShaderProgram, name.c_str()), value);
 }
 
-void Shader::SetVec2(const std::string& name, const glm::vec2& value) const {
+void AShader::SetVec2(const std::string& name, const glm::vec2& value) const {
     glUniform2fv(glGetUniformLocation(m_ShaderProgram, name.c_str()),
                  1,
                  &value[0]);
 }
 
-void Shader::SetVec2(const std::string& name, float x, float y) const {
+void AShader::SetVec2(const std::string& name, float x, float y) const {
     glUniform2f(glGetUniformLocation(m_ShaderProgram, name.c_str()), x, y);
 }
 
-void Shader::SetVec3(const std::string& name, const glm::vec3& value) const {
+void AShader::SetVec3(const std::string& name, const glm::vec3& value) const {
     glUniform3fv(glGetUniformLocation(m_ShaderProgram, name.c_str()),
                  1,
                  &value[0]);
 }
 
-void Shader::SetVec3(const std::string& name, float x, float y, float z) const {
+void AShader::SetVec3(const std::string& name, float x, float y, float z) const {
     glUniform3f(glGetUniformLocation(m_ShaderProgram, name.c_str()), x, y, z);
 }
 
-void Shader::SetVec4(const std::string& name, const glm::vec4& value) const {
+void AShader::SetVec4(const std::string& name, const glm::vec4& value) const {
     glUniform4fv(glGetUniformLocation(m_ShaderProgram, name.c_str()),
                  1,
                  &value[0]);
 }
 
-void Shader::SetVec4(const std::string& name,
+void AShader::SetVec4(const std::string& name,
                      float x,
                      float y,
                      float z,
@@ -191,21 +191,21 @@ void Shader::SetVec4(const std::string& name,
                 w);
 }
 
-void Shader::SetMat2(const std::string& name, const glm::mat2& mat) const {
+void AShader::SetMat2(const std::string& name, const glm::mat2& mat) const {
     glUniformMatrix2fv(glGetUniformLocation(m_ShaderProgram, name.c_str()),
                        1,
                        GL_FALSE,
                        &mat[0][0]);
 }
 
-void Shader::SetMat3(const std::string& name, const glm::mat3& mat) const {
+void AShader::SetMat3(const std::string& name, const glm::mat3& mat) const {
     glUniformMatrix3fv(glGetUniformLocation(m_ShaderProgram, name.c_str()),
                        1,
                        GL_FALSE,
                        &mat[0][0]);
 }
 
-void Shader::SetMat4(const std::string& name, const glm::mat4& mat) const {
+void AShader::SetMat4(const std::string& name, const glm::mat4& mat) const {
     glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, name.c_str()),
                        1,
                        GL_FALSE,

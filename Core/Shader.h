@@ -4,12 +4,12 @@
 #include <string>
 #include <glm/glm.hpp>
 
-struct ShaderSource {
+struct FShaderSource {
     std::string m_Vertex;
     std::string m_Fragment;
 };
 
-enum class ReadShaderError {
+enum class EReadShaderError {
     READ_SHADER_ERROR_SYNTAX_VS,
     READ_SHADER_ERROR_SYNTAX_FS,
     READ_SHADER_ERROR_COMPILE_VS,
@@ -17,10 +17,10 @@ enum class ReadShaderError {
     READ_SHADER_ERROR_LINK,
 };
 
-class Shader {
+class AShader {
 public:
-    explicit Shader(const char* path);
-    ~Shader() = default;
+    explicit AShader(const char* path);
+    ~AShader() = default;
 
     void Use();
 
@@ -42,11 +42,8 @@ public:
 
     void SetVec4(const std::string& name, const glm::vec4& value) const;
 
-    void SetVec4(const std::string& name,
-                 float x,
-                 float y,
-                 float z,
-                 float w) const;
+    void
+    SetVec4(const std::string& name, float x, float y, float z, float w) const;
 
     void SetMat2(const std::string& name, const glm::mat2& mat) const;
 
@@ -55,6 +52,6 @@ public:
     void SetMat4(const std::string& name, const glm::mat4& mat) const;
 
 private:
-    void CompileShaders(const ShaderSource& sources);
+    void CompileShaders(const FShaderSource& sources);
     uint32_t m_ShaderProgram;
 };

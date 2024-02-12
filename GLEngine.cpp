@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "Classes/Shader.h"
+#include "stb_image.h"
 
 namespace GL {
     bool g_IsWireframe = false;
@@ -83,6 +84,32 @@ namespace Utils {
         f.close();
         return buffer.str();
     }
+
+    auto LoadTexture(const char* name,
+                     int& width,
+                     int& height,
+                     int& numChannels,
+                     uint32_t& outTexture) noexcept {
+        unsigned char* data = stbi_load(name, &width, &height, &numChannels, 0);
+
+        // OpenGL stuff
+        if (data) {
+            glGenTextures(1, &outTexture);
+            glBindTexture(GL_TEXTURE_2D, outTexture);
+            glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGB,
+                         width,
+                         height,
+                         0,
+                         GL_RGB,
+                         GL_UNSIGNED_BYTE,
+                         data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+
+        stbi_image_free(data);
+    }
 }  // namespace Utils
 
 namespace TestData {
@@ -101,13 +128,21 @@ namespace TestData {
       0.0f  // top left
     };
     uint32_t indices[] = {0, 1, 3, 1, 2, 3};
+    float texCoords[]  = {
+      0.0f,
+      0.0f,  // lower-left corner
+      1.0f,
+      0.0f,  // lower-right corner
+      0.5f,
+      1.0f  // top-center corner
+    };
     uint32_t VBO;
     uint32_t VAO;
     uint32_t EBO;
-    Shader* shader;
+    AShader* shader;
 
     auto InitTestData() {
-        shader = new Shader("Shaders/triangle.glsl");
+        shader = new AShader("Resources/Shaders/triangle.glsl");
 
         // Generate OpenGL Buffers
         glGenVertexArrays(1, &VAO);
@@ -216,14 +251,6 @@ auto InitOpenGL() noexcept -> cpp::result<void, GLError> {
     glfwSetKeyCallback(Engine::GetWindow(), GL::OnKeyPress);
 
     return {};
-}
-
-auto IsKeyPressed(GLFWwindow* window, int key) -> bool {
-    if (glfwGetKey(window, key) == GLFW_PRESS) {
-        return true;
-    }
-
-    return false;
 }
 
 auto Render() noexcept {
