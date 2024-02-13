@@ -1,4 +1,4 @@
-﻿#include "Shader.h" g_Font
+﻿#include "Shader.h"
 
 #include "Utilities.inl"
 

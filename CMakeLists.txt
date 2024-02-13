@@ -15,7 +15,7 @@ find_package(assimp CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(Freetype CONFIG REQUIRED)
-add_executable(GLEngine Demo.cpp Core/Shader.cpp Vendor/glad.c
+add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Vendor/stb_image.cpp
         Core/GameApp.cpp
         Core/GameApp.h
@@ -34,10 +34,13 @@ add_executable(GLEngine Demo.cpp Core/Shader.cpp Vendor/glad.c
         Core/Resources.cpp
         Core/TextRenderer.cpp
         Core/TextRenderer.h)
-target_link_libraries(GLEngine PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype)
+target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype)
+
+add_executable(DemoApp Demo.cpp)
+target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL)
 
 find_package(Catch2 3 REQUIRED)
 add_executable(Tests Tests/test_color.cpp)
-target_link_libraries(Tests PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(Tests PRIVATE GLEngine-Core EASTL Catch2::Catch2WithMain)
 
 file(COPY Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
