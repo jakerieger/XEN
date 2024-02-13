@@ -8,14 +8,57 @@ namespace Graphics {
     GL::TWindow g_Window;
     FSize g_WindowSize;
     const char* g_WindowTitle;
+    bool g_IsWireframe = false;
+    float g_LastFrame;
+    bool g_IsFullscreen = false;
 
-    float lastFrame;
+    GLFWwindow* GetWindow() {
+        return g_Window.get();
+    }
 
     float GetFrameTime() {
         const auto currentFrame = static_cast<float>(glfwGetTime());
-        const float deltaTime   = currentFrame - lastFrame;
-        lastFrame               = currentFrame;
+        const float deltaTime   = currentFrame - g_LastFrame;
+        g_LastFrame             = currentFrame;
         return deltaTime;
+    }
+
+    void ToggleWireframe() {
+        if (g_IsWireframe) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
+        g_IsWireframe = !g_IsWireframe;
+    }
+
+    void ToggleFullscreen() {
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        if (g_IsFullscreen) {
+            glfwSetWindowMonitor(GetWindow(),
+                                 nullptr,
+                                 0,
+                                 0,
+                                 g_WindowSize.Width,
+                                 g_WindowSize.Height,
+                                 mode->refreshRate);
+        } else {
+            glfwSetWindowMonitor(GetWindow(),
+                                 glfwGetPrimaryMonitor(),
+                                 0,
+                                 0,
+                                 mode->width,
+                                 mode->height,
+                                 mode->refreshRate);
+        }
+
+        g_IsFullscreen = !g_IsFullscreen;
+    }
+
+    void MarkWindowForClose() {
+        glfwSetWindowShouldClose(GetWindow(), true);
     }
 
     bool Initialize(const FSize& size, const char* title) {
@@ -45,8 +88,7 @@ namespace Graphics {
         }
 
         glViewport(0, 0, g_WindowSize.Width, g_WindowSize.Height);
-        // Framebuffer callback
-        // Key callback
+        glfwSetFramebufferSizeCallback(GetWindow(), GL::FramebufferCallback);
 
         return true;
     }

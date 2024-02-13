@@ -11,6 +11,10 @@
 #include <GLFW/glfw3.h>
 
 namespace GL {
+    inline void FramebufferCallback(GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
+    }
+
     struct FDestroyWindow {
         void operator()(GLFWwindow* ptr) const noexcept {
             glfwDestroyWindow(ptr);
@@ -21,14 +25,10 @@ namespace GL {
 }  // namespace GL
 
 namespace Graphics {
-    extern GL::TWindow g_Window;
-    extern FSize g_WindowSize;
-    extern const char* g_WindowTitle;
-
-    inline GLFWwindow* GetWindow() {
-        return g_Window.get();
-    }
-
+    GLFWwindow* GetWindow();
+    void ToggleWireframe();
+    void ToggleFullscreen();
+    void MarkWindowForClose();
     float GetFrameTime();
     bool Initialize(const FSize& size, const char* title);
     void Shutdown();

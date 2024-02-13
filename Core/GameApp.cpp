@@ -4,6 +4,7 @@
 
 #include "GameApp.h"
 #include "GraphicsContext.h"
+#include "Input.h"
 
 namespace Application {
     void InitializeApp(IGameApp& app,
@@ -11,6 +12,7 @@ namespace Application {
                        const int& height,
                        const char* title) {
         Graphics::Initialize(FSize {width, height}, title);
+        Input::Initialize(Graphics::GetWindow());
         app.Startup();
     }
 

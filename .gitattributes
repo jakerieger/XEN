@@ -1,1 +1,2 @@
 Vendor/** linguist-vendored
+*.inl linguist-language=C++
