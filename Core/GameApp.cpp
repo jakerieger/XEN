@@ -8,6 +8,8 @@
 #include "TextRenderer.h"
 
 namespace Application {
+    FColor m_ClearColor = FColor(0xFF11131C);
+
     void InitializeApp(IGameApp& app,
                        const int& width,
                        const int& height,
@@ -23,8 +25,28 @@ namespace Application {
     }
 
     bool UpdateApp(IGameApp& app) {
-        app.Update(Graphics::GetFrameTime());
+        // Update first
+        const float frameTime = Graphics::GetFrameTime();
+        app.Update(frameTime);
+
+        // Clear buffers
+        glClearColor(m_ClearColor.Red,
+                     m_ClearColor.Green,
+                     m_ClearColor.Blue,
+                     m_ClearColor.Alpha);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_DEPTH_BUFFER_BIT);
+
+        // Execute user-defined render logic
         app.RenderScene();
+        app.RenderUI();
+
+        // Swap buffers and poll events
+        glfwSwapBuffers(Graphics::GetWindow());
+        glfwPollEvents();
+
+        // Execute user late update logic
+        app.LateUpdate(frameTime);
 
         return !app.IsDone();
     }

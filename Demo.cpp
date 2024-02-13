@@ -115,13 +115,14 @@ public:
     void Cleanup() override;
     bool IsDone() override;
     void Update(float deltaTime) override;
+    void LateUpdate(float deltaTime) override;
     void RenderScene() override;
+    void RenderUI() override;
 
 private:
     //====================================//
     // Put application-specific data here //
     //====================================//
-    FColor m_ClearColor    = FColor(0xFF11131C);
     float m_FPS            = 0.f;
     bool m_ShowDebugOutput = true;
 
@@ -171,36 +172,52 @@ void DemoApp::Update(const float deltaTime) {
 }
 
 void DemoApp::RenderScene() {
-    glClearColor(m_ClearColor.Red,
-                 m_ClearColor.Green,
-                 m_ClearColor.Blue,
-                 m_ClearColor.Alpha);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glClear(GL_DEPTH_BUFFER_BIT);
-
     DemoContent::RenderTestData();
+}
+
+void DemoApp::RenderUI() {
+    TextRenderer::RenderText(
+      "ShareTechMono",
+      "[F12]       - Toggle render metrics",
+      Graphics::Screen::TopLeft().Width,
+      static_cast<float>(Graphics::Screen::TopLeft().Height) - (16 * 1),
+      1.f,
+      Colors::Black);
+    TextRenderer::RenderText(
+      "ShareTechMono",
+      "[Alt+Enter] - Toggle fullscreen",
+      Graphics::Screen::TopLeft().Width,
+      static_cast<float>(Graphics::Screen::TopLeft().Height) - (16 * 2),
+      1.f,
+      Colors::Black);
+    TextRenderer::RenderText(
+      "ShareTechMono",
+      "[Esc]       - Exit",
+      Graphics::Screen::TopLeft().Width,
+      static_cast<float>(Graphics::Screen::TopLeft().Height) - (16 * 3),
+      1.f,
+      Colors::Black);
 
     if (m_ShowDebugOutput) {
         TextRenderer::RenderText(
           "ShareTechMono",
-          fmt::format("FPS:  {}", round(m_FPS)).c_str(),
+          fmt::format("FPS  : {}", round(m_FPS)).c_str(),
           Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) - 16,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) - (16 * 5),
           1.f,
           DebugValueColor(29, 59));
 
         TextRenderer::RenderText(
           "ShareTechMono",
-          fmt::format("Time: {:1.02f}ms", (1 / m_FPS) * 1000).c_str(),
+          fmt::format("Time : {:1.02f}ms", (1 / m_FPS) * 1000).c_str(),
           Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) - 32,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) - (16 * 6),
           1.f,
           DebugValueColor(29, 59));
     }
-
-    glfwSwapBuffers(Graphics::GetWindow());
-    glfwPollEvents();
 }
+
+void DemoApp::LateUpdate(float deltaTime) {}
 
 FColor DemoApp::DebugValueColor(const float err, const float warn) const {
     if (m_FPS < err) {
