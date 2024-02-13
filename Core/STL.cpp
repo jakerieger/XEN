@@ -10,6 +10,7 @@ void* operator new[](size_t size,
 }
 
 // I don't fucking know, thanks EA for the documentation ;D
+// TODO: figure out what this is supposed to return
 void* operator new[](unsigned long,
                      unsigned long,
                      unsigned long,

@@ -8,7 +8,7 @@
 #include "TextRenderer.h"
 
 namespace Application {
-    FColor m_ClearColor = FColor(0xFF11131C);
+    FColor g_ClearColor = FColor(0xFF11131C);
 
     void InitializeApp(IGameApp& app,
                        const int& width,
@@ -30,10 +30,10 @@ namespace Application {
         app.Update(frameTime);
 
         // Clear buffers
-        glClearColor(m_ClearColor.Red,
-                     m_ClearColor.Green,
-                     m_ClearColor.Blue,
-                     m_ClearColor.Alpha);
+        glClearColor(g_ClearColor.Red,
+                     g_ClearColor.Green,
+                     g_ClearColor.Blue,
+                     g_ClearColor.Alpha);
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
 

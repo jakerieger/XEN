@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
-    Application::InitializeApp(app, 1408, 792, "GLEngine");
+    Application::InitializeApp(app, 1408, 792, "GLEngine | DemoApp");
     Application::RunApp(app);
 
     return 0;
