@@ -14,6 +14,7 @@ find_package(glfw3 3.3 REQUIRED)
 find_package(assimp REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(Freetype CONFIG REQUIRED)
 add_executable(GLEngine Demo.cpp Core/Shader.cpp Vendor/glad.c
         Vendor/stb_image.cpp
         Core/GameApp.cpp
@@ -30,8 +31,10 @@ add_executable(GLEngine Demo.cpp Core/Shader.cpp Vendor/glad.c
         Core/STL.cpp
         Core/Input.cpp
         Core/Input.h
-        Core/Resources.cpp)
-target_link_libraries(GLEngine PRIVATE glfw assimp EASTL fmt::fmt)
+        Core/Resources.cpp
+        Core/TextRenderer.cpp
+        Core/TextRenderer.h)
+target_link_libraries(GLEngine PRIVATE glfw assimp EASTL fmt::fmt Freetype::Freetype)
 
 find_package(Catch2 3 REQUIRED)
 add_executable(Tests Tests/test_color.cpp)

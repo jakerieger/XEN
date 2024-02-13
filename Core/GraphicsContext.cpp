@@ -6,7 +6,8 @@
 
 namespace Graphics {
     GL::TWindow g_Window;
-    FSize g_WindowSize;
+    FSize g_InitWindowSize;
+    FSize g_CurrentWindowSize;
     const char* g_WindowTitle;
     bool g_IsWireframe = false;
     float g_LastFrame;
@@ -41,9 +42,11 @@ namespace Graphics {
                                  nullptr,
                                  0,
                                  0,
-                                 g_WindowSize.Width,
-                                 g_WindowSize.Height,
+                                 g_InitWindowSize.Width,
+                                 g_InitWindowSize.Height,
                                  mode->refreshRate);
+
+            g_CurrentWindowSize = g_InitWindowSize;
         } else {
             glfwSetWindowMonitor(GetWindow(),
                                  glfwGetPrimaryMonitor(),
@@ -52,6 +55,8 @@ namespace Graphics {
                                  mode->width,
                                  mode->height,
                                  mode->refreshRate);
+
+            g_CurrentWindowSize = FSize(mode->width, mode->height);
         }
 
         g_IsFullscreen = !g_IsFullscreen;
@@ -61,9 +66,14 @@ namespace Graphics {
         glfwSetWindowShouldClose(GetWindow(), true);
     }
 
+    FSize GetWindowSize() {
+        return g_CurrentWindowSize;
+    }
+
     bool Initialize(const FSize& size, const char* title) {
-        g_WindowSize  = size;
-        g_WindowTitle = title;
+        g_InitWindowSize    = size;
+        g_CurrentWindowSize = size;
+        g_WindowTitle       = title;
 
         if (glfwInit() != GLFW_TRUE) {
             return false;
@@ -71,8 +81,8 @@ namespace Graphics {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        g_Window = GL::TWindow(glfwCreateWindow(g_WindowSize.Width,
-                                                g_WindowSize.Height,
+        g_Window = GL::TWindow(glfwCreateWindow(size.Width,
+                                                size.Height,
                                                 g_WindowTitle,
                                                 nullptr,
                                                 nullptr));
@@ -87,7 +97,7 @@ namespace Graphics {
             return false;
         }
 
-        glViewport(0, 0, g_WindowSize.Width, g_WindowSize.Height);
+        glViewport(0, 0, size.Width, size.Height);
         glfwSetFramebufferSizeCallback(GetWindow(), GL::FramebufferCallback);
 
         return true;
@@ -97,4 +107,10 @@ namespace Graphics {
         glfwDestroyWindow(GetWindow());
         glfwTerminate();
     }
+
+    namespace GL {
+        void UpdateWindowSize(const int width, const int height) {
+            g_CurrentWindowSize = FSize(width, height);
+        }
+    }  // namespace GL
 }  // namespace Graphics

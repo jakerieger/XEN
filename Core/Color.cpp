@@ -5,7 +5,7 @@
 #include "Color.h"
 
 FColor::FColor(const uint32_t color) : Red(0.f), Green(0.f), Blue(0.f) {
-    Utilities::HexToRGBf(color, Red, Green, Blue, Alpha);
+    Utilities::HexToRGBAf(color, Red, Green, Blue, Alpha);
 }
 
 FColor::FColor(const uint8_t r,

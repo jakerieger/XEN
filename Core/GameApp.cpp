@@ -5,6 +5,7 @@
 #include "GameApp.h"
 #include "GraphicsContext.h"
 #include "Input.h"
+#include "TextRenderer.h"
 
 namespace Application {
     void InitializeApp(IGameApp& app,
@@ -13,6 +14,7 @@ namespace Application {
                        const char* title) {
         Graphics::Initialize(FSize {width, height}, title);
         Input::Initialize(Graphics::GetWindow());
+        TextRenderer::Initialize();
         app.Startup();
     }
 
@@ -31,5 +33,6 @@ namespace Application {
         while (UpdateApp(app)) {}
         TerminateApp(app);
         Graphics::Shutdown();
+        TextRenderer::Shutdown();
     }
 }  // namespace Application

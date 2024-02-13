@@ -7,7 +7,7 @@
 
 namespace Utilities {
     inline void
-    HexToRGBf(const uint32_t hex, float& r, float& g, float& b, float& a) {
+    HexToRGBAf(const uint32_t hex, float& r, float& g, float& b, float& a) {
         const unsigned char alphaByte = (hex >> 24) & 0xFF;
         const unsigned char redByte   = (hex >> 16) & 0xFF;
         const unsigned char greenByte = (hex >> 8) & 0xFF;

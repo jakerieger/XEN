@@ -10,26 +10,52 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-namespace GL {
-    inline void FramebufferCallback(GLFWwindow* window, int width, int height) {
-        glViewport(0, 0, width, height);
-    }
-
-    struct FDestroyWindow {
-        void operator()(GLFWwindow* ptr) const noexcept {
-            glfwDestroyWindow(ptr);
-        }
-    };
-
-    using TWindow = unique_ptr<GLFWwindow, FDestroyWindow>;
-}  // namespace GL
-
 namespace Graphics {
     GLFWwindow* GetWindow();
     void ToggleWireframe();
     void ToggleFullscreen();
     void MarkWindowForClose();
+    FSize GetWindowSize();
     float GetFrameTime();
     bool Initialize(const FSize& size, const char* title);
     void Shutdown();
+
+    namespace Screen {
+        inline FSize TopLeft() {
+            const auto screenSize = GetWindowSize();
+            return {0, screenSize.Height};
+        }
+
+        inline FSize TopRight() {
+            const auto screenSize = GetWindowSize();
+            return {screenSize.Width, screenSize.Height};
+        }
+
+        inline FSize BottomLeft() {
+            return {0, 0};
+        }
+
+        inline FSize BottomRight() {
+            const auto screenSize = GetWindowSize();
+            return {screenSize.Width, 0};
+        }
+    }  // namespace Screen
+
+    namespace GL {
+        void UpdateWindowSize(int width, int height);
+
+        inline void
+        FramebufferCallback(GLFWwindow* window, int width, int height) {
+            UpdateWindowSize(width, height);
+            glViewport(0, 0, width, height);
+        }
+
+        struct FDestroyWindow {
+            void operator()(GLFWwindow* ptr) const noexcept {
+                glfwDestroyWindow(ptr);
+            }
+        };
+
+        using TWindow = unique_ptr<GLFWwindow, FDestroyWindow>;
+    }  // namespace GL
 }  // namespace Graphics

@@ -4,6 +4,8 @@
 #include "Resources.h"
 #include "GameApp.h"
 #include "Shader.h"
+#include "TextRenderer.h"
+#include <fmt/format.h>
 
 namespace DemoContent {
     float vertices[] = {
@@ -119,7 +121,11 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
-    FColor clearColor = FColor(0xFF11131C);
+    FColor m_ClearColor    = FColor(0xFF11131C);
+    float m_FPS            = 0.f;
+    bool m_ShowDebugOutput = true;
+
+    FColor DebugValueColor(float err, float warn) const;
 };
 
 void DemoApp::Startup() {
@@ -135,7 +141,7 @@ void DemoApp::Startup() {
     });
 
     Input::AddAction(GLFW_KEY_F12, GLFW_PRESS, [&]() {
-        // Graphics::ToggleDebugOutput();
+        m_ShowDebugOutput = !m_ShowDebugOutput;
     });
 
     Input::AddAction(GLFW_KEY_ENTER, GLFW_PRESS, GLFW_MOD_ALT, [&]() {
@@ -146,6 +152,10 @@ void DemoApp::Startup() {
     //  Initialize demo content  //
     // ========================= //
     DemoContent::InitTestData();
+
+    TextRenderer::LoadFont("ShareTechMono",
+                           16,
+                           "Resources/Fonts/ShareTechMono-Regular.ttf");
 }
 
 void DemoApp::Cleanup() {
@@ -156,20 +166,50 @@ bool DemoApp::IsDone() {
     return glfwWindowShouldClose(Graphics::GetWindow());
 }
 
-void DemoApp::Update(const float deltaTime) {}
+void DemoApp::Update(const float deltaTime) {
+    m_FPS = 1.f / deltaTime;
+}
 
 void DemoApp::RenderScene() {
-    glClearColor(clearColor.Red,
-                 clearColor.Green,
-                 clearColor.Blue,
-                 clearColor.Alpha);
+    glClearColor(m_ClearColor.Red,
+                 m_ClearColor.Green,
+                 m_ClearColor.Blue,
+                 m_ClearColor.Alpha);
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_DEPTH_BUFFER_BIT);
 
     DemoContent::RenderTestData();
 
+    if (m_ShowDebugOutput) {
+        TextRenderer::RenderText(
+          "ShareTechMono",
+          fmt::format("FPS:  {}", round(m_FPS)).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) - 16,
+          1.f,
+          DebugValueColor(29, 59));
+
+        TextRenderer::RenderText(
+          "ShareTechMono",
+          fmt::format("Time: {:1.02f}ms", (1 / m_FPS) * 1000).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) - 32,
+          1.f,
+          DebugValueColor(29, 59));
+    }
+
     glfwSwapBuffers(Graphics::GetWindow());
     glfwPollEvents();
+}
+
+FColor DemoApp::DebugValueColor(const float err, const float warn) const {
+    if (m_FPS < err) {
+        return Colors::Red;
+    }
+    if (m_FPS < warn) {
+        return Colors::Yellow;
+    }
+    return Colors::Green;
 }
 
 int main(int argc, char* argv[]) {

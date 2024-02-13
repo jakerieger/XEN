@@ -18,3 +18,14 @@ struct FColor {
     float Blue;
     float Alpha = 1.0f;
 };
+
+namespace Colors {
+    inline const FColor White   = FColor(0xFFC0CAF5);
+    inline const FColor Black   = FColor(0xFF414868);
+    inline const FColor Red     = FColor(0xFFf7768e);
+    inline const FColor Yellow  = FColor(0xFFe0af68);
+    inline const FColor Green   = FColor(0xFF73daca);
+    inline const FColor Cyan    = FColor(0xFF7dcfff);
+    inline const FColor Blue    = FColor(0xFF7aa2f7);
+    inline const FColor Magenta = FColor(0xFFbb9af7);
+}  // namespace Colors
