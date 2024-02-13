@@ -1,9 +1,12 @@
+#include "Color.h"
 #include "GraphicsContext.h"
+#include "Resources.inl"
 
 #include <GameApp.h>
 
-class GLEngine final : public IGameApp {
+class DemoApp final : public IGameApp {
 public:
+    DemoApp() = default;
     void Startup() override;
     void Cleanup() override;
     bool IsDone() override;
@@ -14,29 +17,35 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
+    FColor clearColor = FColor(0xFF11131C);
 };
 
-void GLEngine::Startup() {}
+void DemoApp::Startup() {}
 
-void GLEngine::Cleanup() {}
+void DemoApp::Cleanup() {}
 
-bool GLEngine::IsDone() {
+bool DemoApp::IsDone() {
     return glfwWindowShouldClose(Graphics::GetWindow());
 }
 
-void GLEngine::Update(const float deltaTime) {}
+void DemoApp::Update(const float deltaTime) {}
 
-void GLEngine::RenderScene() {
-    glClearColor(0.f, 0.f, 0.f, 1.f);
+void DemoApp::RenderScene() {
+    glClearColor(clearColor.Red,
+                 clearColor.Green,
+                 clearColor.Blue,
+                 clearColor.Alpha);
     glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
 
     glfwSwapBuffers(Graphics::GetWindow());
     glfwPollEvents();
 }
 
-int main() {
-    GLEngine app;
+int main(int argc, char* argv[]) {
+    Resources::SetCwd(argv[0]);
 
+    DemoApp app;
     Application::InitializeApp(app, 1600, 900, "GLEngine");
     Application::RunApp(app);
 

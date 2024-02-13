@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "STL.h"
 #include "Size.h"
 
 #include <memory>
@@ -16,7 +17,7 @@ namespace GL {
         }
     };
 
-    using TWindow = std::unique_ptr<GLFWwindow, FDestroyWindow>;
+    using TWindow = unique_ptr<GLFWwindow, FDestroyWindow>;
 }  // namespace GL
 
 namespace Graphics {

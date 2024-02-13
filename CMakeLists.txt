@@ -17,10 +17,17 @@ add_executable(GLEngine main.cpp Core/Shader.cpp Vendor/glad.c
         Core/GraphicsContext.cpp
         Core/GraphicsContext.h
         Core/Size.cpp
-        Core/Size.h)
+        Core/Size.h
+        Core/Utilities.inl
+        Core/Color.cpp
+        Core/Color.h
+        Core/STL.h
+        Core/Resources.inl
+        Core/STL.cpp)
 
 find_package(glfw3 3.3 REQUIRED)
 find_package(assimp REQUIRED)
-target_link_libraries(GLEngine glfw assimp)
+find_package(EASTL CONFIG REQUIRED)
+target_link_libraries(GLEngine glfw assimp EASTL)
 
 file(COPY Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
