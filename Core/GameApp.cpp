@@ -6,6 +6,7 @@
 #include "GraphicsContext.h"
 #include "GraphicsError.h"
 #include "Input.h"
+#include "PostProcessing.h"
 #include "TextRenderer.h"
 
 namespace Application {

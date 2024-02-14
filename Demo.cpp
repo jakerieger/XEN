@@ -4,6 +4,7 @@
 #include "Resources.h"
 #include "GameApp.h"
 #include "FullscreenQuad.h"
+#include "PostProcessing.h"
 #include "Shader.h"
 #include "TextRenderer.h"
 #include <fmt/format.h>
@@ -64,10 +65,16 @@ void DemoApp::Startup() {
       "JetBrainsMono",
       16,
       Resources::GetResource(RES_FONT, "JetBrainsMono-SemiBold.ttf").c_str());
+
+    // ======================== //
+    //  Enable post processing  //
+    // ======================== //
+    PostProcessing::Initialize();
 }
 
 void DemoApp::Cleanup() {
     m_FullscreenQuad->Destroy();
+    PostProcessing::Shutdown();
 }
 
 bool DemoApp::IsDone() {
@@ -81,6 +88,7 @@ void DemoApp::Update(const float deltaTime) {
 
 void DemoApp::RenderScene() {
     m_FullscreenQuad->Render();
+    PostProcessing::Render();
 }
 
 void DemoApp::RenderUI() {

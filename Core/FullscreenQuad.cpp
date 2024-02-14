@@ -5,39 +5,29 @@
 #include "FullscreenQuad.h"
 
 #include "GraphicsContext.h"
+#include "Resources.h"
 
+#include <stb_image.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace QuadGeometry {
-    float g_Vertices[] = {
-      1.0f,
-      1.0f,
-      0.0f,  // top right
-      1.0f,
-      -1.0f,
-      0.0f,  // bottom right
-      -1.0f,
-      -1.0f,
-      0.0f,  // bottom left
-      -1.0f,
-      1.0f,
-      1.0f  // top left
+    struct FVertex {
+        glm::vec3 Position;
+        glm::vec2 TexCoords;
     };
 
-    uint32_t g_Indices[] = {0, 1, 3, 1, 2, 3};
+    vector<FVertex> g_Vertices = {{{1.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+                                  {{1.0f, -1.0f, 0.0f}, {1.0f, 0.0f}},
+                                  {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
+                                  {{-1.0f, 1.0f, 0.0f}, {0.0f, 1.0f}}};
 
-    float g_TexCoords[] = {
-      0.0f,
-      0.0f,  // lower-left corner
-      1.0f,
-      0.0f,  // lower-right corner
-      0.5f,
-      1.0f  // top-center corner
-    };
+    vector<unsigned int> g_Indices = {0, 1, 3, 1, 2, 3};
 }  // namespace QuadGeometry
 
 // namespace QuadGeometry
+
+unsigned int g_Texture;
 
 void AFullscreenQuad::Initialize(const string& shaderSrc) {
     m_Shader = new AShader(shaderSrc);
@@ -49,36 +39,82 @@ void AFullscreenQuad::Initialize(const string& shaderSrc) {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER,
-                 sizeof(QuadGeometry::g_Vertices),
-                 QuadGeometry::g_Vertices,
+                 QuadGeometry::g_Vertices.size() *
+                   sizeof(QuadGeometry::FVertex),
+                 &QuadGeometry::g_Vertices[0],
                  GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 sizeof(QuadGeometry::g_Indices),
-                 QuadGeometry::g_Indices,
+                 QuadGeometry::g_Indices.size() * sizeof(unsigned int),
+                 &QuadGeometry::g_Indices[0],
                  GL_STATIC_DRAW);
 
+    // vertex positions
+    glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,
                           3,
                           GL_FLOAT,
                           GL_FALSE,
-                          3 * sizeof(float),
-                          static_cast<void*>(nullptr));
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+                          sizeof(QuadGeometry::FVertex),
+                          (void*)0);
+    // vertex texture coords
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1,
+                          2,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(QuadGeometry::FVertex),
+                          (void*)offsetof(QuadGeometry::FVertex, TexCoords));
 
     glBindVertexArray(0);
+
+    // Import a test texture
+    glGenTextures(1, &g_Texture);
+    glBindTexture(GL_TEXTURE_2D, g_Texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,
+                    GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data =
+      stbi_load(Resources::GetResource(RES_TEXTURE, "checker_map.png").c_str(),
+                &width,
+                &height,
+                &nrChannels,
+                0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_RGB,
+                     width,
+                     height,
+                     0,
+                     GL_RGB,
+                     GL_UNSIGNED_BYTE,
+                     data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        printf("Failed to load texture\n");
+    }
+    stbi_image_free(data);
 
     m_Shader->Use();
     m_Shader->SetVec2("u_Resolution",
                       Graphics::GetWindowSize().Width,
                       Graphics::GetWindowSize().Height);
+    m_Shader->SetInt("u_Texture_0", 0);
 }
 
 void AFullscreenQuad::Render() const {
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, g_Texture);
+
     m_Shader->Use();
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

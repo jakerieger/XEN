@@ -1,12 +1,13 @@
 ﻿#include "Shader.h"
 
 #include "Utilities.inl"
+#include "Shaders/ShaderImports.inl"
 
 #include <fstream>
-#include <sstream>
 #include <result.hpp>
-#include <cstring>
+#include <string>
 #include <exception>
+#include <regex>
 
 #include "glad/glad.h"
 
@@ -112,9 +113,43 @@ ReadShaderFromSource(const string& source) noexcept {
     };
 }
 
+FShaderSource AShader::Preprocess(const FShaderSource& sources) {
+    std::string vertexCode   = sources.m_Vertex.c_str();
+    std::string fragmentCode = sources.m_Fragment.c_str();
+    std::regex importRgx("import ([a-zA-Z]+);");
+
+    // 1. Process vertex importsW
+    std::smatch vertexMatches;
+    for (auto it = std::sregex_iterator(vertexCode.begin(),
+                                        vertexCode.end(),
+                                        importRgx);
+         it != std::sregex_iterator();
+         ++it) {
+        std::smatch match;
+        match = *it;
+
+        const auto importLen  = match.str(0).length();
+        const auto importName = match.str(1);
+        const auto importPos  = match.position(0);
+
+        printf("'%s'\n", importName.c_str());
+
+        if (auto search = ShaderImports::ImportMap.find(importName.c_str());
+            search != ShaderImports::ImportMap.end()) {
+            printf("%s\n", search->first);
+            vertexCode.replace(importPos, importLen, search->second.c_str());
+        }
+    }
+    printf("%s\n", vertexCode.c_str());
+
+    // 2. Process fragment imports
+
+    return {vertexCode.c_str(), fragmentCode.c_str()};
+}
+
 void AShader::CompileShaders(const FShaderSource& sources) {
-    const char* vertexCode   = sources.m_Vertex.c_str();
-    const char* fragmentCode = sources.m_Fragment.c_str();
+    const auto vertexCode   = sources.m_Vertex.c_str();
+    const auto fragmentCode = sources.m_Fragment.c_str();
 
     const uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexCode, nullptr);
@@ -161,7 +196,9 @@ AShader::AShader(const char* path) {
         throw std::exception();
     }
 
-    CompileShaders(sources.value());
+    const auto processedSources =
+      sources.value(); /*Preprocess(sources.value());*/
+    CompileShaders(processedSources);
 }
 
 AShader::AShader(const string& source) {
@@ -173,7 +210,9 @@ AShader::AShader(const string& source) {
         throw std::exception();
     }
 
-    CompileShaders(sources.value());
+    const auto processedSources =
+      sources.value(); /*Preprocess(sources.value());*/
+    CompileShaders(processedSources);
 }
 
 void AShader::Use() const {
