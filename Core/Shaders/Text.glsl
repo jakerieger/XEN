@@ -1,5 +1,6 @@
+R""(
 #define VERTEX
-#version 330 core
+#version 460 core
 layout (location = 0) in vec4 vertex;// <vec2 pos, vec2 tex>
 out vec2 TexCoords;
 
@@ -12,7 +13,7 @@ void main() {
 #undef VERTEX
 
 #define FRAGMENT
-#version 330 core
+#version 460 core
 in vec2 TexCoords;
 out vec4 color;
 
@@ -24,3 +25,4 @@ void main() {
     color = vec4(textColor, 1.0) * sampled;
 }
 #undef FRAGMENT
+)"";

@@ -4,7 +4,6 @@
 
 #include "TextRenderer.h"
 #include "GraphicsContext.h"
-
 #include <glad/glad.h>
 #include <glm/matrix.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -21,7 +20,7 @@ namespace TextRenderer {
             fprintf(stderr, "Failed to initialize FreeType\n");
         }
 
-        g_FontShader = new AShader("Resources/Shaders/Text.glsl");
+        g_FontShader = new AShader(BuiltinShaders::Text);
     }
 
     void LoadFont(const char* name, uint32_t size, const char* filename) {

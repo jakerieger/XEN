@@ -4,6 +4,7 @@
 
 #include "GameApp.h"
 #include "GraphicsContext.h"
+#include "GraphicsError.h"
 #include "Input.h"
 #include "TextRenderer.h"
 
@@ -17,6 +18,11 @@ namespace Application {
         Graphics::Initialize(FSize {width, height}, title);
         Input::Initialize(Graphics::GetWindow());
         TextRenderer::Initialize();
+
+#ifdef _DEBUG_GRAPHICS
+        Graphics::Error::EnableDebugOutput();
+#endif
+
         app.Startup();
     }
 

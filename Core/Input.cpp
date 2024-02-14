@@ -6,7 +6,6 @@
 #include "Input.h"
 
 #include <utility>
-#include <bits/ranges_util.h>
 #define GLFW_KEY_NONE 0
 
 namespace Input {

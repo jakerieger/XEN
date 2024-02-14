@@ -20,8 +20,8 @@ struct FColor {
 };
 
 namespace Colors {
-    inline const FColor White   = FColor(0xFFC0CAF5);
-    inline const FColor Black   = FColor(0xFF414868);
+    inline const FColor White   = FColor(0xFFFFFFFF);
+    inline const FColor Black   = FColor(0xFF000000);
     inline const FColor Red     = FColor(0xFFf7768e);
     inline const FColor Yellow  = FColor(0xFFe0af68);
     inline const FColor Green   = FColor(0xFF73daca);

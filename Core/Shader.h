@@ -21,6 +21,7 @@ enum class EReadShaderError {
 class AShader {
 public:
     explicit AShader(const char* path);
+    explicit AShader(const string& source);
     ~AShader() = default;
 
     void Use() const;
@@ -55,3 +56,12 @@ private:
     void CompileShaders(const FShaderSource& sources);
     uint32_t m_ShaderProgram {};
 };
+
+namespace BuiltinShaders {
+    const inline string Quad =
+#include "Shaders/Quad.glsl"
+      ;
+    const inline string Text =
+#include "Shaders/Text.glsl"
+      ;
+}  // namespace BuiltinShaders

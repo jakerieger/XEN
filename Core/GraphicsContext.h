@@ -14,6 +14,7 @@ namespace Graphics {
     GLFWwindow* GetWindow();
     void ToggleWireframe();
     void ToggleFullscreen();
+    void ToggleVsync();
     void MarkWindowForClose();
     FSize GetWindowSize();
     float GetFrameTime();

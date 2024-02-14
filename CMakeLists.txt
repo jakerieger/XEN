@@ -10,11 +10,15 @@ include_directories(
         Vendor
 )
 
+# Comment out this line to disable OpenGL debug output
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG_GRAPHICS")
+
 find_package(glfw3 3.3 REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(Freetype CONFIG REQUIRED)
+find_package(msgpack-cxx CONFIG REQUIRED)
 add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Vendor/stb_image.cpp
         Core/GameApp.cpp
@@ -33,8 +37,12 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Input.h
         Core/Resources.cpp
         Core/TextRenderer.cpp
-        Core/TextRenderer.h)
-target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype)
+        Core/TextRenderer.h
+        Core/GraphicsError.cpp
+        Core/GraphicsError.h
+        Core/FullscreenQuad.cpp
+        Core/FullscreenQuad.h)
+target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype msgpack-cxx)
 
 add_executable(DemoApp Demo.cpp)
 target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL)

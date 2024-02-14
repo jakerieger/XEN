@@ -10,8 +10,7 @@
 
 #include "glad/glad.h"
 
-static auto CheckCompileErrors(uint32_t shader)
-  -> cpp::result<void, const char*> {
+static cpp::result<void, const char*> CheckCompileErrors(uint32_t shader) {
     int success;
     char infoLog[1024];
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -23,8 +22,8 @@ static auto CheckCompileErrors(uint32_t shader)
     return {};
 }
 
-static auto ReadShader(const char* path) noexcept
-  -> cpp::result<const FShaderSource, EReadShaderError> {
+static cpp::result<const FShaderSource, EReadShaderError>
+ReadShaderFromFile(const char* path) noexcept {
     const auto VERTEX_START   = "#define VERTEX\n";
     const auto VERTEX_END     = "#undef VERTEX\n";
     const auto FRAGMENT_START = "#define FRAGMENT\n";
@@ -64,6 +63,48 @@ static auto ReadShader(const char* path) noexcept
 
     const string vertexCode   = strSource.substr(vertStart, vertEnd);
     const string fragmentCode = strSource.substr(fragStart, fragEnd);
+
+    return FShaderSource {
+      vertexCode,
+      fragmentCode,
+    };
+}
+
+static cpp::result<const FShaderSource, EReadShaderError>
+ReadShaderFromSource(const string& source) noexcept {
+    const auto VERTEX_START   = "#define VERTEX\n";
+    const auto VERTEX_END     = "#undef VERTEX\n";
+    const auto FRAGMENT_START = "#define FRAGMENT\n";
+    const auto FRAGMENT_END   = "#undef FRAGMENT\n";
+
+    // Check syntax is correct
+    // =======================
+    size_t vertStart = source.find(VERTEX_START);
+    if (vertStart == string::npos) {
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_VS);
+    }
+    vertStart += strlen(VERTEX_START);
+
+    size_t vertEnd = source.find(VERTEX_END);
+    if (vertEnd == string::npos) {
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_VS);
+    }
+    vertEnd = vertEnd - vertStart;
+
+    size_t fragStart = source.find(FRAGMENT_START);
+    if (fragStart == string::npos) {
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_FS);
+    }
+    fragStart += strlen(FRAGMENT_START);
+
+    size_t fragEnd = source.find(FRAGMENT_END);
+    if (fragEnd == string::npos) {
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_FS);
+    }
+    fragEnd = fragEnd - fragStart;
+
+    const string vertexCode   = source.substr(vertStart, vertEnd);
+    const string fragmentCode = source.substr(fragStart, fragEnd);
 
     return FShaderSource {
       vertexCode,
@@ -112,7 +153,19 @@ void AShader::CompileShaders(const FShaderSource& sources) {
 }
 
 AShader::AShader(const char* path) {
-    const auto sources = ReadShader(path);
+    const auto sources = ReadShaderFromFile(path);
+    if (sources.has_error()) {
+        fprintf(stderr,
+                "ERROR::SHADER::READ - %d\n",
+                static_cast<int>(sources.error()));
+        throw std::exception();
+    }
+
+    CompileShaders(sources.value());
+}
+
+AShader::AShader(const string& source) {
+    const auto sources = ReadShaderFromSource(source);
     if (sources.has_error()) {
         fprintf(stderr,
                 "ERROR::SHADER::READ - %d\n",

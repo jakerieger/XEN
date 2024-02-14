@@ -3,15 +3,20 @@
 //
 
 #include "GraphicsContext.h"
+#include "GraphicsError.h"
 
 namespace Graphics {
+    // Window vars
     GL::TWindow g_Window;
     FSize g_InitWindowSize;
     FSize g_CurrentWindowSize;
     const char* g_WindowTitle;
-    bool g_IsWireframe = false;
-    float g_LastFrame;
+
+    // Graphics state
+    float g_LastFrame   = 0.f;
+    bool g_IsWireframe  = false;
     bool g_IsFullscreen = false;
+    bool g_EnableVsync  = false;
 
     GLFWwindow* GetWindow() {
         return g_Window.get();
@@ -62,6 +67,16 @@ namespace Graphics {
         g_IsFullscreen = !g_IsFullscreen;
     }
 
+    void ToggleVsync() {
+        if (g_EnableVsync) {
+            glfwSwapInterval(0);
+        } else {
+            glfwSwapInterval(1);
+        }
+
+        g_EnableVsync = !g_EnableVsync;
+    }
+
     void MarkWindowForClose() {
         glfwSetWindowShouldClose(GetWindow(), true);
     }
@@ -78,9 +93,16 @@ namespace Graphics {
         if (glfwInit() != GLFW_TRUE) {
             return false;
         }
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        // Defined in CMakeLists.txt
+        // Remove to disable OpenGL debug output
+#ifdef _DEBUG_GRAPHICS
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+#endif
+
         g_Window = GL::TWindow(glfwCreateWindow(size.Width,
                                                 size.Height,
                                                 g_WindowTitle,
@@ -99,6 +121,7 @@ namespace Graphics {
 
         glViewport(0, 0, size.Width, size.Height);
         glfwSetFramebufferSizeCallback(GetWindow(), GL::FramebufferCallback);
+        glfwSwapInterval(0);
 
         return true;
     }

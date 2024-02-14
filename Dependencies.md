@@ -12,9 +12,10 @@ This is a list of all the necessary 3rd party dependencies needed to build GLEng
 - [result](https://github.com/bitwizeshift/result)
 - [msgpack-c](https://github.com/msgpack/msgpack-c)
 
-The [CMakeLists.txt](CMakeLists.txt) assumes these were all built **AND** installed, either via `make install`
-or [vcpkg](https://github.com/microsoft/vcpkg).
+The [CMakeLists.txt](CMakeLists.txt) assumes these were installed with [vcpkg](https://github.com/microsoft/vcpkg).
+Other package managers will require some manual
+reconfiguration on your part.
 
 **Glad** and **stb_image** are included in the [Vendor](Vendor) directory. Changes to the targeted OpenGL version (
-default is 3.3)
+default is 4.6)
 will require generating a new `glad` loader.
