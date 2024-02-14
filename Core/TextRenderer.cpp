@@ -27,11 +27,11 @@ namespace TextRenderer {
         const auto font = new AFont(filename, size);
         font->LoadCharacters();
         g_Fonts.insert(pair(name, font));
+        font->Cleanup();
     }
 
     void Shutdown() {
         for (auto& [Key, Font] : g_Fonts) {
-            Font->Cleanup();
             delete Font;
         }
 

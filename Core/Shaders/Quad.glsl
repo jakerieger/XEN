@@ -4,11 +4,13 @@ R""(
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 
+uniform mat4 transform;
+
 out vec3 FragCoord;
 out vec2 TexCoord;
 
 void main() {
-    gl_Position = vec4(aPos.xy, 0.0, 1.0);
+    gl_Position = transform * vec4(aPos.xy, 0.0, 1.0);
     FragCoord = aPos;
     TexCoord = aTexCoord;
 }

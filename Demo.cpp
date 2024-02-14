@@ -5,6 +5,7 @@
 #include "GameApp.h"
 #include "FullscreenQuad.h"
 #include "PostProcessing.h"
+#include "Profiler.h"
 #include "Shader.h"
 #include "TextRenderer.h"
 #include <fmt/format.h>
@@ -29,6 +30,13 @@ private:
     AFullscreenQuad* m_FullscreenQuad = nullptr;
 
     FColor DebugValueColor(float err, float warn) const;
+
+    // GPU statistics
+    string m_GpuVendor;
+    string m_GpuRenderer;
+    float m_TotalVram;
+    float m_UsedVram;
+    float m_FreeVram;
 };
 
 void DemoApp::Startup() {
@@ -61,9 +69,12 @@ void DemoApp::Startup() {
     m_FullscreenQuad = new AFullscreenQuad();
     m_FullscreenQuad->Initialize(BuiltinShaders::Quad);
 
+    m_GpuVendor   = Profiler::GPU::GetDeviceVendor();
+    m_GpuRenderer = Profiler::GPU::GetDeviceRenderer();
+
     TextRenderer::LoadFont(
       "JetBrainsMono",
-      16,
+      12,
       Resources::GetResource(RES_FONT, "JetBrainsMono-SemiBold.ttf").c_str());
 
     // ======================== //
@@ -84,6 +95,7 @@ bool DemoApp::IsDone() {
 void DemoApp::Update(const float deltaTime) {
     m_FPS = 1.f / deltaTime;
     m_FullscreenQuad->Update(deltaTime);
+    Profiler::GPU::GetMemoryUsage(m_TotalVram, m_UsedVram, m_FreeVram);
 }
 
 void DemoApp::RenderScene() {
@@ -92,61 +104,73 @@ void DemoApp::RenderScene() {
 }
 
 void DemoApp::RenderUI() {
-    constexpr int fontSize = 18;
-    TextRenderer::RenderText(
-      "JetBrainsMono",
-      "[F10] - Toggle fullscreen",
-      Graphics::Screen::TopLeft().Width,
-      static_cast<float>(Graphics::Screen::TopLeft().Height) - (fontSize * 1),
-      1.f,
-      Colors::White);
-    TextRenderer::RenderText(
-      "JetBrainsMono",
-      "[F11] - Toggle VSync",
-      Graphics::Screen::TopLeft().Width,
-      static_cast<float>(Graphics::Screen::TopLeft().Height) - (fontSize * 2),
-      1.f,
-      Colors::White);
-    TextRenderer::RenderText(
-      "JetBrainsMono",
-      "[F12] - Toggle render metrics",
-      Graphics::Screen::TopLeft().Width,
-      static_cast<float>(Graphics::Screen::TopLeft().Height) - (fontSize * 3),
-      1.f,
-      Colors::White);
-    TextRenderer::RenderText(
-      "JetBrainsMono",
-      "[Tab] - Toggle wireframe",
-      Graphics::Screen::TopLeft().Width,
-      static_cast<float>(Graphics::Screen::TopLeft().Height) - (fontSize * 4),
-      1.f,
-      Colors::White);
-    TextRenderer::RenderText(
-      "JetBrainsMono",
-      "[Esc] - Exit",
-      Graphics::Screen::TopLeft().Width,
-      static_cast<float>(Graphics::Screen::TopLeft().Height) - (fontSize * 5),
-      1.f,
-      Colors::White);
-
+    //===========================================//
+    // Draw debug output text in top-left corner //
+    //===========================================//
+    constexpr int fontSize = 14;  // add 2 to give the text a y margin
     if (m_ShowDebugOutput) {
         TextRenderer::RenderText(
           "JetBrainsMono",
-          fmt::format("FPS  : {}", round(m_FPS)).c_str(),
+          fmt::format("FPS          : {}", round(m_FPS)).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) -
+            (fontSize * 1),
+          1.f,
+          DebugValueColor(29, 59));
+
+        TextRenderer::RenderText(
+          "JetBrainsMono",
+          fmt::format("Time         : {:1.02f}ms", (1 / m_FPS) * 1000).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) -
+            (fontSize * 2),
+          1.f,
+          DebugValueColor(29, 59));
+
+        TextRenderer::RenderText(
+          "JetBrainsMono",
+          fmt::format("GPU Vendor   : {}", m_GpuVendor.c_str()).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) -
+            (fontSize * 3),
+          1.f,
+          Colors::White);
+
+        TextRenderer::RenderText(
+          "JetBrainsMono",
+          fmt::format("GPU Renderer : {}", m_GpuRenderer.c_str()).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) -
+            (fontSize * 4),
+          1.f,
+          Colors::White);
+
+        TextRenderer::RenderText(
+          "JetBrainsMono",
+          fmt::format("Total Memory : {:.2f} MB", m_TotalVram / 1000.f).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) -
+            (fontSize * 5),
+          1.f,
+          Colors::Cyan);
+
+        TextRenderer::RenderText(
+          "JetBrainsMono",
+          fmt::format("Used Memory  : {:.2f} MB", m_UsedVram / 1000.f).c_str(),
+          Graphics::Screen::TopLeft().Width,
+          static_cast<float>(Graphics::Screen::TopLeft().Height) -
+            (fontSize * 6),
+          1.f,
+          Colors::Cyan);
+
+        TextRenderer::RenderText(
+          "JetBrainsMono",
+          fmt::format("Free Memory  : {:.2f} MB", m_FreeVram / 1000.f).c_str(),
           Graphics::Screen::TopLeft().Width,
           static_cast<float>(Graphics::Screen::TopLeft().Height) -
             (fontSize * 7),
           1.f,
-          DebugValueColor(29, 59));
-
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("Time : {:1.02f}ms", (1 / m_FPS) * 1000).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 8),
-          1.f,
-          DebugValueColor(29, 59));
+          Colors::Cyan);
     }
 }
 

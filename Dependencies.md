@@ -19,3 +19,7 @@ reconfiguration on your part.
 **Glad** and **stb_image** are included in the [Vendor](Vendor) directory. Changes to the targeted OpenGL version (
 default is 4.6)
 will require generating a new `glad` loader.
+
+OpenGL extension `GL_NVX_gpu_memory_info` is required for
+the profiler to function properly. Support for AMD devices
+is coming soon.

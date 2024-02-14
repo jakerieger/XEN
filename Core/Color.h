@@ -27,5 +27,5 @@ namespace Colors {
     inline const FColor Green   = FColor(0xFF00FF00);
     inline const FColor Cyan    = FColor(0xFF00FFFF);
     inline const FColor Blue    = FColor(0xFF0000FF);
-    inline const FColor Magenta = FColor(0xFF00FFFF);
+    inline const FColor Magenta = FColor(0xFFFF00FF);
 }  // namespace Colors

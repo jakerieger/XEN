@@ -5,6 +5,9 @@
 #pragma once
 #include <Shader.h>
 
+/**
+ * \brief Draws a fullscreen quad for processing render textures
+ */
 class AFullscreenQuad {
 public:
     AFullscreenQuad() = default;
