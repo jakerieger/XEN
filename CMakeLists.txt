@@ -44,7 +44,9 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/FullscreenQuad.h
         Core/Shaders/ShaderImports.inl
         Core/PostProcessing.cpp
-        Core/PostProcessing.h)
+        Core/PostProcessing.h
+        Core/PerformanceMonitor.cpp
+        Core/PerformanceMonitor.h)
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype msgpack-cxx)
 
 add_executable(DemoApp Demo.cpp)

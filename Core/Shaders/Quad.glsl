@@ -22,6 +22,7 @@ in vec2 TexCoord;
 uniform vec2 u_Resolution;
 uniform float u_Time;
 uniform float u_DeltaTime;
+
 uniform sampler2D u_Texture_0;
 
 out vec4 FragColor;
