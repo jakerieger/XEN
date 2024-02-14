@@ -41,13 +41,13 @@ void AFullscreenQuad::Initialize(const string& shaderSrc) {
     glBufferData(GL_ARRAY_BUFFER,
                  QuadGeometry::g_Vertices.size() *
                    sizeof(QuadGeometry::FVertex),
-                 &QuadGeometry::g_Vertices[0],
+                 QuadGeometry::g_Vertices.data(),
                  GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  QuadGeometry::g_Indices.size() * sizeof(unsigned int),
-                 &QuadGeometry::g_Indices[0],
+                 QuadGeometry::g_Indices.data(),
                  GL_STATIC_DRAW);
 
     // vertex positions
