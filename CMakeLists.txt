@@ -15,15 +15,15 @@ include_directories(
 # Comment out this line to disable OpenGL debug output
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG_GRAPHICS")
 
-if (MSVC)
+# Disable deprecation warnings on Windows
+if (WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
+endif ()
 
 find_package(glfw3 3.3 CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
-find_package(Freetype CONFIG REQUIRED)
 find_package(msgpack-cxx CONFIG REQUIRED)
 add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Vendor/stb_image.cpp
@@ -42,8 +42,6 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Input.cpp
         Core/Input.h
         Core/Resources.cpp
-        Core/TextRenderer.cpp
-        Core/TextRenderer.h
         Core/GraphicsError.cpp
         Core/GraphicsError.h
         Core/FullscreenQuad.cpp
@@ -58,7 +56,7 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Model.h
         Core/Camera.cpp
         Core/Camera.h)
-target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype msgpack-cxx)
+target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp)
 add_executable(DemoApp Demo.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS})

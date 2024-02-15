@@ -9,7 +9,6 @@
 #include "PostProcessing.h"
 #include "Profiler.h"
 #include "Shader.h"
-#include "TextRenderer.h"
 #include <fmt/format.h>
 
 #include "imgui.h"

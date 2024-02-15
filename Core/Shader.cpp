@@ -180,6 +180,10 @@ AShader::AShader(const string& source) {
     CompileShaders(processedSources);
 }
 
+AShader::AShader(const FShaderSource& sources) {
+    CompileShaders(sources);
+}
+
 void AShader::Use() const {
     glUseProgram(m_ShaderProgram);
 }

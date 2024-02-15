@@ -7,7 +7,6 @@
 #include "GraphicsError.h"
 #include "Input.h"
 #include "PostProcessing.h"
-#include "TextRenderer.h"
 
 namespace Application {
     FColor g_ClearColor = FColor(0xFF11131C);
@@ -15,7 +14,6 @@ namespace Application {
     void InitializeApp(IGameApp& app, const FSize& size, const char* title) {
         Graphics::Initialize(size, title);
         Input::Initialize(Graphics::GetWindow());
-        TextRenderer::Initialize();
 
 #ifdef _DEBUG_GRAPHICS
         Graphics::Error::EnableDebugOutput();
@@ -59,6 +57,5 @@ namespace Application {
         while (UpdateApp(app)) {}
         TerminateApp(app);
         Graphics::Shutdown();
-        TextRenderer::Shutdown();
     }
 }  // namespace Application

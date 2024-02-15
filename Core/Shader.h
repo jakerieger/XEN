@@ -25,6 +25,7 @@ class AShader {
 public:
     explicit AShader(const char* path);
     explicit AShader(const string& source);
+    explicit AShader(const FShaderSource& sources);
     ~AShader() = default;
 
     void Use() const;
