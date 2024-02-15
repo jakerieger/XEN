@@ -44,13 +44,14 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/GraphicsError.h
         Core/FullscreenQuad.cpp
         Core/FullscreenQuad.h
-        Core/Shaders/ShaderImports.inl
         Core/PostProcessing.cpp
         Core/PostProcessing.h
         Core/Profiler.cpp
         Core/Profiler.h
         Core/Mesh.cpp
-        Core/Mesh.h)
+        Core/Mesh.h
+        Core/Model.cpp
+        Core/Model.h)
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype msgpack-cxx)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp)

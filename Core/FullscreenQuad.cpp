@@ -69,8 +69,7 @@ void AFullscreenQuad::Render() const {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, g_Texture);
 
-    m_Shader->Use();
-    m_Mesh->Draw();
+    m_Mesh->Draw(*m_Shader);
 }
 
 void AFullscreenQuad::Update(const float deltaTime) const {

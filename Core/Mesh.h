@@ -8,6 +8,8 @@
 #include <glm/vec3.hpp>
 #include "STL.h"
 
+#include <Shader.h>
+
 struct FVertex {
     glm::vec3 Position;
     glm::vec3 Normal;
@@ -25,7 +27,7 @@ public:
         Initialize();
     }
 
-    void Draw() const;
+    void Draw(const AShader& shader) const;
     void Destroy() const;
 
 private:
@@ -36,4 +38,5 @@ private:
     uint32_t m_EBO;
     vector<FVertex> m_Vertices;
     vector<uint32_t> m_Indices;
+    AShader* m_Shader;
 };

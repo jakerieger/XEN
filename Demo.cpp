@@ -50,8 +50,6 @@ private:
     bool m_ShowDebugOutput            = true;
     AFullscreenQuad* m_FullscreenQuad = nullptr;
 
-    FColor DebugValueColor(float err, float warn) const;
-
     // GPU statistics
     string m_GpuVendor;
     string m_GpuRenderer;
@@ -90,14 +88,11 @@ void DemoApp::Startup() {
     m_FullscreenQuad = new AFullscreenQuad();
     m_FullscreenQuad->Initialize(BuiltinShaders::Quad);
 
+    //==========================//
+    // Grab GPU device metadata //
+    //==========================//
     m_GpuVendor   = Profiler::GPU::GetDeviceVendor();
     m_GpuRenderer = Profiler::GPU::GetDeviceRenderer();
-
-    // TextRenderer::LoadFont(
-    //   "JetBrainsMono",
-    //   12,
-    //   Resources::GetResource(RES_FONT,
-    //   "JetBrainsMono-SemiBold.ttf").c_str());
 
     // ======================== //
     //  Enable post processing  //
@@ -141,7 +136,6 @@ void DemoApp::RenderUI() {
     //===========================================//
     // Draw debug output text in top-left corner //
     //===========================================//
-    // TODO: This leaks MASSIVE memory, investigate text renderer
     if (m_ShowDebugOutput) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -162,21 +156,11 @@ void DemoApp::RenderUI() {
 
 void DemoApp::LateUpdate(float deltaTime) {}
 
-FColor DemoApp::DebugValueColor(const float err, const float warn) const {
-    if (m_FPS < err) {
-        return Colors::Red;
-    }
-    if (m_FPS < warn) {
-        return Colors::Yellow;
-    }
-    return Colors::Green;
-}
-
 int main(int argc, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
-    Application::InitializeApp(app, SCREEN_720P, "GLEngine | DemoApp");
+    Application::InitializeApp(app, SCREEN_792P, "GLEngine | DemoApp");
     Application::RunApp(app);
 
     return 0;

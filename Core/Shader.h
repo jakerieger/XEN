@@ -47,7 +47,6 @@ public:
     void SetMat4(const string& name, const glm::mat4& mat) const;
 
 private:
-    static FShaderSource Preprocess(const FShaderSource& sources);
     void CompileShaders(const FShaderSource& sources);
     uint32_t m_ShaderProgram {};
 };
@@ -58,5 +57,8 @@ namespace BuiltinShaders {
       ;
     const inline string Text =
 #include "Shaders/Text.glsl"
+      ;
+    const inline string Unlit =
+#include "Shaders/Unlit.glsl"
       ;
 }  // namespace BuiltinShaders
