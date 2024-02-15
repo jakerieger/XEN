@@ -10,12 +10,14 @@ void* operator new[](size_t size,
 }
 
 // I don't fucking know, thanks EA for the documentation ;D
-// TODO: figure out what this is supposed to return
-void* operator new[](unsigned long,
-                     unsigned long,
-                     unsigned long,
+// Update: this works, I don't know why
+void* operator new[](size_t size,
+                     unsigned long long,
+                     unsigned long long,
                      char const*,
                      int,
                      unsigned int,
                      char const*,
-                     int) {}
+                     int) {
+    return new uint8_t[size];
+}

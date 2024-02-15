@@ -9,8 +9,13 @@ namespace Resources {
 
     void SetCwd(const char* exePath) {
         const string exePathStr = exePath;
+#ifdef _WIN32
+        const string cwdStr =
+          exePathStr.substr(0, exePathStr.find_last_of('\\'));
+#else
         const string cwdStr =
           exePathStr.substr(0, exePathStr.find_last_of('/'));
+#endif
         g_Cwd = cwdStr;
     }
 
@@ -27,10 +32,12 @@ namespace Resources {
         const auto filename = fs::path(name);
         const auto path     = root / res / subdir / filename;
         if (!exists(path)) {
-            fprintf(stderr, "Resource not found: '%s'\n", path.c_str());
+            fprintf(stderr,
+                    "Resource not found: '%s'\n",
+                    path.string().c_str());
             throw std::exception();
         }
 
-        return path.c_str();
+        return path.string().c_str();
     }
 }  // namespace Resources

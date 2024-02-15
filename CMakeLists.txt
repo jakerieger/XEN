@@ -15,7 +15,11 @@ include_directories(
 # Comment out this line to disable OpenGL debug output
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG_GRAPHICS")
 
-find_package(glfw3 3.3 REQUIRED)
+if (MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()
+
+find_package(glfw3 3.3 CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
