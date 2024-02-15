@@ -51,7 +51,9 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Mesh.cpp
         Core/Mesh.h
         Core/Model.cpp
-        Core/Model.h)
+        Core/Model.h
+        Core/Camera.cpp
+        Core/Camera.h)
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype msgpack-cxx)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp)

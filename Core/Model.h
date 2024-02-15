@@ -10,19 +10,19 @@
 #include <Shader.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <assimp/postprocess.h>
 
 class AModel {
 public:
-    AModel(const char* path);
+    explicit AModel(const char* path, AShader shader);
 
-    void Draw(const AShader& shader);
+    void Draw();
     void Destroy();
 
 private:
     vector<AMesh> m_Meshes;
+    AShader m_Shader;
 
     void LoadModel(const string& path);
-    void ProcessNode(aiNode* node, const aiScene* scene);
-    AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+    void ProcessNode(const aiNode* node, const aiScene* scene);
+    static AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 };

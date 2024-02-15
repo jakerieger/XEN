@@ -1,9 +1,11 @@
+#include "Camera.h"
 #include "Color.h"
 #include "GraphicsContext.h"
 #include "Input.h"
 #include "Resources.h"
 #include "GameApp.h"
 #include "FullscreenQuad.h"
+#include "Model.h"
 #include "PostProcessing.h"
 #include "Profiler.h"
 #include "Shader.h"
@@ -49,6 +51,8 @@ private:
     float m_FPS                       = 0.f;
     bool m_ShowDebugOutput            = true;
     AFullscreenQuad* m_FullscreenQuad = nullptr;
+    AModel* m_Cube                    = nullptr;
+    ACamera* m_Camera                 = nullptr;
 
     // GPU statistics
     string m_GpuVendor;
@@ -85,8 +89,12 @@ void DemoApp::Startup() {
     // ========================= //
     //  Initialize demo content  //
     // ========================= //
-    m_FullscreenQuad = new AFullscreenQuad();
-    m_FullscreenQuad->Initialize(BuiltinShaders::Quad);
+    // m_FullscreenQuad = new AFullscreenQuad();
+    // m_FullscreenQuad->Initialize(BuiltinShaders::Quad);
+    AShader cubeShader(BuiltinShaders::Unlit);
+    m_Cube =
+      new AModel(Resources::GetResource(RES_3D_MODEL, "cube.obj").c_str(),
+                 cubeShader);
 
     //==========================//
     // Grab GPU device metadata //
@@ -110,7 +118,8 @@ void DemoApp::Startup() {
 }
 
 void DemoApp::Cleanup() {
-    m_FullscreenQuad->Destroy();
+    // m_FullscreenQuad->Destroy();
+    m_Cube->Destroy();
     PostProcessing::Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -123,12 +132,13 @@ bool DemoApp::IsDone() {
 
 void DemoApp::Update(const float deltaTime) {
     m_FPS = 1.f / deltaTime;
-    m_FullscreenQuad->Update(deltaTime);
+    // m_FullscreenQuad->Update(deltaTime);
     Profiler::GPU::GetMemoryUsage(m_TotalVram, m_UsedVram, m_FreeVram);
 }
 
 void DemoApp::RenderScene() {
-    m_FullscreenQuad->Render();
+    // m_FullscreenQuad->Render();
+    m_Cube->Draw();
     PostProcessing::Render();
 }
 
