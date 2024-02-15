@@ -10,6 +10,27 @@
 #include "TextRenderer.h"
 #include <fmt/format.h>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
+#define SCREEN_720P                                                            \
+    FSize {                                                                    \
+        1280, 720                                                              \
+    }
+#define SCREEN_792P                                                            \
+    FSize {                                                                    \
+        1408, 729                                                              \
+    }
+#define SCREEN_900P                                                            \
+    FSize {                                                                    \
+        1600, 900                                                              \
+    }
+#define SCREEN_1080P                                                           \
+    FSize {                                                                    \
+        1920, 1080                                                             \
+    }
+
 class DemoApp final : public IGameApp {
 public:
     DemoApp() = default;
@@ -72,20 +93,33 @@ void DemoApp::Startup() {
     m_GpuVendor   = Profiler::GPU::GetDeviceVendor();
     m_GpuRenderer = Profiler::GPU::GetDeviceRenderer();
 
-    TextRenderer::LoadFont(
-      "JetBrainsMono",
-      12,
-      Resources::GetResource(RES_FONT, "JetBrainsMono-SemiBold.ttf").c_str());
+    // TextRenderer::LoadFont(
+    //   "JetBrainsMono",
+    //   12,
+    //   Resources::GetResource(RES_FONT,
+    //   "JetBrainsMono-SemiBold.ttf").c_str());
 
     // ======================== //
     //  Enable post processing  //
     // ======================== //
     PostProcessing::Initialize();
+
+    //==================//
+    // Initialize ImGui //
+    //==================//
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui_ImplGlfw_InitForOpenGL(Graphics::GetWindow(), true);
+    ImGui_ImplOpenGL3_Init();
 }
 
 void DemoApp::Cleanup() {
     m_FullscreenQuad->Destroy();
     PostProcessing::Shutdown();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
 
 bool DemoApp::IsDone() {
@@ -107,70 +141,22 @@ void DemoApp::RenderUI() {
     //===========================================//
     // Draw debug output text in top-left corner //
     //===========================================//
-    constexpr int fontSize = 14;  // add 2 to give the text a y margin
+    // TODO: This leaks MASSIVE memory, investigate text renderer
     if (m_ShowDebugOutput) {
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("FPS          : {}", round(m_FPS)).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 1),
-          1.f,
-          DebugValueColor(29, 59));
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("Time         : {:1.02f}ms", (1 / m_FPS) * 1000).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 2),
-          1.f,
-          DebugValueColor(29, 59));
+        ImGui::Text("FPS          : %0.2f", m_FPS);
+        ImGui::Text("Time         : %0.2fms", (1.f / m_FPS) * 1000.f);
+        ImGui::Text("GPU Vendor   : %s", m_GpuVendor.c_str());
+        ImGui::Text("GPU Renderer : %s", m_GpuRenderer.c_str());
+        ImGui::Text("Total Mem    : %0.2f MB", m_TotalVram / 1000);
+        ImGui::Text("Used Mem     : %0.2f MB", m_UsedVram / 1000);
+        ImGui::Text("Free Mem     : %0.2f MB", m_FreeVram / 1000);
 
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("GPU Vendor   : {}", m_GpuVendor.c_str()).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 3),
-          1.f,
-          Colors::White);
-
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("GPU Renderer : {}", m_GpuRenderer.c_str()).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 4),
-          1.f,
-          Colors::White);
-
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("Total Memory : {:.2f} MB", m_TotalVram / 1000.f).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 5),
-          1.f,
-          Colors::Cyan);
-
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("Used Memory  : {:.2f} MB", m_UsedVram / 1000.f).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 6),
-          1.f,
-          Colors::Cyan);
-
-        TextRenderer::RenderText(
-          "JetBrainsMono",
-          fmt::format("Free Memory  : {:.2f} MB", m_FreeVram / 1000.f).c_str(),
-          Graphics::Screen::TopLeft().Width,
-          static_cast<float>(Graphics::Screen::TopLeft().Height) -
-            (fontSize * 7),
-          1.f,
-          Colors::Cyan);
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 }
 
@@ -190,7 +176,7 @@ int main(int argc, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
-    Application::InitializeApp(app, 1408, 792, "GLEngine | DemoApp");
+    Application::InitializeApp(app, SCREEN_720P, "GLEngine | DemoApp");
     Application::RunApp(app);
 
     return 0;

@@ -14,6 +14,7 @@ namespace TextRenderer {
     FT_Library g_FontLibrary;
     map<const char*, AFont*> g_Fonts;
     AShader* g_FontShader = nullptr;
+    glm::mat4 g_Projection;
 
     void Initialize() {
         if (FT_Init_FreeType(&g_FontLibrary)) {
@@ -46,7 +47,7 @@ namespace TextRenderer {
                     float posY,
                     float scale,
                     const FColor& color) {
-        glm::mat4 projection =
+        g_Projection =
           glm::ortho(0.f,
                      static_cast<float>(Graphics::GetWindowSize().Width),
                      0.f,
@@ -75,7 +76,7 @@ namespace TextRenderer {
         glBindVertexArray(0);
 
         g_FontShader->Use();
-        g_FontShader->SetMat4("projection", projection);
+        g_FontShader->SetMat4("projection", g_Projection);
         g_FontShader->SetVec3("textColor", color.Red, color.Green, color.Blue);
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);

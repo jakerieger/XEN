@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Color.h"
+#include "Size.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -21,10 +22,7 @@ public:
 };
 
 namespace Application {
-    void InitializeApp(IGameApp& app,
-                       const int& width,
-                       const int& height,
-                       const char* title);
+    void InitializeApp(IGameApp& app, const FSize& size, const char* title);
     bool UpdateApp(IGameApp& app);
     void RunApp(IGameApp& app);
 }  // namespace Application

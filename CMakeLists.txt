@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(
         Core
         Vendor
+        imgui
+        imgui/backends
 )
 
 # Comment out this line to disable OpenGL debug output
@@ -46,10 +48,13 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/PostProcessing.cpp
         Core/PostProcessing.h
         Core/Profiler.cpp
-        Core/Profiler.h)
+        Core/Profiler.h
+        Core/Mesh.cpp
+        Core/Mesh.h)
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt Freetype::Freetype msgpack-cxx)
 
-add_executable(DemoApp Demo.cpp)
+file(GLOB IMGUI_SRCS imgui/*.cpp)
+add_executable(DemoApp Demo.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS})
 target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL)
 
 find_package(Catch2 3 REQUIRED)

@@ -12,11 +12,8 @@
 namespace Application {
     FColor g_ClearColor = FColor(0xFF11131C);
 
-    void InitializeApp(IGameApp& app,
-                       const int& width,
-                       const int& height,
-                       const char* title) {
-        Graphics::Initialize(FSize {width, height}, title);
+    void InitializeApp(IGameApp& app, const FSize& size, const char* title) {
+        Graphics::Initialize(size, title);
         Input::Initialize(Graphics::GetWindow());
         TextRenderer::Initialize();
 

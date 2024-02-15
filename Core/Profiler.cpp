@@ -22,7 +22,7 @@ namespace Profiler {
         glGetFloatv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX,
                     &totalMemory);
         glGetFloatv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX,
-                    &usedMemory);
-        glGetFloatv(GL_GPU_MEMORY_INFO_EVICTION_COUNT_NVX, &freeMemory);
+                    &freeMemory);
+        usedMemory = totalMemory - freeMemory;
     }
 }  // namespace Profiler
