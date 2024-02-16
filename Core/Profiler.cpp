@@ -46,7 +46,7 @@ namespace Profiler {
     }
 
     void Update() {
-        if (IsRunning) {
+        if (IsRunning && CanQueryMemory) {
             GetMemoryInfo(TotalMemory, UsedMemory, FreeMemory);
         }
     }
