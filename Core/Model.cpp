@@ -9,6 +9,12 @@ AModel::AModel(const char* path, const AShader shader) : m_Shader(shader) {
     LoadModel(path);
 }
 
+void AModel::Update(float deltaTime) {
+    m_Transform.Update();
+    m_Shader.Use();
+    m_Shader.SetMat4("u_Model", m_Transform.GetModelMatrix());
+}
+
 void AModel::Draw() {
     for (auto& mesh : m_Meshes) {
         mesh.Draw(m_Shader);

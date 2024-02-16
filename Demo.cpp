@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Color.h"
 #include "DebugUI.h"
+#include "DirectionalLight.h"
 #include "GraphicsContext.h"
 #include "Input.h"
 #include "Resources.h"
@@ -19,7 +20,7 @@
     }
 #define SCREEN_792P                                                            \
     FSize {                                                                    \
-        1408, 729                                                              \
+        1408, 792                                                              \
     }
 #define SCREEN_900P                                                            \
     FSize {                                                                    \
@@ -45,9 +46,10 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
-    bool m_ShowDebugOutput = true;
-    AModel* m_Cube         = nullptr;
-    ACamera* m_Camera      = nullptr;
+    bool m_ShowDebugOutput        = true;
+    AModel* m_Model               = nullptr;
+    ACamera* m_Camera             = nullptr;
+    ADirectionalLight* m_DirLight = nullptr;
 };
 
 void DemoApp::Startup() {
@@ -77,17 +79,28 @@ void DemoApp::Startup() {
     // ========================= //
     //  Initialize demo content  //
     // ========================= //
-    m_Camera = new ACamera(glm::vec3(0.f, 0.f, -2.f));
-    AShader cubeShader(BuiltinShaders::Unlit);
-    m_Cube =
+    m_DirLight = new ADirectionalLight();
+    m_DirLight->GetTransform().Translate(0.f, 0.f, -2.f);
+    m_Camera = new ACamera(glm::vec3(0.f, 0.f, -5.f));
+    AShader modelShader(BuiltinShaders::BlinnPhong);
+
+    m_Model =
       new AModel(Resources::GetResource(RES_3D_MODEL, "monk.fbx").c_str(),
-                 cubeShader);
-    m_Cube->GetShader().Use();
-    m_Cube->GetShader().SetMat4(
+                 modelShader);
+
+    m_Model->GetTransform().Scale(0.01, 0.01, 0.01);
+    m_Model->GetShader().Use();
+    m_Model->GetShader().SetMat4(
       "u_Projection",
-      ACamera::GetProjectionMatrix(90.f, Graphics::GetWindowAspect()));
-    m_Cube->GetShader().SetMat4("u_View", m_Camera->GetViewMatrix());
-    m_Cube->GetShader().SetMat4("u_Model", glm::mat4(1.f));
+      ACamera::GetProjectionMatrix(45.f, Graphics::GetWindowAspect()));
+    m_Model->GetShader().SetMat4("u_View", m_Camera->GetViewMatrix());
+    m_Model->GetShader().SetMat4("u_Model",
+                                 m_Model->GetTransform().GetModelMatrix());
+    m_Model->GetShader().SetVec3("u_ObjectColor", {0.5f, 0.5f, 0.5f});
+    m_Model->GetShader().SetVec3("u_LightColor", m_DirLight->GetColor());
+    m_Model->GetShader().SetVec3("u_LightPosition",
+                                 m_DirLight->GetTransform().GetPosition());
+    m_Model->GetShader().SetVec3("u_ViewPosition", m_Camera->GetPosition());
 
     //==========================//
     // Grab GPU device metadata //
@@ -108,8 +121,8 @@ void DemoApp::Startup() {
 
 void DemoApp::Cleanup() {
     delete m_Camera;
-    m_Cube->Destroy();
-    delete m_Cube;
+    m_Model->Destroy();
+    delete m_Model;
     PostProcessing::Shutdown();
     DebugUI::Shutdown();
     Profiler::Shutdown();
@@ -120,12 +133,20 @@ bool DemoApp::IsDone() {
 }
 
 void DemoApp::Update(const float deltaTime) {
+    // Rotate our monk model
+    const auto rotationY = 50 * (glfwGetTime() * glm::radians(45.f));
+    m_Model->GetTransform().SetPositionAndRotation(
+      glm::vec3(0.f),
+      glm::vec3(0.f, rotationY, 0.f));
+    m_Model->Update(deltaTime);
+    m_DirLight->GetTransform().Update();
+
     DebugUI::Update(deltaTime);
     Profiler::Update();
 }
 
 void DemoApp::RenderScene() {
-    m_Cube->Draw();
+    m_Model->Draw();
     PostProcessing::Render();
 }
 
@@ -153,7 +174,9 @@ int main(int argc, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
-    Application::InitializeApp(app, SCREEN_792P, "GLEngine | DemoApp");
+    Application::InitializeApp(app,
+                               SCREEN_792P,
+                               "GLEngine | DemoApp <OpenGL 4.6>");
     SetWindowIcon();
     Application::RunApp(app);
 

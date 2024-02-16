@@ -62,4 +62,7 @@ namespace BuiltinShaders {
     const inline string Unlit =
 #include "Shaders/Unlit.glsl"
       ;
+    const inline string BlinnPhong =
+#include "Shaders/BlinnPhong.glsl"
+      ;
 }  // namespace BuiltinShaders

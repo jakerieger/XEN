@@ -36,10 +36,10 @@ namespace Application {
                      g_ClearColor.Green,
                      g_ClearColor.Blue,
                      g_ClearColor.Alpha);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glClear(GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Execute user-defined render logic
+        glEnable(GL_DEPTH_TEST);
         app.RenderScene();
         app.RenderUI();
 

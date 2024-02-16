@@ -26,6 +26,10 @@ public:
     glm::mat4 GetViewMatrix() const;
     static glm::mat4 GetProjectionMatrix(float fov, float aspect);
 
+    glm::vec3& GetPosition() {
+        return m_Position;
+    }
+
 private:
     glm::vec3 m_Position;
     glm::vec3 m_Front;
