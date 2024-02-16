@@ -7,11 +7,15 @@
 #include "STL.h"
 
 namespace Profiler {
-    namespace GPU {
-        string GetDeviceVendor();
-        string GetDeviceRenderer();
-        void GetMemoryUsage(float& totalMemory,
-                            float& usedMemory,
-                            float& freeMemory);
-    }  // namespace GPU
+    extern string GpuVendor;
+    extern string GpuRenderer;
+    extern float TotalMemory;
+    extern float FreeMemory;
+    extern float UsedMemory;
+    extern bool CanQueryMemory;
+
+    void Initialize();
+    void Start();
+    void Update();
+    void Shutdown();
 }  // namespace Profiler

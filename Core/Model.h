@@ -18,6 +18,10 @@ public:
     void Draw();
     void Destroy();
 
+    AShader& GetShader() {
+        return m_Shader;
+    }
+
 private:
     vector<AMesh> m_Meshes;
     AShader m_Shader;

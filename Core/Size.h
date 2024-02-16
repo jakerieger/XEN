@@ -7,11 +7,9 @@
 #include <stdint.h>
 
 struct FSize {
-    FSize(const int& width, const int& height) {
-        this->Width  = width;
-        this->Height = height;
-    }
     FSize() = default;
-    uint16_t Width;
-    uint16_t Height;
+    FSize(const uint32_t width, const uint32_t height)
+        : Width(width), Height(height) {}
+    uint32_t Width;
+    uint32_t Height;
 };

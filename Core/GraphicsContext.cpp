@@ -29,6 +29,10 @@ namespace Graphics {
         return deltaTime;
     }
 
+    float GetFrameRate() {
+        return 1.f / GetFrameTime();
+    }
+
     void ToggleWireframe() {
         if (g_IsWireframe) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -83,6 +87,11 @@ namespace Graphics {
 
     FSize GetWindowSize() {
         return g_CurrentWindowSize;
+    }
+
+    float GetWindowAspect() {
+        return (static_cast<float>(g_CurrentWindowSize.Width) /
+                static_cast<float>(g_CurrentWindowSize.Height));
     }
 
     bool Initialize(const FSize& size, const char* title) {

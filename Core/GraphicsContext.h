@@ -17,7 +17,9 @@ namespace Graphics {
     void ToggleVsync();
     void MarkWindowForClose();
     FSize GetWindowSize();
+    float GetWindowAspect();
     float GetFrameTime();
+    float GetFrameRate();
     bool Initialize(const FSize& size, const char* title);
     void Shutdown();
 

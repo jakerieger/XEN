@@ -33,7 +33,7 @@ void AFullscreenQuad::Initialize(const string& shaderSrc) {
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
     unsigned char* data =
-      stbi_load(Resources::GetResource(RES_TEXTURE, "checker_map.png").c_str(),
+      stbi_load(Resources::GetResource(RES_TEXTURE, "<filename>").c_str(),
                 &width,
                 &height,
                 &nrChannels,

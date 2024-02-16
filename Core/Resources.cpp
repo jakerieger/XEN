@@ -28,9 +28,10 @@ namespace Resources {
     string GetResource(const char* type, const char* name) {
         const auto root     = fs::path(g_Cwd.c_str());
         const auto res      = fs::path("Resources");
-        const auto subdir   = fs::path(type);
+        const auto subdir   = (type == RES_ROOT) ? fs::path() : fs::path(type);
         const auto filename = fs::path(name);
-        const auto path     = root / res / subdir / filename;
+        const auto path     = (type == RES_ROOT) ? (root / res / filename)
+                                                 : (root / res / subdir / filename);
         if (!exists(path)) {
             fprintf(stderr,
                     "Resource not found: '%s'\n",

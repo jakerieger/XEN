@@ -10,13 +10,24 @@
 
 #include "glad/glad.h"
 
-static cpp::result<void, const char*> CheckCompileErrors(uint32_t shader) {
+static cpp::result<void, const char*> CheckCompileErrors(uint32_t shader,
+                                                         string type) {
     int success;
     char infoLog[1024];
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-        return cpp::fail(infoLog);
+    if (type != "PROGRAM") {
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
+            printf("ERR::SHADER::COMPILE - %s\n", infoLog);
+            return cpp::fail(infoLog);
+        }
+    } else {
+        glGetProgramiv(shader, GL_LINK_STATUS, &success);
+        if (!success) {
+            glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
+            printf("ERR::SHADER::LINK - %s\n", infoLog);
+            return cpp::fail(infoLog);
+        }
     }
 
     return {};
@@ -119,7 +130,7 @@ void AShader::CompileShaders(const FShaderSource& sources) {
     const uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexCode, nullptr);
     glCompileShader(vertexShader);
-    if (const auto vertCompileResult = CheckCompileErrors(vertexShader);
+    if (const auto vertCompileResult = CheckCompileErrors(vertexShader, "VS");
         vertCompileResult.has_error()) {
         fprintf(stderr,
                 "ERROR::SHADER::VS::COMPILE - %s\n",
@@ -130,7 +141,7 @@ void AShader::CompileShaders(const FShaderSource& sources) {
     const uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentCode, nullptr);
     glCompileShader(fragmentShader);
-    if (const auto fragCompileResult = CheckCompileErrors(fragmentShader);
+    if (const auto fragCompileResult = CheckCompileErrors(fragmentShader, "FS");
         fragCompileResult.has_error()) {
         fprintf(stderr,
                 "ERROR::SHADER::FS::COMPILE - %s\n",
@@ -142,7 +153,8 @@ void AShader::CompileShaders(const FShaderSource& sources) {
     glAttachShader(m_ShaderProgram, vertexShader);
     glAttachShader(m_ShaderProgram, fragmentShader);
     glLinkProgram(m_ShaderProgram);
-    if (const auto linkShaderResult = CheckCompileErrors(m_ShaderProgram);
+    if (const auto linkShaderResult =
+          CheckCompileErrors(m_ShaderProgram, "PROGRAM");
         linkShaderResult.has_error()) {
         fprintf(stderr, "ERROR::SHADER::LINK - %s\n", linkShaderResult.error());
         return;

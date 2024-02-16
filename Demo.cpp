@@ -1,19 +1,17 @@
 #include "Camera.h"
 #include "Color.h"
+#include "DebugUI.h"
 #include "GraphicsContext.h"
 #include "Input.h"
 #include "Resources.h"
 #include "GameApp.h"
-#include "FullscreenQuad.h"
 #include "Model.h"
 #include "PostProcessing.h"
 #include "Profiler.h"
 #include "Shader.h"
 #include <fmt/format.h>
 
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "stb_image.h"
 
 #define SCREEN_720P                                                            \
     FSize {                                                                    \
@@ -47,18 +45,9 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
-    float m_FPS                       = 0.f;
-    bool m_ShowDebugOutput            = true;
-    AFullscreenQuad* m_FullscreenQuad = nullptr;
-    AModel* m_Cube                    = nullptr;
-    ACamera* m_Camera                 = nullptr;
-
-    // GPU statistics
-    string m_GpuVendor;
-    string m_GpuRenderer;
-    float m_TotalVram;
-    float m_UsedVram;
-    float m_FreeVram;
+    bool m_ShowDebugOutput = true;
+    AModel* m_Cube         = nullptr;
+    ACamera* m_Camera      = nullptr;
 };
 
 void DemoApp::Startup() {
@@ -88,18 +77,23 @@ void DemoApp::Startup() {
     // ========================= //
     //  Initialize demo content  //
     // ========================= //
-    // m_FullscreenQuad = new AFullscreenQuad();
-    // m_FullscreenQuad->Initialize(BuiltinShaders::Quad);
+    m_Camera = new ACamera(glm::vec3(0.f, 0.f, -2.f));
     AShader cubeShader(BuiltinShaders::Unlit);
     m_Cube =
-      new AModel(Resources::GetResource(RES_3D_MODEL, "cube.obj").c_str(),
+      new AModel(Resources::GetResource(RES_3D_MODEL, "monk.fbx").c_str(),
                  cubeShader);
+    m_Cube->GetShader().Use();
+    m_Cube->GetShader().SetMat4(
+      "u_Projection",
+      ACamera::GetProjectionMatrix(90.f, Graphics::GetWindowAspect()));
+    m_Cube->GetShader().SetMat4("u_View", m_Camera->GetViewMatrix());
+    m_Cube->GetShader().SetMat4("u_Model", glm::mat4(1.f));
 
     //==========================//
     // Grab GPU device metadata //
     //==========================//
-    m_GpuVendor   = Profiler::GPU::GetDeviceVendor();
-    m_GpuRenderer = Profiler::GPU::GetDeviceRenderer();
+    Profiler::Initialize();
+    Profiler::Start();
 
     // ======================== //
     //  Enable post processing  //
@@ -109,20 +103,16 @@ void DemoApp::Startup() {
     //==================//
     // Initialize ImGui //
     //==================//
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui_ImplGlfw_InitForOpenGL(Graphics::GetWindow(), true);
-    ImGui_ImplOpenGL3_Init();
+    DebugUI::Initialize();
 }
 
 void DemoApp::Cleanup() {
-    // m_FullscreenQuad->Destroy();
+    delete m_Camera;
     m_Cube->Destroy();
+    delete m_Cube;
     PostProcessing::Shutdown();
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    DebugUI::Shutdown();
+    Profiler::Shutdown();
 }
 
 bool DemoApp::IsDone() {
@@ -130,46 +120,41 @@ bool DemoApp::IsDone() {
 }
 
 void DemoApp::Update(const float deltaTime) {
-    m_FPS = 1.f / deltaTime;
-    // m_FullscreenQuad->Update(deltaTime);
-    Profiler::GPU::GetMemoryUsage(m_TotalVram, m_UsedVram, m_FreeVram);
+    DebugUI::Update(deltaTime);
+    Profiler::Update();
 }
 
 void DemoApp::RenderScene() {
-    // m_FullscreenQuad->Render();
     m_Cube->Draw();
     PostProcessing::Render();
 }
 
 void DemoApp::RenderUI() {
-    //===========================================//
-    // Draw debug output text in top-left corner //
-    //===========================================//
     if (m_ShowDebugOutput) {
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        ImGui::Text("FPS          : %0.2f", m_FPS);
-        ImGui::Text("Time         : %0.2fms", (1.f / m_FPS) * 1000.f);
-        ImGui::Text("GPU Vendor   : %s", m_GpuVendor.c_str());
-        ImGui::Text("GPU Renderer : %s", m_GpuRenderer.c_str());
-        ImGui::Text("Total Mem    : %0.2f MB", m_TotalVram / 1000);
-        ImGui::Text("Used Mem     : %0.2f MB", m_UsedVram / 1000);
-        ImGui::Text("Free Mem     : %0.2f MB", m_FreeVram / 1000);
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        DebugUI::Draw();
     }
 }
 
 void DemoApp::LateUpdate(float deltaTime) {}
+
+static void SetWindowIcon() {
+    GLFWimage appIcon[1];
+    appIcon[0].pixels =
+      stbi_load(Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str(),
+                &appIcon[0].width,
+                &appIcon[0].height,
+                0,
+                4);
+    glfwSetWindowIcon(Graphics::GetWindow(), 1, appIcon);
+    stbi_image_free(appIcon[0].pixels);
+}
 
 int main(int argc, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
     Application::InitializeApp(app, SCREEN_792P, "GLEngine | DemoApp");
+    SetWindowIcon();
     Application::RunApp(app);
 
     return 0;

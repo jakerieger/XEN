@@ -55,11 +55,17 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Model.cpp
         Core/Model.h
         Core/Camera.cpp
-        Core/Camera.h)
+        Core/Camera.h
+        Core/DebugUI.cpp
+        Core/DebugUI.h)
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp)
-add_executable(DemoApp Demo.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS})
+if (WIN32)
+    add_executable(DemoApp Demo.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS} Windows/app.rc)
+else ()
+    add_executable(DemoApp Demo.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS})
+endif ()
 target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL)
 
 find_package(Catch2 3 REQUIRED)

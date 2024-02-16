@@ -2,15 +2,11 @@
 // Created by conta on 2/15/2024.
 //
 
-#ifndef DEBUGUI_H
-#define DEBUGUI_H
+#pragma once
 
-
-
-class DebugUI {
-
-};
-
-
-
-#endif //DEBUGUI_H
+namespace DebugUI {
+    void Initialize();
+    void Update(float deltaTime);
+    void Draw();
+    void Shutdown();
+}  // namespace DebugUI
