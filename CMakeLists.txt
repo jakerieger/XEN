@@ -61,7 +61,13 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Transform.cpp
         Core/Transform.h
         Core/DirectionalLight.cpp
-        Core/DirectionalLight.h)
+        Core/DirectionalLight.h
+        Core/Material.cpp
+        Core/Material.h
+        Core/Scene.cpp
+        Core/Scene.h
+        Core/SceneContext.cpp
+        Core/SceneContext.h)
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp)
