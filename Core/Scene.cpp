@@ -20,7 +20,7 @@ void AScene::Update(float deltaTime) {
 
 void AScene::Render() {
     for (auto& model : m_SceneContext.m_Models) {
-        model.Draw();
+        model.Draw(m_SceneContext);
     }
 }
 
@@ -28,6 +28,10 @@ void AScene::LateUpdate(float deltaTime) {}
 
 void AScene::Destroy() {}
 
-void AScene::AddModel() {}
+void AScene::AddModel(const AModel& model) {
+    m_SceneContext.m_Models.push_back(model);
+}
 
-void AScene::AddCamera() {}
+void AScene::AddCamera(const ACamera& camera) {
+    m_SceneContext.m_Cameras.push_back(camera);
+}

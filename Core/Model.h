@@ -4,25 +4,21 @@
 
 #pragma once
 
+#include "Material.h"
 #include "Mesh.h"
 #include "STL.h"
 #include "Transform.h"
-
-#include <Shader.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+struct FSceneContext;
 class AModel {
 public:
-    explicit AModel(const char* path, AShader shader);
+    explicit AModel(const char* path, IMaterial* material);
 
     void Update(float deltaTime);
-    void Draw();
+    void Draw(FSceneContext& sceneContext);
     void Destroy();
-
-    AShader& GetShader() {
-        return m_Shader;
-    }
 
     ATransform& GetTransform() {
         return m_Transform;
@@ -30,7 +26,7 @@ public:
 
 private:
     vector<AMesh> m_Meshes;
-    AShader m_Shader;
+    IMaterial* m_Material;
     ATransform m_Transform;
 
     void LoadModel(const string& path);

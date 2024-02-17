@@ -1,7 +1,6 @@
 #include "Camera.h"
 #include "Color.h"
 #include "DebugUI.h"
-#include "DirectionalLight.h"
 #include "GraphicsContext.h"
 #include "Input.h"
 #include "Resources.h"
@@ -9,6 +8,7 @@
 #include "Model.h"
 #include "PostProcessing.h"
 #include "Profiler.h"
+#include "Scene.h"
 #include "Shader.h"
 #include <fmt/format.h>
 
@@ -46,10 +46,8 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
-    bool m_ShowDebugOutput        = true;
-    AModel* m_Model               = nullptr;
-    ACamera* m_Camera             = nullptr;
-    ADirectionalLight* m_DirLight = nullptr;
+    bool m_ShowDebugOutput = true;
+    AScene* m_Scene        = nullptr;
 };
 
 void DemoApp::Startup() {
@@ -79,28 +77,21 @@ void DemoApp::Startup() {
     // ========================= //
     //  Initialize demo content  //
     // ========================= //
-    m_DirLight = new ADirectionalLight();
-    m_DirLight->GetTransform().Translate(0.f, 0.f, -2.f);
-    m_Camera = new ACamera(glm::vec3(0.f, 0.f, -5.f));
-    AShader modelShader(BuiltinShaders::BlinnPhong);
+    m_Scene = new AScene();
+    m_Scene->Initialize();
 
-    m_Model =
-      new AModel(Resources::GetResource(RES_3D_MODEL, "monk.fbx").c_str(),
-                 modelShader);
+    ACamera camera(glm::vec3(0.f, 0.f, -5.f));
+    camera.SetActive(true);
+    m_Scene->AddCamera(std::move(camera));
 
-    m_Model->GetTransform().Scale(0.01, 0.01, 0.01);
-    m_Model->GetShader().Use();
-    m_Model->GetShader().SetMat4(
-      "u_Projection",
-      ACamera::GetProjectionMatrix(45.f, Graphics::GetWindowAspect()));
-    m_Model->GetShader().SetMat4("u_View", m_Camera->GetViewMatrix());
-    m_Model->GetShader().SetMat4("u_Model",
-                                 m_Model->GetTransform().GetModelMatrix());
-    m_Model->GetShader().SetVec3("u_ObjectColor", {0.5f, 0.5f, 0.5f});
-    m_Model->GetShader().SetVec3("u_LightColor", m_DirLight->GetColor());
-    m_Model->GetShader().SetVec3("u_LightPosition",
-                                 m_DirLight->GetTransform().GetPosition());
-    m_Model->GetShader().SetVec3("u_ViewPosition", m_Camera->GetPosition());
+    auto gunMat = new Materials::BlinnPhong();
+    AModel portalGun(
+      Resources::GetResource(RES_3D_MODEL, "PortalGun.fbx").c_str(),
+      gunMat);
+    portalGun.GetTransform().Scale(0.5, 0.5, 0.5);
+    portalGun.GetTransform()
+      .SetPositionAndRotation(0.f, 0.f, 0.f, 0.f, 90.f, 0.f);
+    m_Scene->AddModel(std::move(portalGun));
 
     //==========================//
     // Grab GPU device metadata //
@@ -120,9 +111,8 @@ void DemoApp::Startup() {
 }
 
 void DemoApp::Cleanup() {
-    delete m_Camera;
-    m_Model->Destroy();
-    delete m_Model;
+    m_Scene->Destroy();
+    delete m_Scene;
     PostProcessing::Shutdown();
     DebugUI::Shutdown();
     Profiler::Shutdown();
@@ -133,20 +123,13 @@ bool DemoApp::IsDone() {
 }
 
 void DemoApp::Update(const float deltaTime) {
-    // Rotate our monk model
-    const auto rotationY = 50 * (glfwGetTime() * glm::radians(45.f));
-    m_Model->GetTransform().SetPositionAndRotation(
-      glm::vec3(0.f),
-      glm::vec3(0.f, rotationY, 0.f));
-    m_Model->Update(deltaTime);
-    m_DirLight->GetTransform().Update();
-
+    m_Scene->Update(deltaTime);
     DebugUI::Update(deltaTime);
     Profiler::Update();
 }
 
 void DemoApp::RenderScene() {
-    m_Model->Draw();
+    m_Scene->Render();
     PostProcessing::Render();
 }
 
@@ -156,7 +139,9 @@ void DemoApp::RenderUI() {
     }
 }
 
-void DemoApp::LateUpdate(float deltaTime) {}
+void DemoApp::LateUpdate(float deltaTime) {
+    m_Scene->LateUpdate(deltaTime);
+}
 
 static void SetWindowIcon() {
     GLFWimage appIcon[1];

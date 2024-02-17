@@ -3,21 +3,54 @@
 //
 
 #include "Model.h"
+
+#include "Camera.h"
+#include "GraphicsContext.h"
+#include "SceneContext.h"
+
 #include <assimp/postprocess.h>
 
-AModel::AModel(const char* path, const AShader shader) : m_Shader(shader) {
+AModel::AModel(const char* path, IMaterial* material) : m_Material(material) {
     LoadModel(path);
+    m_Material->Initialize();
 }
 
 void AModel::Update(float deltaTime) {
     m_Transform.Update();
-    m_Shader.Use();
-    m_Shader.SetMat4("u_Model", m_Transform.GetModelMatrix());
+    m_Material->Use();
+    m_Material->GetShader().SetMat4("u_Model", m_Transform.GetModelMatrix());
 }
 
-void AModel::Draw() {
+void AModel::Draw(FSceneContext& sceneContext) {
+    ACamera* activeCamera = nullptr;
+    for (auto& cam : sceneContext.m_Cameras) {
+        if (cam.GetActive()) {
+            activeCamera = &cam;
+        }
+    }
+
+    if (activeCamera) {
+        m_Material->GetShader().SetMat4(
+          "u_Projection",
+          activeCamera->GetProjectionMatrix(45.f, Graphics::GetWindowAspect()));
+        m_Material->GetShader().SetMat4("u_View",
+                                        activeCamera->GetViewMatrix());
+        m_Material->GetShader().SetMat4("u_Model",
+                                        m_Transform.GetModelMatrix());
+        m_Material->GetShader().SetVec3("u_LightColor",
+                                        sceneContext.m_Sun.GetColor());
+        m_Material->GetShader().SetVec3(
+          "u_LightPosition",
+          sceneContext.m_Sun.GetTransform().GetPosition());
+        m_Material->GetShader().SetVec3("u_ViewPosition",
+                                        activeCamera->GetPosition());
+
+        m_Material->UpdateUniforms();
+    }
+
     for (auto& mesh : m_Meshes) {
-        mesh.Draw(m_Shader);
+        m_Material->Use();
+        mesh.Draw();
     }
 }
 
@@ -25,6 +58,7 @@ void AModel::Destroy() {
     for (auto& mesh : m_Meshes) {
         mesh.Destroy();
     }
+    m_Material->Destroy();
 }
 
 void AModel::LoadModel(const string& path) {

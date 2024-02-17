@@ -16,8 +16,8 @@ public:
     void LateUpdate(float deltaTime);
     void Destroy();
 
-    void AddModel();
-    void AddCamera();
+    void AddModel(const AModel& model);
+    void AddCamera(const ACamera& camera);
 
     ADirectionalLight& GetSun() {
         return m_SceneContext.m_Sun;

@@ -23,6 +23,14 @@ public:
             float yaw,
             float pitch);
 
+    void SetActive(const bool active) {
+        m_IsActiveCamera = active;
+    }
+
+    bool GetActive() const {
+        return m_IsActiveCamera;
+    }
+
     glm::mat4 GetViewMatrix() const;
     static glm::mat4 GetProjectionMatrix(float fov, float aspect);
 
@@ -38,6 +46,7 @@ private:
     glm::vec3 m_WorldUp;
     float m_Yaw;
     float m_Pitch;
+    bool m_IsActiveCamera = false;
     // float m_FOV;
     // float m_AspectRatio;
 

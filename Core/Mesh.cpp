@@ -50,8 +50,7 @@ void AMesh::Initialize() {
     glBindVertexArray(0);
 }
 
-void AMesh::Draw(const AShader& shader) const {
-    shader.Use();
+void AMesh::Draw() const {
     glBindVertexArray(m_VAO);
     glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);

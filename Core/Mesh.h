@@ -27,7 +27,7 @@ public:
         Initialize();
     }
 
-    void Draw(const AShader& shader) const;
+    void Draw() const;
     void Destroy() const;
 
 private:
@@ -38,5 +38,4 @@ private:
     uint32_t m_EBO;
     vector<FVertex> m_Vertices;
     vector<uint32_t> m_Indices;
-    AShader* m_Shader;
 };

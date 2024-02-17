@@ -5,7 +5,6 @@
 #pragma once
 
 #include "STL.h"
-
 #include <Shader.h>
 
 /**
@@ -16,10 +15,14 @@ class IMaterial {
 public:
     virtual ~IMaterial() = default;
 
-    virtual void Initialize() = 0;
-    virtual void Destroy()    = 0;
-    virtual void Update()     = 0;
-    virtual void Draw()       = 0;
+    virtual void Initialize()     = 0;
+    virtual void Destroy()        = 0;
+    virtual void Use()            = 0;
+    virtual void UpdateUniforms() = 0;
+
+    AShader& GetShader() const {
+        return *m_Shader;
+    }
 
 protected:
     AShader* m_Shader = nullptr;
@@ -30,8 +33,8 @@ namespace Materials {
     public:
         void Initialize() override;
         void Destroy() override;
-        void Update() override;
-        void Draw() override;
+        void Use() override;
+        void UpdateUniforms() override;
 
     private:
         glm::vec3 m_DiffuseColor  = {0.5f, 0.5f, 0.5f};

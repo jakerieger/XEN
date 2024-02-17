@@ -4,22 +4,17 @@
 
 #include "Material.h"
 
-#include "Camera.h"
-#include "GraphicsContext.h"
-
 namespace Materials {
     void BlinnPhong::Initialize() {
-        m_Shader = new AShader(BuiltinShaders::BlinnPhong);
-        m_Shader->Use();
-        m_Shader->SetMat4(
-          "u_Projection",
-          ACamera::GetProjectionMatrix(45.f, Graphics::GetWindowAspect()));
+        this->m_Shader = new AShader(BuiltinShaders::BlinnPhong);
     }
 
-    void BlinnPhong::Draw() {}
-
-    void BlinnPhong::Update() {
+    void BlinnPhong::Use() {
         m_Shader->Use();
+    }
+
+    void BlinnPhong::UpdateUniforms() {
+        m_Shader->SetVec3("u_ObjectColor", m_DiffuseColor);
     }
 
     void BlinnPhong::Destroy() {
