@@ -13,6 +13,7 @@
 namespace DebugUI {
     float g_FPS;
     float g_FrameTime;
+    AScene* g_ActiveScene;
 
     void Initialize() {
         IMGUI_CHECKVERSION();
@@ -22,9 +23,10 @@ namespace DebugUI {
         ImGui_ImplOpenGL3_Init();
     }
 
-    void Update(float deltaTme) {
-        g_FPS       = 1.f / deltaTme;
-        g_FrameTime = (1.f / g_FPS) * 1000.f;  // in milliseconds
+    void Update(const float deltaTime, AScene* activeScene) {
+        g_FPS         = 1.f / deltaTime;
+        g_FrameTime   = (1.f / g_FPS) * 1000.f;  // in milliseconds
+        g_ActiveScene = activeScene;
     }
 
     void Draw() {
@@ -39,6 +41,14 @@ namespace DebugUI {
         ImGui::Text("Total Mem    : %0.2f MB", Profiler::TotalMemory / 1000);
         ImGui::Text("Used Mem     : %0.2f MB", Profiler::UsedMemory / 1000);
         ImGui::Text("Free Mem     : %0.2f MB", Profiler::FreeMemory / 1000);
+        ImGui::Separator();
+        ImGui::Text("Active Scene");
+        ImGui::Text("Name         : %s", g_ActiveScene->GetName().c_str());
+        ImGui::Text(
+          "Game Objects : %d",
+          static_cast<int>(g_ActiveScene->GetContext().m_GameObjects.size()));
+        ImGui::Text("Triangles    : %d",
+                    Profiler::GetTotalTriangles(g_ActiveScene));
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

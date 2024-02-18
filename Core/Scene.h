@@ -5,24 +5,55 @@
 #pragma once
 
 #include "SceneContext.h"
+#include "Camera.h"
+#include "STL.h"
 
-class AScene {
+class AScene final : public ILifetime {
 public:
-    AScene() = default;
+    explicit AScene(const string& name) : m_Name(name) {
+        Awake();
+    }
 
-    void Initialize();
-    void Update(float deltaTime);
+    void Awake() override;
+    void Start() override;
+    void Update(float deltaTime) override;
+    void LateUpdate() override;
+    void FixedUpdated() override;
+    void Destroyed() override;
+
     void Render();
-    void LateUpdate(float deltaTime);
-    void Destroy();
 
-    void AddModel(const AModel& model);
-    void AddCamera(const ACamera& camera);
+    void SetActive(const bool active) {
+        m_Active = active;
+    }
+
+    bool GetActive() const {
+        return m_Active;
+    }
+
+    string& GetName() {
+        return m_Name;
+    }
 
     ADirectionalLight& GetSun() {
         return m_SceneContext.m_Sun;
     }
 
+    static ACamera* GetActiveCamera(FSceneContext& context);
+
+    FSceneContext& GetContext() {
+        return m_SceneContext;
+    }
+
+    template<typename T>
+    void AddGameObject(T& gameObject) {
+        static_assert(std::is_base_of_v<IGameObject, T>,
+                      "T must be a subclass of IGameObject");
+        m_SceneContext.m_GameObjects.push_back(&gameObject);
+    }
+
 private:
     FSceneContext m_SceneContext;
+    string m_Name;
+    bool m_Active = false;
 };

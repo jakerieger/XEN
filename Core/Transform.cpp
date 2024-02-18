@@ -70,7 +70,7 @@ void ATransform::SetPositionAndRotation(const float posX,
     SetPositionAndRotation(pos, rot);
 }
 
-void ATransform::Update() {
+void ATransform::Update(float deltaTime, FSceneContext& sceneContext) {
     m_ModelMatrix = glm::mat4(1.0f);
     m_ModelMatrix = glm::translate(m_ModelMatrix, m_Position);
     m_ModelMatrix = glm::rotate(m_ModelMatrix,

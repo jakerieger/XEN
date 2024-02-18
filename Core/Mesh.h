@@ -30,6 +30,10 @@ public:
     void Draw() const;
     void Destroy() const;
 
+    uint32_t GetNumTriangles() const {
+        return static_cast<uint32_t>(m_Indices.size());
+    }
+
 private:
     void Initialize();
 

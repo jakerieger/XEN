@@ -5,4 +5,15 @@
 #pragma once
 #include "Lifetime.h"
 
-class IComponent : public ILifetime {};
+class IGameObject;
+struct FSceneContext;
+
+class IComponent : public ILifetime {
+public:
+    virtual void Awake(FSceneContext& sceneContext) {}
+    virtual void Start(FSceneContext& sceneContext) {}
+    virtual void Update(float deltaTime, FSceneContext& sceneContext) {}
+    virtual void LateUpdate(FSceneContext& sceneContext) {}
+    virtual void FixedUpdated(FSceneContext& sceneContext) {}
+    virtual void Destroyed(FSceneContext& sceneContext) {}
+};

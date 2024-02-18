@@ -4,13 +4,17 @@
 
 #pragma once
 
+#include "Component.h"
+
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 enum class EAxis : uint8_t { X, Y, Z };
 
-class ATransform {
+struct FSceneContext;
+
+class ATransform final : public IComponent {
 public:
     ATransform();
 
@@ -29,7 +33,8 @@ public:
                                 const glm::vec3& rotation);
     void SetPositionAndRotation(
       float posX, float posY, float posZ, float rotX, float rotY, float rotZ);
-    void Update();
+
+    void Update(float deltaTime, FSceneContext& sceneContext) override;
 
     glm::vec3 GetPosition() {
         return m_Position;

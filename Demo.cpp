@@ -1,53 +1,31 @@
-#include "Camera.h"
 #include "Color.h"
 #include "DebugUI.h"
 #include "GraphicsContext.h"
 #include "Input.h"
 #include "Resources.h"
 #include "GameApp.h"
-#include "Model.h"
-#include "PostProcessing.h"
-#include "Profiler.h"
-#include "Scene.h"
-#include "Shader.h"
+#include "Monke.h"
+
 #include <fmt/format.h>
 
 #include "stb_image.h"
 
-#define SCREEN_720P                                                            \
-    FSize {                                                                    \
-        1280, 720                                                              \
-    }
-#define SCREEN_792P                                                            \
-    FSize {                                                                    \
-        1408, 792                                                              \
-    }
-#define SCREEN_900P                                                            \
-    FSize {                                                                    \
-        1600, 900                                                              \
-    }
-#define SCREEN_1080P                                                           \
-    FSize {                                                                    \
-        1920, 1080                                                             \
-    }
+const FSize SCREEN_720P  = {1280, 720};
+const FSize SCREEN_792P  = {1408, 792};
+const FSize SCREEN_900P  = {1600, 900};
+const FSize SCREEN_1080P = {1920, 1080};
 
 class DemoApp final : public IGameApp {
 public:
     DemoApp() = default;
     void Startup() override;
     void Cleanup() override;
-    bool IsDone() override;
-    void Update(float deltaTime) override;
-    void LateUpdate(float deltaTime) override;
-    void RenderScene() override;
-    void RenderUI() override;
 
 private:
     //====================================//
     // Put application-specific data here //
     //====================================//
     bool m_ShowDebugOutput = true;
-    AScene* m_Scene        = nullptr;
 };
 
 void DemoApp::Startup() {
@@ -74,74 +52,27 @@ void DemoApp::Startup() {
         Graphics::ToggleVsync();
     });
 
-    // ========================= //
-    //  Initialize demo content  //
-    // ========================= //
-    m_Scene = new AScene();
-    m_Scene->Initialize();
+    const auto demoScene = new AScene("Demo");
+    const auto monke     = new Monke(0x00000002);
+    const auto mainCam   = new ACamera;
+    monke->GetTransform()->Scale(0.01, 0.01, 0.01);
+    mainCam->SetActive(true);
+    mainCam->GetTransform()
+      ->SetPositionAndRotation(0.f, 0.f, -5.f, 0.f, 0.f, 0.f);
+    demoScene->AddGameObject(*monke);
+    demoScene->AddGameObject(*mainCam);
+    demoScene->GetContext().m_Sun.GetTransform().SetPositionAndRotation(0.f,
+                                                                        0.f,
+                                                                        -5.f,
+                                                                        0.f,
+                                                                        0.f,
+                                                                        0.f);
 
-    ACamera camera(glm::vec3(0.f, 0.f, -5.f));
-    camera.SetActive(true);
-    m_Scene->AddCamera(std::move(camera));
-
-    auto gunMat = new Materials::BlinnPhong();
-    AModel portalGun(
-      Resources::GetResource(RES_3D_MODEL, "PortalGun.fbx").c_str(),
-      gunMat);
-    portalGun.GetTransform().Scale(0.5, 0.5, 0.5);
-    portalGun.GetTransform()
-      .SetPositionAndRotation(0.f, 0.f, 0.f, 0.f, 90.f, 0.f);
-    m_Scene->AddModel(std::move(portalGun));
-
-    //==========================//
-    // Grab GPU device metadata //
-    //==========================//
-    Profiler::Initialize();
-    Profiler::Start();
-
-    // ======================== //
-    //  Enable post processing  //
-    // ======================== //
-    PostProcessing::Initialize();
-
-    //==================//
-    // Initialize ImGui //
-    //==================//
-    DebugUI::Initialize();
+    AddScene(*demoScene);
+    LoadScene("Demo");
 }
 
-void DemoApp::Cleanup() {
-    m_Scene->Destroy();
-    delete m_Scene;
-    PostProcessing::Shutdown();
-    DebugUI::Shutdown();
-    Profiler::Shutdown();
-}
-
-bool DemoApp::IsDone() {
-    return glfwWindowShouldClose(Graphics::GetWindow());
-}
-
-void DemoApp::Update(const float deltaTime) {
-    m_Scene->Update(deltaTime);
-    DebugUI::Update(deltaTime);
-    Profiler::Update();
-}
-
-void DemoApp::RenderScene() {
-    m_Scene->Render();
-    PostProcessing::Render();
-}
-
-void DemoApp::RenderUI() {
-    if (m_ShowDebugOutput) {
-        DebugUI::Draw();
-    }
-}
-
-void DemoApp::LateUpdate(float deltaTime) {
-    m_Scene->LateUpdate(deltaTime);
-}
+void DemoApp::Cleanup() {}
 
 static void SetWindowIcon() {
     GLFWimage appIcon[1];
@@ -162,7 +93,7 @@ int main(int argc, char* argv[]) {
     Application::InitializeApp(app,
                                SCREEN_792P,
                                "GLEngine | DemoApp <OpenGL 4.6>");
-    SetWindowIcon();
+    // SetWindowIcon();
     Application::RunApp(app);
 
     return 0;

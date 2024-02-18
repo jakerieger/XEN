@@ -5,6 +5,7 @@
 #pragma once
 
 #include "STL.h"
+#include "Scene.h"
 
 namespace Profiler {
     extern string GpuVendor;
@@ -18,4 +19,6 @@ namespace Profiler {
     void Start();
     void Update();
     void Shutdown();
+
+    uint32_t GetTotalTriangles(AScene* scene);
 }  // namespace Profiler

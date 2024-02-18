@@ -3,6 +3,10 @@
 //
 
 #include "Profiler.h"
+
+#include "Drawable.h"
+#include "MeshRenderer.h"
+
 #include <glad/glad.h>
 
 namespace Profiler {
@@ -58,5 +62,21 @@ namespace Profiler {
         TotalMemory = 0.f;
         FreeMemory  = 0.f;
         UsedMemory  = 0.f;
+    }
+
+    uint32_t GetTotalTriangles(AScene* scene) {
+        uint32_t totalTris = 0;
+
+        for (const auto gameObjects = scene->GetContext().m_GameObjects;
+             const auto go : gameObjects) {
+            if (const auto drawable = dynamic_cast<IDrawable*>(go);
+                drawable && drawable->GetMeshRenderer()) {
+                for (auto& mesh : drawable->GetMeshRenderer()->GetMeshes()) {
+                    totalTris += mesh.GetNumTriangles();
+                }
+            }
+        }
+
+        return totalTris;
     }
 }  // namespace Profiler

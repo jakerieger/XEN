@@ -3,22 +3,42 @@
 //
 
 #pragma once
-#include "Color.h"
 #include "Size.h"
+#include "STL.h"
+#include "Scene.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 class IGameApp {
 public:
-    virtual ~IGameApp()                      = default;
-    virtual void Startup()                   = 0;
-    virtual void Cleanup()                   = 0;
-    virtual bool IsDone()                    = 0;
-    virtual void Update(float deltaTime)     = 0;
-    virtual void LateUpdate(float deltaTime) = 0;
-    virtual void RenderScene()               = 0;
-    virtual void RenderUI()                  = 0;
+    virtual ~IGameApp()    = default;
+    virtual void Startup() = 0;
+    virtual void Cleanup() = 0;
+
+    void AddScene(const AScene& scene);
+    void LoadScene(const string& name);
+
+    AScene* GetActiveScene() {
+        for (auto& scene : m_Scenes) {
+            if (scene.GetActive()) {
+                return &scene;
+            }
+        }
+        return nullptr;
+    }
+
+    AScene* GetScene(const string& name) {
+        for (auto& scene : m_Scenes) {
+            if (scene.GetName() == name) {
+                return &scene;
+            }
+        }
+        return nullptr;
+    }
+
+protected:
+    vector<AScene> m_Scenes;
 };
 
 namespace Application {

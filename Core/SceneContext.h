@@ -4,13 +4,11 @@
 
 #pragma once
 
-#include "Camera.h"
 #include "DirectionalLight.h"
-#include "Model.h"
+#include "GameObject.h"
 #include "STL.h"
 
 struct FSceneContext {
-    vector<AModel> m_Models;
-    vector<ACamera> m_Cameras;
+    vector<IGameObject*> m_GameObjects;
     ADirectionalLight m_Sun;
 };

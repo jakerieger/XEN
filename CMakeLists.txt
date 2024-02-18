@@ -5,6 +5,8 @@ project(GLEngine)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(BUILD_TESTS "Enable compiling tests as part of ALL target" OFF)
+
 include_directories(
         Core
         Vendor
@@ -50,8 +52,6 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Profiler.h
         Core/Mesh.cpp
         Core/Mesh.h
-        Core/Model.cpp
-        Core/Model.h
         Core/Camera.cpp
         Core/Camera.h
         Core/DebugUI.cpp
@@ -70,19 +70,28 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/GameObject.h
         Core/Component.cpp
         Core/Component.h
-        Core/Lifetime.h)
+        Core/Lifetime.h
+        Core/Drawable.h
+        Core/MeshRenderer.cpp
+        Core/MeshRenderer.h
+        Core/InputListener.h)
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp)
+file(GLOB DEMO_SRCS Demo.cpp Monke.cpp)
 if (WIN32)
-    add_executable(DemoApp Demo.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS} Windows/app.rc)
+    add_executable(DemoApp ${DEMO_SRCS} imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS} Windows/app.rc)
 else ()
-    add_executable(DemoApp Demo.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS})
+    add_executable(DemoApp ${DEMO_SRCS} imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp ${IMGUI_SRCS})
 endif ()
 target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL)
 
-find_package(Catch2 3 REQUIRED)
-add_executable(Tests Tests/test_color.cpp)
-target_link_libraries(Tests PRIVATE GLEngine-Core EASTL Catch2::Catch2WithMain)
+if (BUILD_TESTS)
+    find_package(Catch2 3 REQUIRED)
+    add_executable(Tests Tests/test_gameobject.cpp
+            Tests/test_scene.cpp
+    )
+    target_link_libraries(Tests PRIVATE GLEngine-Core EASTL Catch2::Catch2WithMain)
+endif ()
 
 file(COPY Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

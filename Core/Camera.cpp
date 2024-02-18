@@ -3,38 +3,35 @@
 //
 
 #include "Camera.h"
+#include "SceneContext.h"
 
-ACamera::ACamera(glm::vec3 pos, glm::vec3 up, float yaw, float pitch)
-    : m_Front({0.f, 0.f, -1.f}) {
-    m_Position = pos;
-    m_WorldUp  = up;
-    m_Yaw      = yaw;
-    m_Pitch    = pitch;
+ACamera::ACamera(glm::vec3 up, float yaw, float pitch)
+    : IGameObject(0), m_Front({0.f, 0.f, -1.f}) {
+    m_WorldUp = up;
+    m_Yaw     = yaw;
+    m_Pitch   = pitch;
     UpdateCameraVectors();
 }
 
-ACamera::ACamera(float posX,
-                 float posY,
-                 float posZ,
-                 float upX,
-                 float upY,
-                 float upZ,
-                 float yaw,
-                 float pitch)
-    : m_Front({0.f, 0.f, -1.f}) {
-    m_Position = {posX, posY, posZ};
-    m_WorldUp  = {upX, upY, upZ};
-    m_Yaw      = yaw;
-    m_Pitch    = pitch;
+ACamera::ACamera(float upX, float upY, float upZ, float yaw, float pitch)
+    : IGameObject(0), m_Front({0.f, 0.f, -1.f}) {
+    m_WorldUp = {upX, upY, upZ};
+    m_Yaw     = yaw;
+    m_Pitch   = pitch;
     UpdateCameraVectors();
 }
 
-glm::mat4 ACamera::GetViewMatrix() const {
-    return lookAt(m_Position, m_Front, m_Up);
+glm::mat4 ACamera::GetViewMatrix() {
+    return lookAt(GetTransform()->GetPosition(), m_Front, m_Up);
 }
 
 glm::mat4 ACamera::GetProjectionMatrix(const float fov, float aspect) {
     return glm::perspective(glm::radians(fov), aspect, 0.1f, 100.f);
+}
+
+void ACamera::Update(const float deltaTime, FSceneContext& sceneContext) {
+    IGameObject::Update(deltaTime, sceneContext);
+    UpdateCameraVectors();
 }
 
 void ACamera::UpdateCameraVectors() {

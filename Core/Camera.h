@@ -4,24 +4,19 @@
 
 #pragma once
 
+#include "GameObject.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "STL.h"
 
-class ACamera {
+struct FSceneContext;
+
+class ACamera final : public IGameObject {
 public:
-    explicit ACamera(glm::vec3 pos = {0.f, 0.f, 0.f},
-                     glm::vec3 up  = {0.f, 1.f, 0.f},
-                     float yaw     = -90.f,
-                     float pitch   = 0.f);
-    ACamera(float posX,
-            float posY,
-            float posZ,
-            float upX,
-            float upY,
-            float upZ,
-            float yaw,
-            float pitch);
+    explicit ACamera(glm::vec3 up = {0.f, 1.f, 0.f},
+                     float yaw    = -90.f,
+                     float pitch  = 0.f);
+    ACamera(float upX, float upY, float upZ, float yaw, float pitch);
 
     void SetActive(const bool active) {
         m_IsActiveCamera = active;
@@ -31,15 +26,12 @@ public:
         return m_IsActiveCamera;
     }
 
-    glm::mat4 GetViewMatrix() const;
+    glm::mat4 GetViewMatrix();
     static glm::mat4 GetProjectionMatrix(float fov, float aspect);
 
-    glm::vec3& GetPosition() {
-        return m_Position;
-    }
+    void Update(const float deltaTime, FSceneContext& sceneContext) override;
 
 private:
-    glm::vec3 m_Position;
     glm::vec3 m_Front;
     glm::vec3 m_Up;
     glm::vec3 m_Right;
