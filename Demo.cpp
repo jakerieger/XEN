@@ -54,13 +54,27 @@ void DemoApp::Startup() {
 
     const auto demoScene = new AScene("Demo");
     const auto monke     = new Monke(0x00000002);
+    const auto monke2    = new Monke(0x00000003);
+    const auto monke3    = new Monke(0x00000004);
     const auto mainCam   = new ACamera;
+    
     monke->GetTransform()->Scale(0.01, 0.01, 0.01);
+    
+    monke2->GetTransform()->Scale(0.01, 0.01, 0.01);
+    monke2->GetTransform()->Translate(-3, 0, 3);
+    
+    monke3->GetTransform()->Scale(0.01, 0.01, 0.01);
+    monke3->GetTransform()->Translate(3, 0, 3);
+    
     mainCam->SetActive(true);
     mainCam->GetTransform()
       ->SetPositionAndRotation(0.f, 0.f, -5.f, 0.f, 0.f, 0.f);
+      
     demoScene->AddGameObject(*monke);
+    demoScene->AddGameObject(*monke2);
+    demoScene->AddGameObject(*monke3);
     demoScene->AddGameObject(*mainCam);
+    
     demoScene->GetContext().m_Sun.GetTransform().SetPositionAndRotation(0.f,
                                                                         0.f,
                                                                         -5.f,
@@ -93,7 +107,7 @@ int main(int argc, char* argv[]) {
     Application::InitializeApp(app,
                                SCREEN_792P,
                                "GLEngine | DemoApp <OpenGL 4.6>");
-    // SetWindowIcon();
+    SetWindowIcon();
     Application::RunApp(app);
 
     return 0;

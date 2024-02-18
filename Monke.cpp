@@ -30,7 +30,7 @@ void Monke::Update(const float deltaTime, FSceneContext& sceneContext) {
     IGameObject::Update(deltaTime, sceneContext);
 
     const auto rotationY = 50 * (glfwGetTime() * glm::radians(45.f));
-    GetTransform()->SetPositionAndRotation(glm::vec3(0.f),
+    GetTransform()->SetPositionAndRotation(GetTransform()->GetPosition(),
                                            glm::vec3(0.f, rotationY, 0.f));
 
     m_MeshRenderer->Update(deltaTime, sceneContext);
