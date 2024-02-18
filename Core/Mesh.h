@@ -31,7 +31,7 @@ public:
     void Destroy() const;
 
     uint32_t GetNumTriangles() const {
-        return static_cast<uint32_t>(m_Indices.size());
+        return static_cast<uint32_t>(m_Indices.size() / 3);
     }
 
 private:
