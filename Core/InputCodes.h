@@ -135,7 +135,7 @@ namespace MouseButton {
     constexpr u32 Middle = 2;
     constexpr u32 Macro1 = 3;
     constexpr u32 Macro2 = 4;
-    constexpr u32 Macro4 = 5;
-    constexpr u32 Macro5 = 6;
-    constexpr u32 Macro6 = 7;
+    constexpr u32 Macro3 = 5;
+    constexpr u32 Macro4 = 6;
+    constexpr u32 Macro5 = 7;
 }  // namespace MouseButton
