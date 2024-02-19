@@ -14,6 +14,7 @@ namespace DebugUI {
     float g_FPS;
     float g_FrameTime;
     AScene* g_ActiveScene;
+    bool g_Visible = true;
 
     void Initialize() {
         IMGUI_CHECKVERSION();
@@ -30,33 +31,40 @@ namespace DebugUI {
     }
 
     void Draw() {
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        if (g_Visible) {
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
-        ImGui::Text("FPS          : %0.2f", g_FPS);
-        ImGui::Text("Time         : %0.2fms", g_FrameTime);
-        ImGui::Text("GPU Vendor   : %s", Profiler::GpuVendor.c_str());
-        ImGui::Text("GPU Renderer : %s", Profiler::GpuRenderer.c_str());
-        ImGui::Text("Total Mem    : %0.2f MB", Profiler::TotalMemory / 1000);
-        ImGui::Text("Used Mem     : %0.2f MB", Profiler::UsedMemory / 1000);
-        ImGui::Text("Free Mem     : %0.2f MB", Profiler::FreeMemory / 1000);
-        ImGui::Separator();
-        ImGui::Text("Active Scene");
-        ImGui::Text("Name         : %s", g_ActiveScene->GetName().c_str());
-        ImGui::Text(
-          "Game Objects : %d",
-          static_cast<int>(g_ActiveScene->GetContext().m_GameObjects.size()));
-        ImGui::Text("Triangles    : %d",
-                    Profiler::GetTotalTriangles(g_ActiveScene));
+            ImGui::Text("FPS          : %0.2f", g_FPS);
+            ImGui::Text("Time         : %0.2fms", g_FrameTime);
+            ImGui::Text("GPU Vendor   : %s", Profiler::GpuVendor.c_str());
+            ImGui::Text("GPU Renderer : %s", Profiler::GpuRenderer.c_str());
+            ImGui::Text("Total Mem    : %0.2f MB",
+                        Profiler::TotalMemory / 1000);
+            ImGui::Text("Used Mem     : %0.2f MB", Profiler::UsedMemory / 1000);
+            ImGui::Text("Free Mem     : %0.2f MB", Profiler::FreeMemory / 1000);
+            ImGui::Separator();
+            ImGui::Text("Active Scene");
+            ImGui::Text("Name         : %s", g_ActiveScene->GetName().c_str());
+            ImGui::Text("Game Objects : %d",
+                        static_cast<int>(
+                          g_ActiveScene->GetContext().m_GameObjects.size()));
+            ImGui::Text("Triangles    : %d",
+                        Profiler::GetTotalTriangles(g_ActiveScene));
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
     }
 
     void Shutdown() {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
+    }
+
+    void ToggleVisible() {
+        g_Visible = !g_Visible;
     }
 }  // namespace DebugUI

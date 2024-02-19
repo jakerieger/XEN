@@ -1,4 +1,5 @@
 #include "Color.h"
+#include "DebugUI.h"
 #include "GraphicsContext.h"
 #include "Resources.h"
 #include "GameApp.h"
@@ -67,6 +68,9 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
             break;
         case KeyCode::F11:
             Graphics::ToggleVsync();
+            break;
+        case KeyCode::F12:
+            DebugUI::ToggleVisible();
             break;
         case KeyCode::Tab:
             Graphics::ToggleWireframe();

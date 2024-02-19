@@ -10,4 +10,6 @@ namespace DebugUI {
     void Update(float deltaTime, AScene* activeScene);
     void Draw();
     void Shutdown();
+
+    void ToggleVisible();
 }  // namespace DebugUI
