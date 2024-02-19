@@ -3,13 +3,9 @@
 //
 
 #include "Monke.h"
-
-#include "Input.h"
 #include "InputCodes.h"
 #include "Resources.h"
 #include "SceneContext.h"
-
-#include <GLFW/glfw3.h>
 
 Monke::Monke(const string& name) : IGameObject(name) {
     m_MeshRenderer = new AMeshRenderer(

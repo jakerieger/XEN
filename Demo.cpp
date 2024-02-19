@@ -5,8 +5,6 @@
 #include "InputCodes.h"
 #include "Monke.h"
 
-#include "stb_image.h"
-
 const FSize SCREEN_720P  = {1280, 720};
 const FSize SCREEN_792P  = {1408, 792};
 const FSize SCREEN_900P  = {1600, 900};
