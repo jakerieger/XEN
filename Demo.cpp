@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Resources.h"
 #include "GameApp.h"
+#include "KeyCode.h"
 #include "Monke.h"
 
 #include <stduuid/uuid.h>
@@ -66,16 +67,16 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
 
     if (event.Action == GLFW_PRESS) {
         switch (event.KeyCode) {
-            case GLFW_KEY_ESCAPE:
+            case KeyCode::Escape:
                 Graphics::MarkWindowForClose();
                 break;
-            case GLFW_KEY_F10:
+            case KeyCode::F10:
                 Graphics::ToggleFullscreen();
                 break;
-            case GLFW_KEY_F11:
+            case KeyCode::F11:
                 Graphics::ToggleVsync();
                 break;
-            case GLFW_KEY_TAB:
+            case KeyCode::Tab:
                 Graphics::ToggleWireframe();
                 break;
             default:

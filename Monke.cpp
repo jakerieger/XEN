@@ -5,6 +5,7 @@
 #include "Monke.h"
 
 #include "Input.h"
+#include "KeyCode.h"
 #include "Resources.h"
 #include "SceneContext.h"
 
@@ -51,16 +52,16 @@ void Monke::OnKeyDown(FKeyEvent& event) {
 
     if (event.Modifiers == 0 && event.Action == GLFW_PRESS)
         switch (event.KeyCode) {
-            case GLFW_KEY_W:
+            case KeyCode::W:
                 GetTransform()->Translate(0.f, 0.f, 0.25f);
                 break;
-            case GLFW_KEY_S:
+            case KeyCode::S:
                 GetTransform()->Translate(0.f, 0.f, -0.25f);
                 break;
-            case GLFW_KEY_A:
+            case KeyCode::A:
                 GetTransform()->Translate(0.25f, 0.f, 0.f);
                 break;
-            case GLFW_KEY_D:
+            case KeyCode::D:
                 GetTransform()->Translate(-0.25f, 0.f, 0.f);
                 break;
             default:

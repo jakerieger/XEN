@@ -83,6 +83,7 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/MeshRenderer.h
         Core/InputListener.h
         Core/InputEvents.h
+        Core/KeyCode.h
 )
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx stduuid)
 
