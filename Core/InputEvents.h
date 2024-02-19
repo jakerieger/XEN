@@ -4,16 +4,18 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "Types.h"
 
 struct FKeyEvent {
-    uint32_t KeyCode;
-    uint32_t Action;
-    uint32_t Modifiers;
+    u32 KeyCode;
+    u32 Modifiers;
 };
 
 struct FMouseEvent {
-    uint32_t Button;
+    u32 Button;
 };
 
-struct FScrollEvent {};
+struct FScrollEvent {
+    f64 X;
+    f64 Y;
+};

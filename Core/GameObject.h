@@ -4,16 +4,21 @@
 
 #pragma once
 #include "Component.h"
+#include "Input.h"
+#include "InputListener.h"
 #include "Lifetime.h"
 #include "STL.h"
 #include "Transform.h"
 
 struct FSceneContext;
 
-class IGameObject : public ILifetime {
+class IGameObject : public ILifetime,
+                    public IInputListener {
 public:
     explicit IGameObject(const string& name)
-        : m_Name(name), m_Transform(ATransform()) {}
+        : m_Name(name), m_Transform(ATransform()) {
+        Input::RegisterListener(this);
+    }
 
     string GetName() const {
         return m_Name;

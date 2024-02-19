@@ -5,9 +5,8 @@
 #pragma once
 #include "InputListener.h"
 #include "STL.h"
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
-using TCallbackFunction = void (*)();
 
 namespace Input {
     void Initialize(GLFWwindow* window);

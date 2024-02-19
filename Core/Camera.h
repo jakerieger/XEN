@@ -16,13 +16,15 @@ public:
     explicit ACamera(const string& name,
                      glm::vec3 up = {0.f, 1.f, 0.f},
                      float yaw    = -90.f,
-                     float pitch  = 0.f);
+                     float pitch  = 0.f,
+                     float fov    = 45.f);
     ACamera(const string& name,
             float upX,
             float upY,
             float upZ,
             float yaw,
-            float pitch);
+            float pitch,
+            float fov = 45.f);
 
     void SetActive(const bool active) {
         m_IsActiveCamera = active;
@@ -33,9 +35,10 @@ public:
     }
 
     glm::mat4 GetViewMatrix();
-    static glm::mat4 GetProjectionMatrix(float fov, float aspect);
+    glm::mat4 GetProjectionMatrix(float aspect) const;
 
     void Update(const float deltaTime, FSceneContext& sceneContext) override;
+    void OnScroll(FScrollEvent& event) override;
 
 private:
     glm::vec3 m_Front;
@@ -45,7 +48,7 @@ private:
     float m_Yaw;
     float m_Pitch;
     bool m_IsActiveCamera = false;
-    // float m_FOV;
+    float m_FOV;
     // float m_AspectRatio;
 
     void UpdateCameraVectors();

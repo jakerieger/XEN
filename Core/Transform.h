@@ -5,12 +5,13 @@
 #pragma once
 
 #include "Component.h"
+#include "Types.h"
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-enum class EAxis : uint8_t { X, Y, Z };
+enum class EAxis : u8 { X, Y, Z };
 
 struct FSceneContext;
 
@@ -42,13 +43,15 @@ public:
 
     void Update(float deltaTime, FSceneContext& sceneContext) override;
 
-    glm::vec3 GetPosition() {
+    glm::vec3 GetPosition() const {
         return m_Position;
     }
-    glm::vec3 GetRotation() {
+
+    glm::vec3 GetRotation() const {
         return m_Rotation;
     }
-    glm::vec3 GetScale() {
+
+    glm::vec3 GetScale() const {
         return m_Scale;
     }
 

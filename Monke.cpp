@@ -5,7 +5,7 @@
 #include "Monke.h"
 
 #include "Input.h"
-#include "KeyCode.h"
+#include "InputCodes.h"
 #include "Resources.h"
 #include "SceneContext.h"
 
@@ -18,7 +18,6 @@ Monke::Monke(const string& name) : IGameObject(name) {
       GetTransform());
 
     this->SetMeshRenderer(m_MeshRenderer);
-    Input::RegisterListener(this);
 }
 
 void Monke::Draw(FSceneContext& sceneContext) {
@@ -50,21 +49,20 @@ void Monke::Destroyed(FSceneContext& sceneContext) {
 void Monke::OnKeyDown(FKeyEvent& event) {
     IInputListener::OnKeyDown(event);
 
-    if (event.Modifiers == 0 && event.Action == GLFW_PRESS)
-        switch (event.KeyCode) {
-            case KeyCode::W:
-                GetTransform()->Translate(0.f, 0.f, 0.25f);
-                break;
-            case KeyCode::S:
-                GetTransform()->Translate(0.f, 0.f, -0.25f);
-                break;
-            case KeyCode::A:
-                GetTransform()->Translate(0.25f, 0.f, 0.f);
-                break;
-            case KeyCode::D:
-                GetTransform()->Translate(-0.25f, 0.f, 0.f);
-                break;
-            default:
-                break;
-        }
+    switch (event.KeyCode) {
+        case KeyCode::W:
+            GetTransform()->Translate(0.f, 0.f, 0.25f);
+            break;
+        case KeyCode::S:
+            GetTransform()->Translate(0.f, 0.f, -0.25f);
+            break;
+        case KeyCode::A:
+            GetTransform()->Translate(0.25f, 0.f, 0.f);
+            break;
+        case KeyCode::D:
+            GetTransform()->Translate(-0.25f, 0.f, 0.f);
+            break;
+        default:
+            break;
+    }
 }

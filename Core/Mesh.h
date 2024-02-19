@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <stdint.h>
+#include "Types.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include "STL.h"
@@ -21,7 +21,7 @@ struct FVertex {
  */
 class AMesh {
 public:
-    AMesh(const vector<FVertex>& vertices, const vector<uint32_t>& indices)
+    AMesh(const vector<FVertex>& vertices, const vector<u32>& indices)
         : m_VAO(0), m_VBO(0), m_EBO(0), m_Vertices(vertices),
           m_Indices(indices) {
         Initialize();
@@ -30,16 +30,16 @@ public:
     void Draw() const;
     void Destroy() const;
 
-    uint32_t GetNumTriangles() const {
-        return static_cast<uint32_t>(m_Indices.size() / 3);
+    u32 GetNumTriangles() const {
+        return static_cast<u32>(m_Indices.size() / 3);
     }
 
 private:
     void Initialize();
 
-    uint32_t m_VAO;
-    uint32_t m_VBO;
-    uint32_t m_EBO;
+    u32 m_VAO;
+    u32 m_VBO;
+    u32 m_EBO;
     vector<FVertex> m_Vertices;
-    vector<uint32_t> m_Indices;
+    vector<u32> m_Indices;
 };

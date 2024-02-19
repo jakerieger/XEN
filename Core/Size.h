@@ -4,12 +4,11 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "Types.h"
 
 struct FSize {
     FSize() = default;
-    FSize(const uint32_t width, const uint32_t height)
-        : Width(width), Height(height) {}
-    uint32_t Width;
-    uint32_t Height;
+    FSize(const u32 width, const u32 height) : Width(width), Height(height) {}
+    u32 Width;
+    u32 Height;
 };

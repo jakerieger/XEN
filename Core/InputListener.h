@@ -13,5 +13,5 @@ public:
     virtual void OnMouseUp(FMouseEvent& event) {}
     virtual void OnKeyDown(FKeyEvent& event) {}
     virtual void OnKeyUp(FKeyEvent& event) {}
-    virtual void OnScroll(FScrollEvent* event) {}
+    virtual void OnScroll(FScrollEvent& event) {}
 };

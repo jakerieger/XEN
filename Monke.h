@@ -7,11 +7,9 @@
 #include "Drawable.h"
 #include "GameObject.h"
 #include "MeshRenderer.h"
-#include "InputListener.h"
 
 class Monke final : public IGameObject,
-                    public IDrawable,
-                    public IInputListener {
+                    public IDrawable {
 public:
     explicit Monke(const string& name);
 

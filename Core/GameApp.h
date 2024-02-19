@@ -6,13 +6,16 @@
 #include "Size.h"
 #include "STL.h"
 #include "Scene.h"
+#include "Input.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-class IGameApp {
+class IGameApp : public IInputListener {
 public:
-    virtual ~IGameApp()    = default;
+    IGameApp() {
+        Input::RegisterListener(this);
+    }
     virtual void Startup() = 0;
     virtual void Cleanup() = 0;
 

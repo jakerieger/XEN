@@ -4,21 +4,21 @@
 
 #include "Color.h"
 
-FColor::FColor(const uint32_t color) : Red(0.f), Green(0.f), Blue(0.f) {
+FColor::FColor(const u32 color) : Red(0.f), Green(0.f), Blue(0.f) {
     Utilities::HexToRGBAf(color, Red, Green, Blue, Alpha);
 }
 
-FColor::FColor(const uint8_t r,
-               const uint8_t g,
-               const uint8_t b,
-               const uint8_t a) {
+FColor::FColor(const u8 r,
+               const u8 g,
+               const u8 b,
+               const u8 a) {
     Red   = static_cast<float>(r) / 255.f;
     Green = static_cast<float>(g) / 255.f;
     Blue  = static_cast<float>(b) / 255.f;
     Alpha = static_cast<float>(a) / 255.f;
 }
 
-FColor::FColor(const uint8_t v) {
+FColor::FColor(const u8 v) {
     Red   = static_cast<float>(v) / 255.f;
     Green = static_cast<float>(v) / 255.f;
     Blue  = static_cast<float>(v) / 255.f;

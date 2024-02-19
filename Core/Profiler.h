@@ -20,5 +20,5 @@ namespace Profiler {
     void Update();
     void Shutdown();
 
-    uint32_t GetTotalTriangles(AScene* scene);
+    u32 GetTotalTriangles(AScene* scene);
 }  // namespace Profiler

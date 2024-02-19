@@ -33,7 +33,6 @@ find_package(assimp CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(msgpack-cxx CONFIG REQUIRED)
-find_package(stduuid CONFIG REQUIRED)
 add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Vendor/stb_image.cpp
         Core/GameApp.cpp
@@ -83,13 +82,14 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/MeshRenderer.h
         Core/InputListener.h
         Core/InputEvents.h
-        Core/KeyCode.h
+        Core/InputCodes.h
+        Core/Types.h
 )
-target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx stduuid)
+target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp)
 add_executable(DemoApp Demo.cpp Monke.cpp ${IMGUI_SRCS} ${RC_FILE})
-target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL stduuid)
+target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL)
 
 if (BUILD_TESTS)
     find_package(Catch2 3 REQUIRED)

@@ -29,7 +29,7 @@ void AMeshRenderer::Draw(FSceneContext& sceneContext) {
     if (activeCamera) {
         m_Material->GetShader().SetMat4(
           "u_Projection",
-          activeCamera->GetProjectionMatrix(45.f, Graphics::GetWindowAspect()));
+          activeCamera->GetProjectionMatrix(Graphics::GetWindowAspect()));
         m_Material->GetShader().SetMat4("u_View",
                                         activeCamera->GetViewMatrix());
         m_Material->GetShader().SetMat4("u_Model",
@@ -76,21 +76,21 @@ void AMeshRenderer::LoadModel(const string& path) {
 }
 
 void AMeshRenderer::ProcessNode(const aiNode* node, const aiScene* scene) {
-    for (uint32_t i = 0; i < node->mNumMeshes; i++) {
+    for (u32 i = 0; i < node->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         m_Meshes.push_back(ProcessMesh(mesh, scene));
     }
 
-    for (uint32_t i = 0; i < node->mNumChildren; i++) {
+    for (u32 i = 0; i < node->mNumChildren; i++) {
         ProcessNode(node->mChildren[i], scene);
     }
 }
 
 AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene) {
     vector<FVertex> vertices;
-    vector<uint32_t> indices;
+    vector<u32> indices;
 
-    for (uint32_t i = 0; i < mesh->mNumVertices; i++) {
+    for (u32 i = 0; i < mesh->mNumVertices; i++) {
         FVertex vertex;
 
         glm::vec3 position;
@@ -117,9 +117,9 @@ AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene) {
         vertices.push_back(vertex);
     }
 
-    for (uint32_t i = 0; i < mesh->mNumFaces; i++) {
+    for (u32 i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
-        for (uint32_t j = 0; j < face.mNumIndices; j++) {
+        for (u32 j = 0; j < face.mNumIndices; j++) {
             indices.push_back(face.mIndices[j]);
         }
     }

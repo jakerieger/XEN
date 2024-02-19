@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <stdint.h>
+#include "Types.h"
 #include <glm/glm.hpp>
 #include "STL.h"
 
@@ -49,7 +49,7 @@ public:
 
 private:
     void CompileShaders(const FShaderSource& sources);
-    uint32_t m_ShaderProgram {};
+    u32 m_ShaderProgram {};
 };
 
 namespace BuiltinShaders {

@@ -6,7 +6,7 @@ void* operator new[](size_t size,
                      unsigned debugFlags,
                      const char* file,
                      int line) {
-    return new uint8_t[size];
+    return new u8[size];
 }
 
 #ifdef _WIN32
@@ -20,10 +20,17 @@ void* operator new[](size_t size,
                      unsigned int,
                      char const*,
                      int) {
-    return new uint8_t[size];
+    return new u8[size];
 }
 #else
-void* operator new[](size_t size, unsigned long, unsigned long, char const*, int, unsigned int, char const*, int) {
-    return new uint8_t[size];
+void* operator new[](size_t size,
+                     unsigned long,
+                     unsigned long,
+                     char const*,
+                     int,
+                     unsigned int,
+                     char const*,
+                     int) {
+    return new u8[size];
 }
 #endif

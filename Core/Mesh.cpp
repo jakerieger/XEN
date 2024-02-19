@@ -20,7 +20,7 @@ void AMesh::Initialize() {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 m_Indices.size() * sizeof(uint32_t),
+                 m_Indices.size() * sizeof(u32),
                  m_Indices.data(),
                  GL_STATIC_DRAW);
 

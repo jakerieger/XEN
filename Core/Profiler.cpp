@@ -64,8 +64,8 @@ namespace Profiler {
         UsedMemory  = 0.f;
     }
 
-    uint32_t GetTotalTriangles(AScene* scene) {
-        uint32_t totalTris = 0;
+    u32 GetTotalTriangles(AScene* scene) {
+        u32 totalTris = 0;
 
         for (const auto gameObjects = scene->GetContext().m_GameObjects;
              const auto go : gameObjects) {

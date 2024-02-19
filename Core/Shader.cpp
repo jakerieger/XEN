@@ -10,7 +10,7 @@
 
 #include "glad/glad.h"
 
-static cpp::result<void, const char*> CheckCompileErrors(uint32_t shader,
+static cpp::result<void, const char*> CheckCompileErrors(u32 shader,
                                                          string type) {
     int success;
     char infoLog[1024];
@@ -127,7 +127,7 @@ void AShader::CompileShaders(const FShaderSource& sources) {
     const auto vertexCode   = sources.m_Vertex.c_str();
     const auto fragmentCode = sources.m_Fragment.c_str();
 
-    const uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    const u32 vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexCode, nullptr);
     glCompileShader(vertexShader);
     if (const auto vertCompileResult = CheckCompileErrors(vertexShader, "VS");
@@ -138,7 +138,7 @@ void AShader::CompileShaders(const FShaderSource& sources) {
         return;
     }
 
-    const uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    const u32 fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentCode, nullptr);
     glCompileShader(fragmentShader);
     if (const auto fragCompileResult = CheckCompileErrors(fragmentShader, "FS");

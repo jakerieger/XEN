@@ -1,12 +1,10 @@
 #include "Color.h"
 #include "GraphicsContext.h"
-#include "Input.h"
 #include "Resources.h"
 #include "GameApp.h"
-#include "KeyCode.h"
+#include "InputCodes.h"
 #include "Monke.h"
 
-#include <stduuid/uuid.h>
 #include "stb_image.h"
 
 const FSize SCREEN_720P  = {1280, 720};
@@ -14,8 +12,7 @@ const FSize SCREEN_792P  = {1408, 792};
 const FSize SCREEN_900P  = {1600, 900};
 const FSize SCREEN_1080P = {1920, 1080};
 
-class DemoApp final : public IGameApp,
-                      public IInputListener {
+class DemoApp final : public IGameApp {
 public:
     DemoApp() = default;
     void Startup() override;
@@ -30,8 +27,6 @@ private:
 };
 
 void DemoApp::Startup() {
-    Input::RegisterListener(this);
-
     const auto demoScene = new AScene("Demo");
     const auto monke     = new Monke("monke1");
     const auto monke2    = new Monke("monke2");
@@ -65,23 +60,21 @@ void DemoApp::Cleanup() {}
 void DemoApp::OnKeyDown(FKeyEvent& event) {
     IInputListener::OnKeyDown(event);
 
-    if (event.Action == GLFW_PRESS) {
-        switch (event.KeyCode) {
-            case KeyCode::Escape:
-                Graphics::MarkWindowForClose();
-                break;
-            case KeyCode::F10:
-                Graphics::ToggleFullscreen();
-                break;
-            case KeyCode::F11:
-                Graphics::ToggleVsync();
-                break;
-            case KeyCode::Tab:
-                Graphics::ToggleWireframe();
-                break;
-            default:
-                break;
-        }
+    switch (event.KeyCode) {
+        case KeyCode::Escape:
+            Graphics::MarkWindowForClose();
+            break;
+        case KeyCode::F10:
+            Graphics::ToggleFullscreen();
+            break;
+        case KeyCode::F11:
+            Graphics::ToggleVsync();
+            break;
+        case KeyCode::Tab:
+            Graphics::ToggleWireframe();
+            break;
+        default:
+            break;
     }
 }
 
