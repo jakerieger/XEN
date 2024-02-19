@@ -1,9 +1,12 @@
 #pragma once
 
+#include "GraphicsContext.h"
 #include "Types.h"
 #include "STL.h"
 
 #include <result.hpp>
+#include <stb_image.h>
+#include <GLFW/glfw3.h>
 
 namespace Utilities {
     inline void
@@ -31,5 +34,13 @@ namespace Utilities {
             return contents;
         }
         return cpp::fail(1);
+    }
+
+    inline void SetWindowIcon(const char* file) {
+        GLFWimage appIcon;
+        appIcon.pixels =
+          stbi_load(file, &appIcon.width, &appIcon.height, nullptr, 4);
+        glfwSetWindowIcon(Graphics::GetWindow(), 1, &appIcon);
+        stbi_image_free(appIcon.pixels);
     }
 }  // namespace Utilities

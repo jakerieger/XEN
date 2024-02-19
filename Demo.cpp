@@ -78,18 +78,6 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
     }
 }
 
-static void SetWindowIcon() {
-    GLFWimage appIcon[1];
-    appIcon[0].pixels =
-      stbi_load(Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str(),
-                &appIcon[0].width,
-                &appIcon[0].height,
-                0,
-                4);
-    glfwSetWindowIcon(Graphics::GetWindow(), 1, appIcon);
-    stbi_image_free(appIcon[0].pixels);
-}
-
 int main(int argc, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
@@ -97,7 +85,8 @@ int main(int argc, char* argv[]) {
     Application::InitializeApp(app,
                                SCREEN_792P,
                                "GLEngine | DemoApp <OpenGL 4.6>");
-    SetWindowIcon();
+    Utilities::SetWindowIcon(
+      Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str());
     Application::RunApp(app);
 
     return 0;
