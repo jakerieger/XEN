@@ -5,16 +5,17 @@
 #include "Camera.h"
 #include "SceneContext.h"
 
-ACamera::ACamera(glm::vec3 up, float yaw, float pitch)
-    : IGameObject(0), m_Front({0.f, 0.f, -1.f}) {
+ACamera::ACamera(const string& name, glm::vec3 up, float yaw, float pitch)
+    : IGameObject(name), m_Front({0.f, 0.f, -1.f}) {
     m_WorldUp = up;
     m_Yaw     = yaw;
     m_Pitch   = pitch;
     UpdateCameraVectors();
 }
 
-ACamera::ACamera(float upX, float upY, float upZ, float yaw, float pitch)
-    : IGameObject(0), m_Front({0.f, 0.f, -1.f}) {
+ACamera::ACamera(
+  const string& name, float upX, float upY, float upZ, float yaw, float pitch)
+    : IGameObject(name), m_Front({0.f, 0.f, -1.f}) {
     m_WorldUp = {upX, upY, upZ};
     m_Yaw     = yaw;
     m_Pitch   = pitch;

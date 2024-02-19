@@ -6,19 +6,25 @@
 
 #include "Drawable.h"
 #include "GameObject.h"
-#include "InputListener.h"
 #include "MeshRenderer.h"
+#include "InputListener.h"
 
 class Monke final : public IGameObject,
                     public IDrawable,
                     public IInputListener {
 public:
-    explicit Monke(const uint32_t id);
+    explicit Monke(const string& name);
 
+    // IDrawable
     void Draw(FSceneContext& sceneContext) override;
+
+    // IGameObject
     void Start(FSceneContext& sceneContext) override;
     void Update(float deltaTime, FSceneContext& sceneContext) override;
     void Destroyed(FSceneContext& sceneContext) override;
+
+    // IInputListener
+    void OnKeyDown(FKeyEvent& event) override;
 
     AMeshRenderer* m_MeshRenderer = nullptr;
 };

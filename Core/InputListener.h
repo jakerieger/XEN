@@ -2,7 +2,16 @@
 // Created by conta on 2/18/2024.
 //
 
-#ifndef INPUTLISTENER_H
-#define INPUTLISTENER_H
+#pragma once
+#include "InputEvents.h"
 
-#endif //INPUTLISTENER_H
+class IInputListener {
+public:
+    virtual ~IInputListener() = default;
+
+    virtual void OnMouseDown(FMouseEvent& event) {}
+    virtual void OnMouseUp(FMouseEvent& event) {}
+    virtual void OnKeyDown(FKeyEvent& event) {}
+    virtual void OnKeyUp(FKeyEvent& event) {}
+    virtual void OnScroll(FScrollEvent* event) {}
+};

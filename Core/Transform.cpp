@@ -70,6 +70,30 @@ void ATransform::SetPositionAndRotation(const float posX,
     SetPositionAndRotation(pos, rot);
 }
 
+void ATransform::SetPosition(const glm::vec3& pos) {
+    m_Position = pos;
+}
+
+void ATransform::SetPosition(float x, float y, float z) {
+    m_Position = {x, y, z};
+}
+
+void ATransform::SetRotation(const glm::vec3& rot) {
+    m_Rotation = rot;
+}
+
+void ATransform::SetRotation(float x, float y, float z) {
+    m_Rotation = {x, y, z};
+}
+
+void ATransform::SetScale(const glm::vec3& scale) {
+    m_Scale = scale;
+}
+
+void ATransform::SetScale(float x, float y, float z) {
+    m_Scale = {x, y, z};
+}
+
 void ATransform::Update(float deltaTime, FSceneContext& sceneContext) {
     m_ModelMatrix = glm::mat4(1.0f);
     m_ModelMatrix = glm::translate(m_ModelMatrix, m_Position);

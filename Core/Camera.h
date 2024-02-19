@@ -13,10 +13,16 @@ struct FSceneContext;
 
 class ACamera final : public IGameObject {
 public:
-    explicit ACamera(glm::vec3 up = {0.f, 1.f, 0.f},
+    explicit ACamera(const string& name,
+                     glm::vec3 up = {0.f, 1.f, 0.f},
                      float yaw    = -90.f,
                      float pitch  = 0.f);
-    ACamera(float upX, float upY, float upZ, float yaw, float pitch);
+    ACamera(const string& name,
+            float upX,
+            float upY,
+            float upZ,
+            float yaw,
+            float pitch);
 
     void SetActive(const bool active) {
         m_IsActiveCamera = active;

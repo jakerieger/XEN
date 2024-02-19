@@ -5,39 +5,25 @@
 #include "glad/glad.h"
 #include "Input.h"
 
+#include "InputListener.h"
+
 #include <utility>
 #define GLFW_KEY_NONE 0
 
 namespace Input {
-    struct FInputAction {
-        explicit
-        FInputAction(const int key, const int action, function<void()> callback)
-            : Key(key), Action(action), Modifier(GLFW_KEY_NONE),
-              Callback(std::move(callback)) {}
-        explicit FInputAction(const int key,
-                              const int action,
-                              const int modifier,
-                              function<void()> callback)
-            : Key(key), Action(action), Modifier(modifier),
-              Callback(std::move(callback)) {}
-
-        int Key;
-        int Action;
-        int Modifier;
-        function<void()> Callback;
-    };
-
-    vector<FInputAction> g_Actions;
+    vector<IInputListener*> g_Listeners;
 
     void KeyCallback(GLFWwindow* window,
                      const int key,
                      int scancode,
                      const int action,
                      const int mods) {
-        for (auto& [Key, Action, Modifier, Callback] : g_Actions) {
-            if (Key == key && Action == action && Modifier == mods) {
-                Callback();
-            }
+        FKeyEvent event;
+        event.KeyCode   = key;
+        event.Action    = action;
+        event.Modifiers = mods;
+        for (const auto& listener : g_Listeners) {
+            listener->OnKeyDown(event);
         }
     }
 
@@ -45,17 +31,8 @@ namespace Input {
         glfwSetKeyCallback(window, KeyCallback);
     }
 
-    void AddAction(const int key,
-                   const int action,
-                   const function<void()>& callback) {
-        g_Actions.push_back(FInputAction {key, action, callback});
-    }
-
-    void AddAction(const int key,
-                   const int action,
-                   const int modifier,
-                   const function<void()>& callback) {
-        g_Actions.push_back(FInputAction {key, action, modifier, callback});
+    void RegisterListener(IInputListener* listener) {
+        g_Listeners.push_back(listener);
     }
 
 }  // namespace Input

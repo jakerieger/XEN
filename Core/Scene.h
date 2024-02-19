@@ -23,6 +23,8 @@ public:
 
     void Render();
 
+    static ACamera* GetActiveCamera(FSceneContext& context);
+
     void SetActive(const bool active) {
         m_Active = active;
     }
@@ -39,11 +41,40 @@ public:
         return m_SceneContext.m_Sun;
     }
 
-    static ACamera* GetActiveCamera(FSceneContext& context);
-
     FSceneContext& GetContext() {
         return m_SceneContext;
     }
+
+    template<typename T>
+    static vector<T*> FindAllGameObjectsOf(FSceneContext& context) {
+        static_assert(std::is_base_of_v<IGameObject, T>,
+                      "T must be a subclass of IGameObject");
+        vector<T*> found;
+        for (auto& go : context.m_GameObjects) {
+            if (auto casted = dynamic_cast<T*>(go); casted) {
+                found.push_back(casted);
+            }
+        }
+
+        return found;
+    }
+
+    template<typename T>
+    static T* FindGameObjectOf(FSceneContext& context, const string& name) {
+        static_assert(std::is_base_of_v<IGameObject, T>,
+                      "T must be a subclass of IGameObject");
+        for (auto& go : context.m_GameObjects) {
+            if (auto casted = dynamic_cast<T*>(go);
+                casted && casted->GetName() == name) {
+                return casted;
+            }
+        }
+
+        return nullptr;
+    }
+
+    static IGameObject* FindGameObject(FSceneContext& context,
+                                       const string& name);
 
     template<typename T>
     void AddGameObject(T& gameObject) {

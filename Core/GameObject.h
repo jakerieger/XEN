@@ -12,11 +12,11 @@ struct FSceneContext;
 
 class IGameObject : public ILifetime {
 public:
-    explicit IGameObject(const uint32_t id)
-        : m_ID(id), m_Transform(ATransform()) {}
+    explicit IGameObject(const string& name)
+        : m_Name(name), m_Transform(ATransform()) {}
 
-    uint32_t GetID() const {
-        return m_ID;
+    string GetName() const {
+        return m_Name;
     }
 
     virtual void Awake(FSceneContext& sceneContext) {
@@ -47,7 +47,12 @@ public:
         return &m_Transform;
     }
 
+    template<typename T>
+    T* Cast() {
+        return dynamic_cast<T*>(this);
+    }
+
 protected:
-    uint32_t m_ID;
+    string m_Name;
     ATransform m_Transform;
 };

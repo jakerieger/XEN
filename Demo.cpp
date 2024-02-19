@@ -1,13 +1,11 @@
 #include "Color.h"
-#include "DebugUI.h"
 #include "GraphicsContext.h"
 #include "Input.h"
 #include "Resources.h"
 #include "GameApp.h"
 #include "Monke.h"
 
-#include <fmt/format.h>
-
+#include <stduuid/uuid.h>
 #include "stb_image.h"
 
 const FSize SCREEN_720P  = {1280, 720};
@@ -15,11 +13,13 @@ const FSize SCREEN_792P  = {1408, 792};
 const FSize SCREEN_900P  = {1600, 900};
 const FSize SCREEN_1080P = {1920, 1080};
 
-class DemoApp final : public IGameApp {
+class DemoApp final : public IGameApp,
+                      public IInputListener {
 public:
     DemoApp() = default;
     void Startup() override;
     void Cleanup() override;
+    void OnKeyDown(FKeyEvent& event) override;
 
 private:
     //====================================//
@@ -29,64 +29,60 @@ private:
 };
 
 void DemoApp::Startup() {
-    // =============================== //
-    //  Bind some default key actions  //
-    // =============================== //
-    Input::AddAction(GLFW_KEY_ESCAPE, GLFW_PRESS, [&]() {
-        Graphics::MarkWindowForClose();
-    });
-
-    Input::AddAction(GLFW_KEY_TAB, GLFW_PRESS, [&]() {
-        Graphics::ToggleWireframe();
-    });
-
-    Input::AddAction(GLFW_KEY_F12, GLFW_PRESS, [&]() {
-        m_ShowDebugOutput = !m_ShowDebugOutput;
-    });
-
-    Input::AddAction(GLFW_KEY_F10, GLFW_PRESS, [&]() {
-        Graphics::ToggleFullscreen();
-    });
-
-    Input::AddAction(GLFW_KEY_F11, GLFW_PRESS, [&]() {
-        Graphics::ToggleVsync();
-    });
+    Input::RegisterListener(this);
 
     const auto demoScene = new AScene("Demo");
-    const auto monke     = new Monke(0x00000002);
-    const auto monke2    = new Monke(0x00000003);
-    const auto monke3    = new Monke(0x00000004);
-    const auto mainCam   = new ACamera;
-    
-    monke->GetTransform()->Scale(0.01, 0.01, 0.01);
-    
-    monke2->GetTransform()->Scale(0.01, 0.01, 0.01);
-    monke2->GetTransform()->Translate(-3, 0, 3);
-    
-    monke3->GetTransform()->Scale(0.01, 0.01, 0.01);
-    monke3->GetTransform()->Translate(3, 0, 3);
-    
+    const auto monke     = new Monke("monke1");
+    const auto monke2    = new Monke("monke2");
+    const auto monke3    = new Monke("monke3");
+    const auto mainCam   = new ACamera("MainCamera");
+
+    monke->GetTransform()->SetScale(0.01, 0.01, 0.01);
+
+    monke2->GetTransform()->SetScale(0.01, 0.01, 0.01);
+    monke2->GetTransform()->SetPosition(-3, 0, 3);
+
+    monke3->GetTransform()->SetScale(0.01, 0.01, 0.01);
+    monke3->GetTransform()->SetPosition(3, 0, 3);
+
     mainCam->SetActive(true);
-    mainCam->GetTransform()
-      ->SetPositionAndRotation(0.f, 0.f, -5.f, 0.f, 0.f, 0.f);
-      
+    mainCam->GetTransform()->SetPosition(0.f, 0.f, -5.f);
+
     demoScene->AddGameObject(*monke);
     demoScene->AddGameObject(*monke2);
     demoScene->AddGameObject(*monke3);
     demoScene->AddGameObject(*mainCam);
-    
-    demoScene->GetContext().m_Sun.GetTransform().SetPositionAndRotation(0.f,
-                                                                        0.f,
-                                                                        -5.f,
-                                                                        0.f,
-                                                                        0.f,
-                                                                        0.f);
+
+    demoScene->GetSun().GetTransform().SetPosition(0.f, 0.f, -5.f);
 
     AddScene(*demoScene);
     LoadScene("Demo");
 }
 
 void DemoApp::Cleanup() {}
+
+void DemoApp::OnKeyDown(FKeyEvent& event) {
+    IInputListener::OnKeyDown(event);
+
+    if (event.Action == GLFW_PRESS) {
+        switch (event.KeyCode) {
+            case GLFW_KEY_ESCAPE:
+                Graphics::MarkWindowForClose();
+                break;
+            case GLFW_KEY_F10:
+                Graphics::ToggleFullscreen();
+                break;
+            case GLFW_KEY_F11:
+                Graphics::ToggleVsync();
+                break;
+            case GLFW_KEY_TAB:
+                Graphics::ToggleWireframe();
+                break;
+            default:
+                break;
+        }
+    }
+}
 
 static void SetWindowIcon() {
     GLFWimage appIcon[1];

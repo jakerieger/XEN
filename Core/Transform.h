@@ -33,6 +33,12 @@ public:
                                 const glm::vec3& rotation);
     void SetPositionAndRotation(
       float posX, float posY, float posZ, float rotX, float rotY, float rotZ);
+    void SetPosition(const glm::vec3& pos);
+    void SetPosition(float x, float y, float z);
+    void SetRotation(const glm::vec3& rot);
+    void SetRotation(float x, float y, float z);
+    void SetScale(const glm::vec3& scale);
+    void SetScale(float x, float y, float z);
 
     void Update(float deltaTime, FSceneContext& sceneContext) override;
 

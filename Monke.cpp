@@ -3,18 +3,21 @@
 //
 
 #include "Monke.h"
+
+#include "Input.h"
 #include "Resources.h"
 #include "SceneContext.h"
 
 #include <GLFW/glfw3.h>
 
-Monke::Monke(const uint32_t id) : IGameObject(id) {
+Monke::Monke(const string& name) : IGameObject(name) {
     m_MeshRenderer = new AMeshRenderer(
       Resources::GetResource(RES_3D_MODEL, "monk.fbx").c_str(),
       new Materials::BlinnPhong(),
       GetTransform());
 
     this->SetMeshRenderer(m_MeshRenderer);
+    Input::RegisterListener(this);
 }
 
 void Monke::Draw(FSceneContext& sceneContext) {
@@ -41,4 +44,26 @@ void Monke::Destroyed(FSceneContext& sceneContext) {
     m_MeshRenderer->Destroyed(sceneContext);
 
     delete m_MeshRenderer;
+}
+
+void Monke::OnKeyDown(FKeyEvent& event) {
+    IInputListener::OnKeyDown(event);
+
+    if (event.Modifiers == 0 && event.Action == GLFW_PRESS)
+        switch (event.KeyCode) {
+            case GLFW_KEY_W:
+                GetTransform()->Translate(0.f, 0.f, 0.25f);
+                break;
+            case GLFW_KEY_S:
+                GetTransform()->Translate(0.f, 0.f, -0.25f);
+                break;
+            case GLFW_KEY_A:
+                GetTransform()->Translate(0.25f, 0.f, 0.f);
+                break;
+            case GLFW_KEY_D:
+                GetTransform()->Translate(-0.25f, 0.f, 0.f);
+                break;
+            default:
+                break;
+        }
 }
