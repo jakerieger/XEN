@@ -2,10 +2,7 @@
 // Created by conta on 2/18/2024.
 //
 
-#pragma once
+#ifndef INPUTLISTENER_H
+#define INPUTLISTENER_H
 
-class IInputListener {
-public:
-    virtual ~IInputListener() = default;
-    void BindAction() {}
-};
+#endif //INPUTLISTENER_H
