@@ -3,7 +3,7 @@
 //
 
 #include "Scene.h"
-#include "Drawable.h"
+#include "Interfaces/Drawable.h"
 
 void AScene::Awake() {
     for (const auto& go : m_SceneContext.m_GameObjects) {

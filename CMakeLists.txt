@@ -5,13 +5,8 @@ project(GLEngine)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(BUILD_TESTS "Enable compiling tests as part of ALL target" OFF)
-
-if (WIN32)
-    set(RC_FILE Windows/app.rc)
-else ()
-    set(RC_FILE "")
-endif ()
+option(BUILD_TESTS "Build unit tests" OFF)
+option(BUILD_EXAMPLES "Build example projects" ON)
 
 include_directories(
         Core
@@ -33,8 +28,14 @@ find_package(assimp CONFIG REQUIRED)
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(msgpack-cxx CONFIG REQUIRED)
-add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
+
+file(GLOB IMGUI_SRCS imgui/*.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp)
+
+add_library(GLEngine-Core STATIC
+        ${IMGUI_SRCS}
+        Vendor/glad.c
         Vendor/stb_image.cpp
+        Core/Shader.cpp
         Core/GameApp.cpp
         Core/GameApp.h
         Core/GraphicsContext.cpp
@@ -72,24 +73,18 @@ add_library(GLEngine-Core STATIC Core/Shader.cpp Vendor/glad.c
         Core/Scene.h
         Core/SceneContext.cpp
         Core/SceneContext.h
-        Core/GameObject.cpp
-        Core/GameObject.h
-        Core/Component.cpp
-        Core/Component.h
-        Core/Lifetime.h
-        Core/Drawable.h
+        Core/Interfaces/GameObject.h
+        Core/Interfaces/Component.h
+        Core/Interfaces/Lifetime.h
+        Core/Interfaces/Drawable.h
         Core/MeshRenderer.cpp
         Core/MeshRenderer.h
-        Core/InputListener.h
+        Core/Interfaces/InputListener.h
         Core/InputEvents.h
         Core/InputCodes.h
         Core/Types.h
 )
 target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
-
-file(GLOB IMGUI_SRCS imgui/*.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp)
-add_executable(DemoApp Demo.cpp Monke.cpp ${IMGUI_SRCS} ${RC_FILE})
-target_link_libraries(DemoApp PRIVATE GLEngine-Core EASTL)
 
 if (BUILD_TESTS)
     find_package(Catch2 3 REQUIRED)
@@ -99,4 +94,9 @@ if (BUILD_TESTS)
     target_link_libraries(Tests PRIVATE GLEngine-Core EASTL Catch2::Catch2WithMain)
 endif ()
 
-file(COPY Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+if (BUILD_EXAMPLES)
+    add_subdirectory(Examples/ModelLoading)
+endif ()
+
+# Put active project(s) in this file
+include(Projects.cmake)

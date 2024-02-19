@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "Lifetime.h"
+#include "Interfaces/Lifetime.h"
 
 class IGameObject;
 struct FSceneContext;

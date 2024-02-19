@@ -4,7 +4,7 @@
 
 #include "Profiler.h"
 
-#include "Drawable.h"
+#include "Interfaces/Drawable.h"
 #include "MeshRenderer.h"
 
 #include <glad/glad.h>

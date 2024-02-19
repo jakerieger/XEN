@@ -5,7 +5,7 @@
 #pragma once
 
 #include "DirectionalLight.h"
-#include "GameObject.h"
+#include "Interfaces/GameObject.h"
 #include "STL.h"
 
 struct FSceneContext {

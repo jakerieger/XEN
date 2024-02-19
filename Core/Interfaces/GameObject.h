@@ -3,10 +3,10 @@
 //
 
 #pragma once
-#include "Component.h"
+#include "Interfaces/Component.h"
 #include "Input.h"
-#include "InputListener.h"
-#include "Lifetime.h"
+#include "Interfaces/InputListener.h"
+#include "Interfaces/Lifetime.h"
 #include "STL.h"
 #include "Transform.h"
 

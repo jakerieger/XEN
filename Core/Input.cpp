@@ -3,7 +3,7 @@
 //
 
 #include "Input.h"
-#include "InputListener.h"
+#include "Interfaces/InputListener.h"
 
 #define GLFW_KEY_NONE 0
 

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Component.h"
+#include "Interfaces/Component.h"
 #include "Material.h"
 #include "Mesh.h"
 #include "STL.h"

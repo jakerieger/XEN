@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "GameObject.h"
+#include "Interfaces/GameObject.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

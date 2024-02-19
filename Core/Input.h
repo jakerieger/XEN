@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "InputListener.h"
+#include "Interfaces/InputListener.h"
 #include "STL.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

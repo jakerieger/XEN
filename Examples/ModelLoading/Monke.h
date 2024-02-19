@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "Drawable.h"
-#include "GameObject.h"
+#include "Interfaces/Drawable.h"
+#include "Interfaces/GameObject.h"
 #include "MeshRenderer.h"
 
 class Monke final : public IGameObject,
