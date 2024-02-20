@@ -1,5 +1,6 @@
 #include "Color.h"
 #include "DebugUI.h"
+#include "Floor.h"
 #include "GraphicsContext.h"
 #include "Resources.h"
 #include "GameApp.h"
@@ -22,35 +23,24 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
-    bool m_ShowDebugOutput = true;
 };
 
 void DemoApp::Startup() {
-    const auto demoScene = new AScene("Demo");
-    const auto monke     = new Monke("monke1");
-    const auto monke2    = new Monke("monke2");
-    const auto monke3    = new Monke("monke3");
-    const auto mainCam   = new ACamera("MainCamera");
+    auto demoScene = make_unique<AScene>("Demo");
+    auto floor     = IGameObject::Create<Floor>("Floor");
+    auto monke     = IGameObject::Create<Monke>("Monke");
+    auto mainCam   = IGameObject::Create<ACamera>("MainCamera");
 
-    monke->GetTransform()->SetScale(0.01, 0.01, 0.01);
-
-    monke2->GetTransform()->SetScale(0.01, 0.01, 0.01);
-    monke2->GetTransform()->SetPosition(-3, 0, 3);
-
-    monke3->GetTransform()->SetScale(0.01, 0.01, 0.01);
-    monke3->GetTransform()->SetPosition(3, 0, 3);
-
+    floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
     mainCam->SetActive(true);
     mainCam->GetTransform()->SetPosition(0.f, 0.f, -5.f);
-
-    demoScene->AddGameObject(*monke);
-    demoScene->AddGameObject(*monke2);
-    demoScene->AddGameObject(*monke3);
-    demoScene->AddGameObject(*mainCam);
-
     demoScene->GetSun().GetTransform().SetPosition(0.f, 0.f, -5.f);
 
-    AddScene(*demoScene);
+    demoScene->AddGameObject(floor);
+    demoScene->AddGameObject(monke);
+    demoScene->AddGameObject(mainCam);
+
+    AddScene(move(demoScene));
     LoadScene("Demo");
 }
 
@@ -80,7 +70,7 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;

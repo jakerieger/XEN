@@ -16,11 +16,10 @@ struct FSceneContext;
 
 class AMeshRenderer final : public IComponent {
 public:
-    explicit
-    AMeshRenderer(const char* path, IMaterial* material, ATransform* transform);
+    explicit AMeshRenderer(const char* path, unique_ptr<IMaterial>& material);
 
     void Update(float deltaTime, FSceneContext& sceneContext) override;
-    void Draw(FSceneContext& sceneContext);
+    void Draw(FSceneContext& sceneContext, const ATransform* transform);
     void Destroyed(FSceneContext& sceneContext) override;
 
     vector<AMesh>& GetMeshes() {
@@ -29,8 +28,7 @@ public:
 
 private:
     vector<AMesh> m_Meshes;
-    IMaterial* m_Material;
-    ATransform* m_Transform;
+    unique_ptr<IMaterial> m_Material;
 
 private:
     void LoadModel(const string& path);

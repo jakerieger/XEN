@@ -7,22 +7,23 @@
 #include "Resources.h"
 #include "SceneContext.h"
 
-Monke::Monke(const string& name) : IGameObject(name) {
-    m_MeshRenderer = new AMeshRenderer(
-      Resources::GetResource(RES_3D_MODEL, "monk.fbx").c_str(),
-      new Materials::BlinnPhong(),
-      GetTransform());
+#include "STL.h"
 
-    this->SetMeshRenderer(m_MeshRenderer);
+Monke::Monke(const string& name) : IGameObject(name) {
+    auto mat = IMaterial::Create<Materials::BlinnPhong>();
+
+    m_MonkeMesh = make_unique<AMeshRenderer>(
+      Resources::GetResource(RES_3D_MODEL, "Monke.fbx").c_str(),
+      mat);
 }
 
 void Monke::Draw(FSceneContext& sceneContext) {
-    m_MeshRenderer->Draw(sceneContext);
+    m_MonkeMesh->Draw(sceneContext, GetTransform());
 }
 
 void Monke::Start(FSceneContext& sceneContext) {
     IGameObject::Start(sceneContext);
-    m_MeshRenderer->Start(sceneContext);
+    m_MonkeMesh->Start(sceneContext);
 }
 
 void Monke::Update(const float deltaTime, FSceneContext& sceneContext) {
@@ -32,14 +33,12 @@ void Monke::Update(const float deltaTime, FSceneContext& sceneContext) {
     GetTransform()->SetPositionAndRotation(GetTransform()->GetPosition(),
                                            glm::vec3(0.f, rotationY, 0.f));
 
-    m_MeshRenderer->Update(deltaTime, sceneContext);
+    m_MonkeMesh->Update(deltaTime, sceneContext);
 }
 
 void Monke::Destroyed(FSceneContext& sceneContext) {
     IGameObject::Destroyed(sceneContext);
-    m_MeshRenderer->Destroyed(sceneContext);
-
-    delete m_MeshRenderer;
+    m_MonkeMesh->Destroyed(sceneContext);
 }
 
 void Monke::OnKeyDown(FKeyEvent& event) {

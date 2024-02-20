@@ -5,9 +5,10 @@
 #include "Material.h"
 
 namespace Materials {
-    void BlinnPhong::Initialize() {
-        this->m_Shader = new AShader(BuiltinShaders::BlinnPhong);
-    }
+    BlinnPhong::BlinnPhong()
+        : IMaterial(make_unique<AShader>(BuiltinShaders::BlinnPhong)) {}
+
+    void BlinnPhong::Initialize() {}
 
     void BlinnPhong::Use() {
         m_Shader->Use();
@@ -17,7 +18,20 @@ namespace Materials {
         m_Shader->SetVec3("u_ObjectColor", m_DiffuseColor);
     }
 
-    void BlinnPhong::Destroy() {
-        delete m_Shader;
+    void BlinnPhong::Destroy() {}
+
+    Unlit::Unlit() : IMaterial(make_unique<AShader>(BuiltinShaders::Unlit)) {}
+
+    void Unlit::Initialize() {}
+
+    void Unlit::Use() {
+        m_Shader->Use();
     }
+
+    void Unlit::UpdateUniforms() {
+        m_Shader->SetVec3("u_ObjectColor", m_Color);
+    }
+
+    void Unlit::Destroy() {}
+
 }  // namespace Materials

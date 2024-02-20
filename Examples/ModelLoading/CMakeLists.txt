@@ -22,7 +22,9 @@ endif ()
 
 find_package(EASTL CONFIG REQUIRED)
 
-add_executable(ModelLoading main.cpp Monke.cpp ${RC_FILE})
+add_executable(ModelLoading main.cpp Monke.cpp ${RC_FILE}
+        Floor.cpp
+        Floor.h)
 target_link_libraries(ModelLoading PRIVATE GLEngine-Core EASTL)
 
 file(COPY ../../Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

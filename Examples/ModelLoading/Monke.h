@@ -24,5 +24,5 @@ public:
     // IInputListener
     void OnKeyDown(FKeyEvent& event) override;
 
-    AMeshRenderer* m_MeshRenderer = nullptr;
+    unique_ptr<AMeshRenderer> m_MonkeMesh;
 };

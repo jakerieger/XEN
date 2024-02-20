@@ -10,9 +10,7 @@
 
 class AScene final : public ILifetime {
 public:
-    explicit AScene(const string& name) : m_Name(name) {
-        Awake();
-    }
+    explicit AScene(const string& name) : m_Name(name) {}
 
     void Awake() override;
     void Start() override;
@@ -51,7 +49,7 @@ public:
                       "T must be a subclass of IGameObject");
         vector<T*> found;
         for (auto& go : context.m_GameObjects) {
-            if (auto casted = dynamic_cast<T*>(go); casted) {
+            if (auto casted = dynamic_cast<T*>(go.get()); casted) {
                 found.push_back(casted);
             }
         }
@@ -64,7 +62,7 @@ public:
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
         for (auto& go : context.m_GameObjects) {
-            if (auto casted = dynamic_cast<T*>(go);
+            if (auto casted = dynamic_cast<T*>(go.get());
                 casted && casted->GetName() == name) {
                 return casted;
             }
@@ -77,10 +75,10 @@ public:
                                        const string& name);
 
     template<typename T>
-    void AddGameObject(T& gameObject) {
+    void AddGameObject(unique_ptr<T>& gameObject) {
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
-        m_SceneContext.m_GameObjects.push_back(&gameObject);
+        m_SceneContext.m_GameObjects.push_back(move(gameObject));
     }
 
 private:

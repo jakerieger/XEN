@@ -38,7 +38,6 @@ void AScene::FixedUpdated() {
 void AScene::Destroyed() {
     for (const auto& go : m_SceneContext.m_GameObjects) {
         go->Destroyed(m_SceneContext);
-        delete go;
     }
 }
 
@@ -66,7 +65,7 @@ IGameObject* AScene::FindGameObject(FSceneContext& context,
                                     const string& name) {
     for (const auto& go : context.m_GameObjects) {
         if (go->GetName() == name) {
-            return go;
+            return go.get();
         }
     }
 

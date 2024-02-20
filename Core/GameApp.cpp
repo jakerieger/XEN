@@ -75,8 +75,8 @@ namespace Application {
     }
 }  // namespace Application
 
-void IGameApp::AddScene(const AScene& scene) {
-    m_Scenes.push_back(scene);
+void IGameApp::AddScene(unique_ptr<AScene> scene) {
+    m_Scenes.push_back(move(scene));
 }
 
 void IGameApp::LoadScene(const string& name) {

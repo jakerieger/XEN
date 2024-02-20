@@ -13,6 +13,7 @@
  */
 class IMaterial {
 public:
+    explicit IMaterial(unique_ptr<AShader> shader) : m_Shader(move(shader)) {}
     virtual ~IMaterial() = default;
 
     virtual void Initialize()     = 0;
@@ -20,17 +21,23 @@ public:
     virtual void Use()            = 0;
     virtual void UpdateUniforms() = 0;
 
-    AShader& GetShader() const {
-        return *m_Shader;
+    AShader* GetShader() const {
+        return m_Shader.get();
+    }
+
+    template<typename T>
+    static unique_ptr<IMaterial> Create() {
+        return unique_ptr<IMaterial>(new T);
     }
 
 protected:
-    AShader* m_Shader = nullptr;
+    unique_ptr<AShader> m_Shader;
 };
 
 namespace Materials {
     class BlinnPhong final : public IMaterial {
     public:
+        BlinnPhong();
         void Initialize() override;
         void Destroy() override;
         void Use() override;
@@ -41,4 +48,17 @@ namespace Materials {
         glm::vec3 m_SpecularColor = {1.f, 1.f, 1.f};
         float m_SpecularStrength  = 1.f;
     };
+
+    class Unlit final : public IMaterial {
+    public:
+        Unlit();
+        void Initialize() override;
+        void Destroy() override;
+        void Use() override;
+        void UpdateUniforms() override;
+
+    private:
+        glm::vec3 m_Color = {1.f, 0.f, 0.f};
+    };
+
 }  // namespace Materials

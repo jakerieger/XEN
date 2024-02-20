@@ -67,15 +67,15 @@ namespace Profiler {
     u32 GetTotalTriangles(AScene* scene) {
         u32 totalTris = 0;
 
-        for (const auto gameObjects = scene->GetContext().m_GameObjects;
-             const auto go : gameObjects) {
-            if (const auto drawable = dynamic_cast<IDrawable*>(go);
-                drawable && drawable->GetMeshRenderer()) {
-                for (auto& mesh : drawable->GetMeshRenderer()->GetMeshes()) {
-                    totalTris += mesh.GetNumTriangles();
-                }
-            }
-        }
+        // for (auto gameObjects = scene->GetContext().m_GameObjects;
+        //      auto go : gameObjects) {
+        //     if (const auto drawable = dynamic_cast<IDrawable*>(go.get());
+        //         drawable && drawable->GetMeshRenderer()) {
+        //         for (auto& mesh : drawable->GetMeshRenderer()->GetMeshes()) {
+        //             totalTris += mesh.GetNumTriangles();
+        //         }
+        //     }
+        // }
 
         return totalTris;
     }

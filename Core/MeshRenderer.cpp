@@ -11,10 +11,8 @@
 
 static AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-AMeshRenderer::AMeshRenderer(const char* path,
-                             IMaterial* material,
-                             ATransform* transform)
-    : m_Material(material), m_Transform(transform) {
+AMeshRenderer::AMeshRenderer(const char* path, unique_ptr<IMaterial>& material)
+    : m_Material(move(material)) {
     LoadModel(path);
     m_Material->Initialize();
 }
@@ -23,23 +21,25 @@ void AMeshRenderer::Update(const float deltaTime, FSceneContext& sceneContext) {
     IComponent::Update(deltaTime, sceneContext);
 }
 
-void AMeshRenderer::Draw(FSceneContext& sceneContext) {
+void AMeshRenderer::Draw(FSceneContext& sceneContext,
+                         const ATransform* transform) {
     ACamera* activeCamera = AScene::GetActiveCamera(sceneContext);
 
+    m_Material->Use();
     if (activeCamera) {
-        m_Material->GetShader().SetMat4(
+        m_Material->GetShader()->SetMat4(
           "u_Projection",
           activeCamera->GetProjectionMatrix(Graphics::GetWindowAspect()));
-        m_Material->GetShader().SetMat4("u_View",
-                                        activeCamera->GetViewMatrix());
-        m_Material->GetShader().SetMat4("u_Model",
-                                        m_Transform->GetModelMatrix());
-        m_Material->GetShader().SetVec3("u_LightColor",
-                                        sceneContext.m_Sun.GetColor());
-        m_Material->GetShader().SetVec3(
+        m_Material->GetShader()->SetMat4("u_View",
+                                         activeCamera->GetViewMatrix());
+        m_Material->GetShader()->SetMat4("u_Model",
+                                         transform->GetModelMatrix());
+        m_Material->GetShader()->SetVec3("u_LightColor",
+                                         sceneContext.m_Sun.GetColor());
+        m_Material->GetShader()->SetVec3(
           "u_LightPosition",
           sceneContext.m_Sun.GetTransform().GetPosition());
-        m_Material->GetShader().SetVec3(
+        m_Material->GetShader()->SetVec3(
           "u_ViewPosition",
           activeCamera->GetTransform()->GetPosition());
 
@@ -47,7 +47,6 @@ void AMeshRenderer::Draw(FSceneContext& sceneContext) {
     }
 
     for (auto& mesh : m_Meshes) {
-        m_Material->Use();
         mesh.Draw();
     }
 }
