@@ -1,8 +1,8 @@
 """
-Script for creating new GLEngine projects.
+Script for creating new XEN projects.
 
 Projects are created in a "Projects" subdirectory of
-GLEngine's source for simplicity's sake
+XEN's source for simplicity's sake
 """
 
 import os
@@ -51,7 +51,7 @@ endif ()
 find_package(EASTL CONFIG REQUIRED)
 
 add_executable({name} main.cpp)
-target_link_libraries({name} PRIVATE GLEngine-Core EASTL)
+target_link_libraries({name} PRIVATE XEN-Core EASTL)
 
 file(COPY ../../Resources DESTINATION "${{CMAKE_CURRENT_BINARY_DIR}}")
 '''.format(name=project_name)
@@ -112,4 +112,4 @@ with open(os.path.join(project_dir, "main.cpp"), "w") as main_cpp:
 print("\nProject '{}' created successfully!".format(project_name))
 print("In order to build this project, you need to add the following line to Projects.cmake:")
 print("\n    add_subdirectory(Projects/{})\n".format(project_name))
-print("Then you can reconfigure GLEngine and select '{}' as your build target.".format(project_name))
+print("Then you can reconfigure XEN and select '{}' as your build target.".format(project_name))

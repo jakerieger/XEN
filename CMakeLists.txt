@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(GLEngine)
+project(XEN)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -31,7 +31,7 @@ find_package(msgpack-cxx CONFIG REQUIRED)
 
 file(GLOB IMGUI_SRCS imgui/*.cpp imgui/backends/imgui_impl_opengl3.cpp imgui/backends/imgui_impl_glfw.cpp)
 
-add_library(GLEngine-Core STATIC
+add_library(XEN-Core STATIC
         ${IMGUI_SRCS}
         Vendor/glad.c
         Vendor/stb_image.cpp
@@ -84,14 +84,14 @@ add_library(GLEngine-Core STATIC
         Core/InputCodes.h
         Core/Types.h
 )
-target_link_libraries(GLEngine-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
+target_link_libraries(XEN-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 
 if (BUILD_TESTS)
     find_package(Catch2 3 REQUIRED)
     add_executable(Tests Tests/test_gameobject.cpp
             Tests/test_scene.cpp
     )
-    target_link_libraries(Tests PRIVATE GLEngine-Core EASTL Catch2::Catch2WithMain)
+    target_link_libraries(Tests PRIVATE XEN-Core EASTL Catch2::Catch2WithMain)
 endif ()
 
 if (BUILD_EXAMPLES)

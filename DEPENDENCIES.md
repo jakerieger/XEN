@@ -2,15 +2,15 @@
 
 ## ⚠️ Necessary
 
-GLEngine relies on several third-party libraries to handle many tasks like model loading and UI rendering.
-Here's a list of all the necessary 3rd party dependencies needed to build GLEngine.
+XEN relies on several third-party libraries to handle many tasks like model loading and UI rendering.
+Here's a list of all the necessary 3rd party dependencies needed to build XEN.
 
 - [GLFW](https://github.com/glfw/glfw) - Cross-platform window management
 - [glad](https://glad.dav1d.de/) - Modern OpenGL loader
 - [Open**GL** **M**athematics (glm)](https://github.com/g-truc/glm) - Performance-optimized linear algebra library
 - [Assimp](https://github.com/assimp/assimp) - 3D model loading
 - [EASTL](https://github.com/electronicarts/EASTL) - Performance-optimized **S**tandard **T**emplate **L**ibrary.
-  *Entirely replaces the std STL in GLEngine.* See [Using EASTL](#-using-eastl) for more information.
+  *Entirely replaces the std STL in XEN.* See [Using EASTL](#-using-eastl) for more information.
 - [fmtlib](https://github.com/fmtlib/fmt) - Advanced string formatting
 - [stb_image](https://github.com/nothings/stb) - Image loading
 - [result](https://github.com/bitwizeshift/result) - Modern error-handling used to avoid exceptions
@@ -19,7 +19,7 @@ Here's a list of all the necessary 3rd party dependencies needed to build GLEngi
 
 ## ❔In consideration
 
-These libraries are being considered for integration into GLEngine.
+These libraries are being considered for integration into XEN.
 
 - [RmlUI](https://github.com/mikke89/RmlUi) - HTML/CSS UI framework for game UI's
 - [stduuid](https://github.com/mariusbancila/stduuid) - UUID generation library for C++17
@@ -49,7 +49,7 @@ is coming soon.
 
 ### 🛈 Using EASTL
 
-GLEngine uses EASTL in place of the standard C++ STL. Type names and methods are all identical to the standard STL,
+XEN uses EASTL in place of the standard C++ STL. Type names and methods are all identical to the standard STL,
 so code like:
 
 ```c++
