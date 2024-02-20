@@ -62,7 +62,7 @@ ACamera* AScene::GetActiveCamera(FSceneContext& context) {
 }
 
 IGameObject* AScene::FindGameObject(FSceneContext& context,
-                                    const string& name) {
+                                    const eastl::string& name) {
     for (const auto& go : context.m_GameObjects) {
         if (go->GetName() == name) {
             return go.get();

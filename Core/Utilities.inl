@@ -22,10 +22,10 @@ namespace Utilities {
         b = static_cast<float>(static_cast<u32>(blueByte) / 255.0);
     }
 
-    inline cpp::result<string, int>
+    inline cpp::result<eastl::string, int>
     ReadFileToString(const char* path) noexcept {
         if (FILE* fp = fopen(path, "rb")) {
-            string contents;
+            eastl::string contents;
             fseek(fp, 0, SEEK_END);
             contents.resize(ftell(fp));
             rewind(fp);

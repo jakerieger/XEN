@@ -13,7 +13,8 @@
  */
 class IMaterial {
 public:
-    explicit IMaterial(unique_ptr<AShader> shader) : m_Shader(move(shader)) {}
+    explicit IMaterial(eastl::unique_ptr<AShader> shader)
+        : m_Shader(move(shader)) {}
     virtual ~IMaterial() = default;
 
     virtual void Initialize()     = 0;
@@ -31,12 +32,12 @@ public:
     }
 
     template<typename T>
-    static unique_ptr<IMaterial> Create() {
-        return unique_ptr<IMaterial>(new T);
+    static eastl::unique_ptr<IMaterial> Create() {
+        return eastl::unique_ptr<IMaterial>(new T);
     }
 
 protected:
-    unique_ptr<AShader> m_Shader;
+    eastl::unique_ptr<AShader> m_Shader;
 };
 
 namespace Materials {

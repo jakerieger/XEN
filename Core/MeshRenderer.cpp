@@ -11,7 +11,8 @@
 
 static AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-AMeshRenderer::AMeshRenderer(const char* path, unique_ptr<IMaterial>& material)
+AMeshRenderer::AMeshRenderer(const char* path,
+                             eastl::unique_ptr<IMaterial>& material)
     : m_Material(move(material)) {
     LoadModel(path);
     m_Material->Initialize();
@@ -60,7 +61,7 @@ void AMeshRenderer::Destroyed(FSceneContext& sceneContext) {
     m_Material->Destroy();
 }
 
-void AMeshRenderer::LoadModel(const string& path) {
+void AMeshRenderer::LoadModel(const eastl::string& path) {
     Assimp::Importer import;
     const aiScene* scene =
       import.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -86,8 +87,8 @@ void AMeshRenderer::ProcessNode(const aiNode* node, const aiScene* scene) {
 }
 
 AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene) {
-    vector<FVertex> vertices;
-    vector<u32> indices;
+    eastl::vector<FVertex> vertices;
+    eastl::vector<u32> indices;
 
     for (u32 i = 0; i < mesh->mNumVertices; i++) {
         FVertex vertex;

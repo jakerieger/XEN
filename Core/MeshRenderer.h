@@ -16,13 +16,14 @@ struct FSceneContext;
 
 class AMeshRenderer final : public IComponent {
 public:
-    explicit AMeshRenderer(const char* path, unique_ptr<IMaterial>& material);
+    explicit AMeshRenderer(const char* path,
+                           eastl::unique_ptr<IMaterial>& material);
 
     void Update(float deltaTime, FSceneContext& sceneContext) override;
     void Draw(FSceneContext& sceneContext, const ATransform* transform);
     void Destroyed(FSceneContext& sceneContext) override;
 
-    vector<AMesh>& GetMeshes() {
+    eastl::vector<AMesh>& GetMeshes() {
         return m_Meshes;
     }
 
@@ -36,10 +37,10 @@ public:
     }
 
 private:
-    vector<AMesh> m_Meshes;
-    unique_ptr<IMaterial> m_Material;
+    eastl::vector<AMesh> m_Meshes;
+    eastl::unique_ptr<IMaterial> m_Material;
 
 private:
-    void LoadModel(const string& path);
+    void LoadModel(const eastl::string& path);
     void ProcessNode(const aiNode* node, const aiScene* scene);
 };

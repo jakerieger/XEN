@@ -10,5 +10,5 @@
 
 namespace Resources {
     void SetCwd(const char* exePath);
-    string GetResource(const char* type, const char* name);
+    eastl::string GetResource(const char* type, const char* name);
 }  // namespace Resources

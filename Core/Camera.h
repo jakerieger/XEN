@@ -13,12 +13,12 @@ struct FSceneContext;
 
 class ACamera final : public IGameObject {
 public:
-    explicit ACamera(const string& name,
+    explicit ACamera(const eastl::string& name,
                      glm::vec3 up = {0.f, 1.f, 0.f},
                      float yaw    = -90.f,
                      float pitch  = 0.f,
                      float fov    = 45.f);
-    ACamera(const string& name,
+    ACamera(const eastl::string& name,
             float upX,
             float upY,
             float upZ,

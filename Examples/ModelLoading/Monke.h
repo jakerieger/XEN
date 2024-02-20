@@ -11,7 +11,7 @@
 class Monke final : public IGameObject,
                     public IDrawable {
 public:
-    explicit Monke(const string& name);
+    explicit Monke(const eastl::string& name);
 
     // IDrawable
     void Draw(FSceneContext& sceneContext) override;
@@ -24,5 +24,5 @@ public:
     // IInputListener
     void OnKeyDown(FKeyEvent& event) override;
 
-    unique_ptr<AMeshRenderer> m_MonkeMesh;
+    eastl::unique_ptr<AMeshRenderer> m_MonkeMesh;
 };

@@ -4,16 +4,16 @@
 #include <filesystem>
 
 namespace Resources {
-    string g_Cwd = "";
-    namespace fs = std::filesystem;
+    eastl::string g_Cwd = "";
+    namespace fs        = std::filesystem;
 
     void SetCwd(const char* exePath) {
-        const string exePathStr = exePath;
+        const eastl::string exePathStr = exePath;
 #ifdef _WIN32
-        const string cwdStr =
+        const eastl::string cwdStr =
           exePathStr.substr(0, exePathStr.find_last_of('\\'));
 #else
-        const string cwdStr =
+        const eastl::string cwdStr =
           exePathStr.substr(0, exePathStr.find_last_of('/'));
 #endif
         g_Cwd = cwdStr;
@@ -25,7 +25,7 @@ namespace Resources {
      * \param name File name
      * \return Full path to resource
      */
-    string GetResource(const char* type, const char* name) {
+    eastl::string GetResource(const char* type, const char* name) {
         const auto root     = fs::path(g_Cwd.c_str());
         const auto res      = fs::path("Resources");
         const auto subdir   = (type == RES_ROOT) ? fs::path() : fs::path(type);

@@ -8,7 +8,7 @@
 #include "Resources.h"
 #include "MeshRenderer.h"
 
-Floor::Floor(const string& name) : IGameObject(name) {
+Floor::Floor(const eastl::string& name) : IGameObject(name) {
     auto mat = IMaterial::Create<Materials::BlinnPhong>();
 
     m_FloorMesh = make_unique<AMeshRenderer>(

@@ -59,6 +59,6 @@ namespace Graphics {
             }
         };
 
-        using TWindow = unique_ptr<GLFWwindow, FDestroyWindow>;
+        using TWindow = eastl::unique_ptr<GLFWwindow, FDestroyWindow>;
     }  // namespace GL
 }  // namespace Graphics

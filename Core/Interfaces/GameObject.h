@@ -15,16 +15,16 @@ struct FSceneContext;
 class IGameObject : public ILifetime,
                     public IInputListener {
 public:
-    explicit IGameObject(const string& name) : m_Name(name) {
+    explicit IGameObject(const eastl::string& name) : m_Name(name) {
         // Input::RegisterListener(this);
     }
 
     template<typename T>
-    static unique_ptr<T> Create(const string& name) {
+    static eastl::unique_ptr<T> Create(const eastl::string& name) {
         return make_unique<T>(name);
     }
 
-    string GetName() const {
+    eastl::string GetName() const {
         return m_Name;
     }
 
@@ -62,6 +62,6 @@ public:
     }
 
 protected:
-    string m_Name;
+    eastl::string m_Name;
     ATransform m_Transform;
 };

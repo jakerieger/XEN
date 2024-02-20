@@ -75,11 +75,11 @@ namespace Application {
     }
 }  // namespace Application
 
-void IGameApp::AddScene(unique_ptr<AScene> scene) {
-    m_Scenes.push_back(move(scene));
+void IGameApp::AddScene(eastl::unique_ptr<AScene> scene) {
+    m_Scenes.push_back(eastl::move(scene));
 }
 
-void IGameApp::LoadScene(const string& name) {
+void IGameApp::LoadScene(const eastl::string& name) {
     const auto scene = GetScene(name);
     if (scene) {
         scene->SetActive(true);

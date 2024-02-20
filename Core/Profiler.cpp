@@ -10,12 +10,12 @@
 #include <glad/glad.h>
 
 namespace Profiler {
-    string GetDeviceVendor() {
+    eastl::string GetDeviceVendor() {
         const unsigned char* vendor = glGetString(GL_VENDOR);
         return reinterpret_cast<const char*>(vendor);
     }
 
-    string GetDeviceRenderer() {
+    eastl::string GetDeviceRenderer() {
         const unsigned char* renderer = glGetString(GL_RENDERER);
         return reinterpret_cast<const char*>(renderer);
     }
@@ -29,8 +29,8 @@ namespace Profiler {
         usedMemory = totalMemory - freeMemory;
     }
 
-    string GpuVendor;
-    string GpuRenderer;
+    eastl::string GpuVendor;
+    eastl::string GpuRenderer;
     float TotalMemory;
     float FreeMemory;
     float UsedMemory;

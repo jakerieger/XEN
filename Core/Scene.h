@@ -10,7 +10,7 @@
 
 class AScene final : public ILifetime {
 public:
-    explicit AScene(const string& name) : m_Name(name) {}
+    explicit AScene(const eastl::string& name) : m_Name(name) {}
 
     void Awake() override;
     void Start() override;
@@ -31,7 +31,7 @@ public:
         return m_Active;
     }
 
-    string& GetName() {
+    eastl::string& GetName() {
         return m_Name;
     }
 
@@ -43,15 +43,15 @@ public:
         return m_SceneContext;
     }
 
-    static unique_ptr<AScene> Create(const string& name) {
+    static eastl::unique_ptr<AScene> Create(const eastl::string& name) {
         return make_unique<AScene>(name);
     }
 
     template<typename T>
-    static vector<T*> FindAllGameObjectsOf(FSceneContext& context) {
+    static eastl::vector<T*> FindAllGameObjectsOf(FSceneContext& context) {
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
-        vector<T*> found;
+        eastl::vector<T*> found;
         for (auto& go : context.m_GameObjects) {
             if (auto casted = dynamic_cast<T*>(go.get()); casted) {
                 found.push_back(casted);
@@ -62,7 +62,8 @@ public:
     }
 
     template<typename T>
-    static T* FindGameObjectOf(FSceneContext& context, const string& name) {
+    static T* FindGameObjectOf(FSceneContext& context,
+                               const eastl::string& name) {
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
         for (auto& go : context.m_GameObjects) {
@@ -76,10 +77,10 @@ public:
     }
 
     static IGameObject* FindGameObject(FSceneContext& context,
-                                       const string& name);
+                                       const eastl::string& name);
 
     template<typename T>
-    void AddGameObject(unique_ptr<T>& gameObject) {
+    void AddGameObject(eastl::unique_ptr<T>& gameObject) {
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
         m_SceneContext.m_GameObjects.push_back(move(gameObject));
@@ -87,6 +88,6 @@ public:
 
 private:
     FSceneContext m_SceneContext;
-    string m_Name;
+    eastl::string m_Name;
     bool m_Active = false;
 };

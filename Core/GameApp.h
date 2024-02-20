@@ -19,8 +19,8 @@ public:
     virtual void Startup() = 0;
     virtual void Cleanup() = 0;
 
-    void AddScene(unique_ptr<AScene> scene);
-    void LoadScene(const string& name);
+    void AddScene(eastl::unique_ptr<AScene> scene);
+    void LoadScene(const eastl::string& name);
 
     AScene* GetActiveScene() {
         for (const auto& scene : m_Scenes) {
@@ -31,7 +31,7 @@ public:
         return nullptr;
     }
 
-    AScene* GetScene(const string& name) {
+    AScene* GetScene(const eastl::string& name) {
         for (const auto& scene : m_Scenes) {
             if (scene->GetName() == name) {
                 return scene.get();
@@ -41,7 +41,7 @@ public:
     }
 
 protected:
-    vector<unique_ptr<AScene>> m_Scenes;
+    eastl::vector<eastl::unique_ptr<AScene>> m_Scenes;
 };
 
 namespace Application {

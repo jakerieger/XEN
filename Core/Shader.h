@@ -5,8 +5,8 @@
 #include "STL.h"
 
 struct FShaderSource {
-    string m_Vertex;
-    string m_Fragment;
+    eastl::string m_Vertex;
+    eastl::string m_Fragment;
 };
 
 enum class EReadShaderError {
@@ -24,7 +24,7 @@ enum class EReadShaderError {
 class AShader {
 public:
     explicit AShader(const char* path);
-    explicit AShader(const string& source);
+    explicit AShader(const eastl::string& source);
     explicit AShader(const FShaderSource& sources);
     ~AShader() = default;
 
@@ -34,18 +34,18 @@ public:
     //=================//
     // Uniform Setters //
     //=================//
-    void SetBool(const string& name, bool value) const;
-    void SetInt(const string& name, int value) const;
-    void SetFloat(const string& name, float value) const;
-    void SetVec2(const string& name, const glm::vec2& value) const;
-    void SetVec2(const string& name, float x, float y) const;
-    void SetVec3(const string& name, const glm::vec3& value) const;
-    void SetVec3(const string& name, float x, float y, float z) const;
-    void SetVec4(const string& name, const glm::vec4& value) const;
-    void SetVec4(const string& name, float x, float y, float z, float w) const;
-    void SetMat2(const string& name, const glm::mat2& mat) const;
-    void SetMat3(const string& name, const glm::mat3& mat) const;
-    void SetMat4(const string& name, const glm::mat4& mat) const;
+    void SetBool(const eastl::string& name, bool value) const;
+    void SetInt(const eastl::string& name, int value) const;
+    void SetFloat(const eastl::string& name, float value) const;
+    void SetVec2(const eastl::string& name, const glm::vec2& value) const;
+    void SetVec2(const eastl::string& name, float x, float y) const;
+    void SetVec3(const eastl::string& name, const glm::vec3& value) const;
+    void SetVec3(const eastl::string& name, float x, float y, float z) const;
+    void SetVec4(const eastl::string& name, const glm::vec4& value) const;
+    void SetVec4(const eastl::string& name, float x, float y, float z, float w) const;
+    void SetMat2(const eastl::string& name, const glm::mat2& mat) const;
+    void SetMat3(const eastl::string& name, const glm::mat3& mat) const;
+    void SetMat4(const eastl::string& name, const glm::mat4& mat) const;
 
 private:
     void CompileShaders(const FShaderSource& sources);
@@ -53,16 +53,16 @@ private:
 };
 
 namespace BuiltinShaders {
-    const inline string Quad =
+    const inline eastl::string Quad =
 #include "Shaders/Quad.glsl"
       ;
-    const inline string Text =
+    const inline eastl::string Text =
 #include "Shaders/Text.glsl"
       ;
-    const inline string Unlit =
+    const inline eastl::string Unlit =
 #include "Shaders/Unlit.glsl"
       ;
-    const inline string BlinnPhong =
+    const inline eastl::string BlinnPhong =
 #include "Shaders/BlinnPhong.glsl"
       ;
 }  // namespace BuiltinShaders

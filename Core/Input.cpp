@@ -8,7 +8,7 @@
 #define GLFW_KEY_NONE 0
 
 namespace Input {
-    vector<IInputListener*> g_Listeners;
+    eastl::vector<IInputListener*> g_Listeners;
 
     void KeyCallback(
       GLFWwindow*, const int key, int, const int action, const int mods) {

@@ -10,5 +10,3 @@
 #include <EASTL/unordered_map.h>
 #include <EASTL/map.h>
 #include "Types.h"
-
-using namespace eastl;

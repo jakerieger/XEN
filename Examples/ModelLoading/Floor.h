@@ -10,12 +10,12 @@
 class Floor final : public IGameObject,
                     public IDrawable {
 public:
-    explicit Floor(const string& name);
+    explicit Floor(const eastl::string& name);
 
     void Draw(FSceneContext& sceneContext) override;
     void Start(FSceneContext& sceneContext) override;
     void Update(float deltaTime, FSceneContext& sceneContext) override;
     void Destroyed(FSceneContext& sceneContext) override;
 
-    unique_ptr<AMeshRenderer> m_FloorMesh;
+    eastl::unique_ptr<AMeshRenderer> m_FloorMesh;
 };

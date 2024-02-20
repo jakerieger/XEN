@@ -6,7 +6,7 @@
 #include "SceneContext.h"
 
 ACamera::ACamera(
-  const string& name, glm::vec3 up, float yaw, float pitch, float fov)
+  const eastl::string& name, glm::vec3 up, float yaw, float pitch, float fov)
     : IGameObject(name), m_Front({0.f, 0.f, -1.f}), m_FOV(fov) {
     m_WorldUp = up;
     m_Yaw     = yaw;
@@ -14,7 +14,7 @@ ACamera::ACamera(
     UpdateCameraVectors();
 }
 
-ACamera::ACamera(const string& name,
+ACamera::ACamera(const eastl::string& name,
                  float upX,
                  float upY,
                  float upZ,

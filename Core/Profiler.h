@@ -8,8 +8,8 @@
 #include "Scene.h"
 
 namespace Profiler {
-    extern string GpuVendor;
-    extern string GpuRenderer;
+    extern eastl::string GpuVendor;
+    extern eastl::string GpuRenderer;
     extern float TotalMemory;
     extern float FreeMemory;
     extern float UsedMemory;

@@ -9,6 +9,6 @@
 #include "STL.h"
 
 struct FSceneContext {
-    vector<unique_ptr<IGameObject>> m_GameObjects;
+    eastl::vector<eastl::unique_ptr<IGameObject>> m_GameObjects;
     ADirectionalLight m_Sun;
 };

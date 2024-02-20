@@ -21,7 +21,8 @@ struct FVertex {
  */
 class AMesh {
 public:
-    AMesh(const vector<FVertex>& vertices, const vector<u32>& indices)
+    AMesh(const eastl::vector<FVertex>& vertices,
+          const eastl::vector<u32>& indices)
         : m_VAO(0), m_VBO(0), m_EBO(0), m_Vertices(vertices),
           m_Indices(indices) {
         Initialize();
@@ -40,6 +41,6 @@ private:
     u32 m_VAO;
     u32 m_VBO;
     u32 m_EBO;
-    vector<FVertex> m_Vertices;
-    vector<u32> m_Indices;
+    eastl::vector<FVertex> m_Vertices;
+    eastl::vector<u32> m_Indices;
 };
