@@ -3,85 +3,17 @@
 Just another game engine project based on OpenGL. Provides a `Core` static library that can
 be linked against to build games and other 3D tools.
 
-To see GLEngine in action, build and run the `DemoApp` target. This isn't a comprehensive
-implementation of all of GLEngine's capabilities, but covers the majority of use-cases.
+To see GLEngine in action, you can browse and build the projects provided in the [Examples](Examples) directory.
 
-## Example Game Boilerplate
+## Third Party Dependencies
 
-```c++
-#include "GameApp.h"
+See [DEPENDENCIES](DEPENDENCIES.md) for information regarding GLEngine's use of 3rd party libraries.
 
-class DemoApp final : public IGameApp {
-public:
-    DemoApp() = default;
-    void Startup() override;
-    void Cleanup() override;
-    bool IsDone() override;
-    void Update(float deltaTime) override;
-    void LateUpdate(float deltaTime) override;
-    void RenderScene() override;
-    void RenderUI() override;
+## Creating Projects
 
-private:
-    //====================================//
-    // Put application-specific data here //
-    //====================================//
-};
-
-void DemoApp::Startup() {
-    //====================================//
-    // Initialize game-specific data here //
-    //====================================//
-}
-
-void DemoApp::Cleanup() {
-    //====================================//
-    // Cleanup and destroy game data here //
-    //====================================//
-}
-
-bool DemoApp::IsDone() {
-    return glfwWindowShouldClose(Graphics::GetWindow());
-}
-
-void DemoApp::Update(const float deltaTime) {
-    //=====================================//
-    // Update loop called before rendering //
-    //=====================================//
-}
-
-void DemoApp::RenderScene() {
-    //=====================//
-    // Main rendering loop //
-    //=====================//
-}
-
-void DemoApp::RenderUI() {
-    //===============================================//
-    // UI rendering loop, called after RenderScene() //
-    //===============================================//
-}
-
-void DemoApp::LateUpdate(float deltaTime) {
-    //=====================================================//
-    // Update loop called after all rendering is completed //
-    //=====================================================//
-}
-
-int main(int argc, char* argv[]) {
-    // Required to load assets from the "Resources" directory
-    // located in the game exe root directory
-    Resources::SetCwd(argv[0]);
-
-    DemoApp app;
-    Application::InitializeApp(app,
-                               { 1280, 720 },
-                               "GLEngine | Example");
-    Application::RunApp(app);
-
-    return 0;
-}
-```
+GLEngine provides a [Python script](Scripts/CreateNewProject.py) for generating a new project. Projects must be added
+to [Projects.cmake](Projects.cmake)
+and the GLEngine project reconfigured before the project can be compiled.
 
 ## License
 
