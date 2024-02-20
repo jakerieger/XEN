@@ -10,7 +10,7 @@ Here's a list of all the necessary 3rd party dependencies needed to build GLEngi
 - [Open**GL** **M**athematics (glm)](https://github.com/g-truc/glm) - Performance-optimized linear algebra library
 - [Assimp](https://github.com/assimp/assimp) - 3D model loading
 - [EASTL](https://github.com/electronicarts/EASTL) - Performance-optimized **S**tandard **T**emplate **L**ibrary.
-  *Entirely replaces the std STL in GLEngine.* See [Using EASTL](#using-eastl) for more information.
+  *Entirely replaces the std STL in GLEngine.* See [Using EASTL](#-using-eastl) for more information.
 - [fmtlib](https://github.com/fmtlib/fmt) - Advanced string formatting
 - [stb_image](https://github.com/nothings/stb) - Image loading
 - [result](https://github.com/bitwizeshift/result) - Modern error-handling used to avoid exceptions
