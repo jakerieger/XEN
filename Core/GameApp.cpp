@@ -75,7 +75,7 @@ namespace Application {
     }
 }  // namespace Application
 
-void IGameApp::AddScene(eastl::unique_ptr<AScene> scene) {
+void IGameApp::AddScene(eastl::unique_ptr<AScene>& scene) {
     m_Scenes.push_back(eastl::move(scene));
 }
 

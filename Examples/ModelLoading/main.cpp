@@ -40,7 +40,7 @@ void DemoApp::Startup() {
     demoScene->AddGameObject(monke);
     demoScene->AddGameObject(mainCam);
 
-    AddScene(move(demoScene));
+    AddScene(demoScene);
     LoadScene("Demo");
 }
 

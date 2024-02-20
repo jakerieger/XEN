@@ -19,7 +19,7 @@ public:
     virtual void Startup() = 0;
     virtual void Cleanup() = 0;
 
-    void AddScene(eastl::unique_ptr<AScene> scene);
+    void AddScene(eastl::unique_ptr<AScene>& scene);
     void LoadScene(const eastl::string& name);
 
     AScene* GetActiveScene() {
