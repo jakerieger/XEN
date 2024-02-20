@@ -23,7 +23,7 @@ These libraries are being considered for integration into GLEngine.
 
 - [RmlUI](https://github.com/mikke89/RmlUi) - HTML/CSS UI framework for game UI's
 - [stduuid](https://github.com/mariusbancila/stduuid) - UUID generation library for C++17
-- [Boost.ASIO](https://www.boost.org/doc/libs/1_76_0/doc/html/boost_asio.html) - Networking IO library
+- [Boost.Asio](https://www.boost.org/doc/libs/1_76_0/doc/html/boost_asio.html) - Networking IO library
 - [FMOD](https://www.fmod.com/) - Proprietary audio library
 - [Bullet](https://github.com/bulletphysics/bullet3) - Open-source physics library
 - [DirectInput](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ee416842(v=vs.85)) - First-party
@@ -53,10 +53,12 @@ GLEngine uses EASTL in place of the standard C++ STL. Type names and methods are
 so code like:
 
 ```c++
-std::vector<int> nums = {1,2,3,4};
-std::size_t numsLen = nums.size();
+using namespace std;
 
-std::function<void()> lambdaFunc;
+vector<int> nums = {1,2,3,4};
+size_t numsLen = nums.size();
+
+function<void()> lambdaFunc;
 lambdaFunc();
 
 ... etc
@@ -65,15 +67,17 @@ lambdaFunc();
 is identical to:
 
 ```c++
-eastl::vector<int> nums = {1,2,3,4};
-eastl::size_t numsLen = nums.size();
+using namespace eastl;
 
-eastl::function<void()> lambdaFunc;
+vector<int> nums = {1,2,3,4};
+size_t numsLen = nums.size();
+
+function<void()> lambdaFunc;
 lambdaFunc();
 
 ... etc
 ```
 
-EA provides a very handy PDF that outlines everything includes in
+EA provides a very handy PDF that outlines everything included in
 EASTL [here](https://github.com/electronicarts/EASTL/blob/master/doc/quick-reference.pdf).
 Adopting EASTL for you game project should require little to no extra effort.

@@ -44,14 +44,20 @@ namespace DebugUI {
                         Profiler::TotalMemory / 1000);
             ImGui::Text("Used Mem     : %0.2f MB", Profiler::UsedMemory / 1000);
             ImGui::Text("Free Mem     : %0.2f MB", Profiler::FreeMemory / 1000);
+
             ImGui::Separator();
-            ImGui::Text("Active Scene");
-            ImGui::Text("Name         : %s", g_ActiveScene->GetName().c_str());
-            ImGui::Text("Game Objects : %d",
-                        static_cast<int>(
-                          g_ActiveScene->GetContext().m_GameObjects.size()));
-            ImGui::Text("Triangles    : %d",
-                        Profiler::GetTotalTriangles(g_ActiveScene));
+
+            if (g_ActiveScene) {
+                ImGui::Text("Active Scene");
+                ImGui::Text("Name         : %s",
+                            g_ActiveScene->GetName().c_str());
+                ImGui::Text(
+                  "Game Objects : %d",
+                  static_cast<int>(
+                    g_ActiveScene->GetContext().m_GameObjects.size()));
+                ImGui::Text("Triangles    : %d",
+                            Profiler::GetTotalTriangles(g_ActiveScene));
+            }
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
