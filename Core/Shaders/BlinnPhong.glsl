@@ -37,6 +37,8 @@ uniform vec3 u_LightColor;
 uniform vec3 u_LightPosition;
 uniform vec3 u_ViewPosition;
 
+uniform sampler2D u_DiffuseMap;
+
 out vec4 FragColor;
 
 void main() {
@@ -55,7 +57,8 @@ void main() {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
     vec3 specular = specularStrength * spec * u_LightColor;
 
-    vec3 result = (ambient + diffuse + specular) * ObjectColor;
+    vec4 diffMap = texture(u_DiffuseMap, TexCoord * 4);
+    vec3 result = (ambient + diffuse + specular) * diffMap.xyz;
 
     FragColor = vec4(result, 1.0);
 }

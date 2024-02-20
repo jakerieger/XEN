@@ -57,6 +57,7 @@ namespace Materials {
         glm::vec3 m_DiffuseColor  = {0.5f, 0.5f, 0.5f};
         glm::vec3 m_SpecularColor = {1.f, 1.f, 1.f};
         float m_SpecularStrength  = 1.f;
+        u32 m_DiffuseTexture      = 0;
     };
 
     class Unlit final : public IMaterial {
