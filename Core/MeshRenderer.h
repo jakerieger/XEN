@@ -26,6 +26,15 @@ public:
         return m_Meshes;
     }
 
+    IMaterial* GetMaterial() const {
+        return m_Material.get();
+    }
+
+    template<typename T>
+    T* GetMaterialAs() {
+        return m_Material->Cast<T>();
+    }
+
 private:
     vector<AMesh> m_Meshes;
     unique_ptr<IMaterial> m_Material;

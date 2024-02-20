@@ -34,6 +34,12 @@ void Monke::Update(const float deltaTime, FSceneContext& sceneContext) {
     GetTransform()->SetPositionAndRotation(GetTransform()->GetPosition(),
                                            glm::vec3(0.f, rotationY, 0.f));
 
+    constexpr auto red    = 0.5f;
+    const auto green      = 0.5 + 0.5 * sin(glfwGetTime());
+    const auto blue       = sin(glfwGetTime());
+    const glm::vec3 color = {red, green, blue};
+    m_MonkeMesh->GetMaterialAs<Materials::BlinnPhong>()->SetColor(color);
+
     m_MonkeMesh->Update(deltaTime, sceneContext);
 }
 
