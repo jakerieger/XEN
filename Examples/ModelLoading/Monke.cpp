@@ -11,6 +11,7 @@
 
 Monke::Monke(const string& name) : IGameObject(name) {
     auto mat = IMaterial::Create<Materials::BlinnPhong>();
+    mat->Cast<Materials::BlinnPhong>()->SetColor({0.f, 0.4f, 0.8f});
 
     m_MonkeMesh = make_unique<AMeshRenderer>(
       Resources::GetResource(RES_3D_MODEL, "Monke.fbx").c_str(),

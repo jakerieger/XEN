@@ -43,6 +43,10 @@ public:
         return m_SceneContext;
     }
 
+    static unique_ptr<AScene> Create(const string& name) {
+        return make_unique<AScene>(name);
+    }
+
     template<typename T>
     static vector<T*> FindAllGameObjectsOf(FSceneContext& context) {
         static_assert(std::is_base_of_v<IGameObject, T>,

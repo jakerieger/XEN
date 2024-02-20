@@ -26,7 +26,7 @@ private:
 };
 
 void DemoApp::Startup() {
-    auto demoScene = make_unique<AScene>("Demo");
+    auto demoScene = AScene::Create("Demo");
     auto floor     = IGameObject::Create<Floor>("Floor");
     auto monke     = IGameObject::Create<Monke>("Monke");
     auto mainCam   = IGameObject::Create<ACamera>("MainCamera");

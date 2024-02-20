@@ -26,6 +26,11 @@ public:
     }
 
     template<typename T>
+    T* Cast() {
+        return dynamic_cast<T*>(this);
+    }
+
+    template<typename T>
     static unique_ptr<IMaterial> Create() {
         return unique_ptr<IMaterial>(new T);
     }
@@ -42,6 +47,10 @@ namespace Materials {
         void Destroy() override;
         void Use() override;
         void UpdateUniforms() override;
+
+        void SetColor(const glm::vec3& color) {
+            m_DiffuseColor = color;
+        }
 
     private:
         glm::vec3 m_DiffuseColor  = {0.5f, 0.5f, 0.5f};
