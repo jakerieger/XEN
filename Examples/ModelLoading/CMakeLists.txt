@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (WIN32)
-    set(RC_FILE ../../Windows/app.rc)
+    set(RC_FILE ../res/app.rc)
 else ()
     set(RC_FILE "")
 endif ()
