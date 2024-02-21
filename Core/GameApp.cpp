@@ -15,7 +15,7 @@ namespace Application {
     void InitializeApp(IGameApp& app,
                        const FSize& size,
                        const char* title,
-                       bool launchFullscreen) {
+                       const bool launchFullscreen) {
         Graphics::Initialize(size, title);
         Input::Initialize(Graphics::GetWindow());
         Profiler::Initialize();
