@@ -1,49 +1,38 @@
 R""(
 #define VERTEX
 #version 460 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoord;
+layout (location = 0) in vec2 aPos;
+layout (location = 1) in vec2 aTexCoords;
 
-uniform mat4 u_Transform;
-
-out vec3 FragCoord;
-out vec2 TexCoord;
+out vec2 TexCoords;
 
 void main() {
-    gl_Position = u_Transform * vec4(aPos.xy, 0.0, 1.0);
-    FragCoord = aPos;
-    TexCoord = aTexCoord;
+    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+    TexCoords = aTexCoords;
 }
+
 #undef VERTEX
 
 #define FRAGMENT
 #version 460 core
-in vec3 FragCoord;
-in vec2 TexCoord;
-
-uniform vec2 u_Resolution;
-uniform float u_Time;
-uniform float u_DeltaTime;
-
-uniform sampler2D u_Texture_0;
-
 out vec4 FragColor;
 
-float map(float value, float min1, float max1, float min2, float max2) {
-    return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+in vec2 TexCoords;
+
+uniform sampler2D u_Texture;
+
+vec3 aces(vec3 x) {
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
 }
 
 void main() {
-    float red = sin(u_Time) * TexCoord.x;
-    float green = cos(u_Time) * TexCoord.y;
-    red = map(red, -1.0, 1.0, 0.0, 1.0);
-    green = map(green, -1.0, 1.0, 0.0, 1.0);
-    vec4 color = vec4(red, green, 0.0, 1.0);
-    vec4 tex = texture(u_Texture_0, TexCoord);
-    vec4 outColor = mix(tex, color, 0.9);
-    FragColor = outColor;
-    //    FragColor = texture(u_Texture_0, TexCoord);
+    vec4 tex = texture(u_Texture, TexCoords);
+    FragColor = vec4(aces(tex.xyz), 1.0);
 }
 #undef FRAGMENT
 )"";

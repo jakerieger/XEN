@@ -77,9 +77,6 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
         case KeyCode::F12:
             DebugUI::ToggleVisible();
             break;
-        case KeyCode::Tab:
-            Graphics::ToggleWireframe();
-            break;
         case KeyCode::Space: {
             if (m_HideCursor) {
                 glfwSetInputMode(Graphics::GetWindow(),

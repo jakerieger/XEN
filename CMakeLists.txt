@@ -53,8 +53,8 @@ add_library(XEN-Core STATIC
         Core/Resources.cpp
         Core/GraphicsError.cpp
         Core/GraphicsError.h
-        Core/PostProcessing.cpp
-        Core/PostProcessing.h
+        Core/PostProcessing/PostProcessing.cpp
+        Core/PostProcessing/PostProcessing.h
         Core/Profiler.cpp
         Core/Profiler.h
         Core/Mesh.cpp
@@ -83,6 +83,14 @@ add_library(XEN-Core STATIC
         Core/InputEvents.h
         Core/InputCodes.h
         Core/Types.h
+        Core/Framebuffer.cpp
+        Core/Framebuffer.h
+        Core/PostProcessing/SSAO.cpp
+        Core/PostProcessing/SSAO.h
+        Core/PostProcessing/ToneMapper.cpp
+        Core/PostProcessing/ToneMapper.h
+        Core/PostProcessing/Bloom.cpp
+        Core/PostProcessing/Bloom.h
 )
 target_link_libraries(XEN-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 

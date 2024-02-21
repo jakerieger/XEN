@@ -61,7 +61,7 @@ void main() {
     vec4 diffMap = texture(u_DiffuseMap, TexCoord * u_UV_Scale);
     vec3 result = (ambient + diffuse + specular) * (ObjectColor * diffMap.xyz);
 
-    FragColor = vec4(result /* * brightness */, 1.0);
+    FragColor = vec4(result, 1.0);
 }
 #undef FRAGMENT
 )"";
