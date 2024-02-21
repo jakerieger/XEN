@@ -8,8 +8,6 @@
 #include <glm/vec3.hpp>
 #include "STL.h"
 
-#include <Shader.h>
-
 struct FVertex {
     glm::vec3 Position;
     glm::vec3 Normal;

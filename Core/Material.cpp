@@ -3,9 +3,9 @@
 //
 
 #include "Material.h"
-
 #include "Resources.h"
-
+#include "SceneContext.h"
+#include "Camera.h"
 #include <glad/glad.h>
 #include "stb_image.h"
 
@@ -53,12 +53,70 @@ namespace Materials {
         m_Shader->Use();
     }
 
-    void BlinnPhong::UpdateUniforms() {
+    void BlinnPhong::UpdateUniforms(FSceneContext& sceneContext,
+                                    ACamera* camera) {
+        m_Shader->SetVec3("u_LightColor", sceneContext.m_Sun.GetColor());
+        m_Shader->SetVec3("u_LightPosition",
+                          sceneContext.m_Sun.GetTransform().GetPosition());
+        m_Shader->SetVec3("u_ViewPosition",
+                          camera->GetTransform()->GetPosition());
         m_Shader->SetVec3("u_ObjectColor", m_DiffuseColor);
         m_Shader->SetInt("u_DiffuseMap", 0);
+        m_Shader->SetFloat("u_UV_Scale", m_UVScale);
     }
 
     void BlinnPhong::Destroy() {}
+
+    SkyDome::SkyDome()
+        : IMaterial(make_unique<AShader>(BuiltinShaders::SkyDome)) {}
+
+    void SkyDome::Initialize() {
+        glGenTextures(1, &m_Texture);
+        glBindTexture(GL_TEXTURE_2D, m_Texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D,
+                        GL_TEXTURE_MIN_FILTER,
+                        GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        int width, height, nrChannels;
+        stbi_set_flip_vertically_on_load(true);
+        u8* data =
+          stbi_load(Resources::GetResource(RES_TEXTURE, "SkyDome.jpg").c_str(),
+                    &width,
+                    &height,
+                    &nrChannels,
+                    0);
+        if (data) {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         GL_RGB,
+                         width,
+                         height,
+                         0,
+                         GL_RGB,
+                         GL_UNSIGNED_BYTE,
+                         data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        } else {
+            printf("Failed to load texture\n");
+        }
+        stbi_image_free(data);
+    }
+
+    void SkyDome::Destroy() {}
+
+    void SkyDome::Use() {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_Texture);
+        m_Shader->Use();
+    }
+
+    void SkyDome::UpdateUniforms(FSceneContext& sceneContext, ACamera* camera) {
+        m_Shader->SetInt("u_Texture", 0);
+        m_Shader->SetFloat("u_UV_Scale", m_UVScale);
+    }
 
     Unlit::Unlit() : IMaterial(make_unique<AShader>(BuiltinShaders::Unlit)) {}
 
@@ -68,7 +126,7 @@ namespace Materials {
         m_Shader->Use();
     }
 
-    void Unlit::UpdateUniforms() {
+    void Unlit::UpdateUniforms(FSceneContext& sceneContext, ACamera* camera) {
         m_Shader->SetVec3("u_ObjectColor", m_Color);
     }
 

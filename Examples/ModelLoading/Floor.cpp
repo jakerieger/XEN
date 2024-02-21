@@ -23,6 +23,9 @@ void Floor::Draw(FSceneContext& sceneContext) {
 void Floor::Start(FSceneContext& sceneContext) {
     IGameObject::Start(sceneContext);
     m_FloorMesh->Start(sceneContext);
+    m_FloorMesh->GetMaterialAs<Materials::BlinnPhong>()->SetUVScale(200.f);
+    m_FloorMesh->GetMaterialAs<Materials::BlinnPhong>()->SetColor(
+      glm::vec3(1.f));
 }
 
 void Floor::Update(const float deltaTime, FSceneContext& sceneContext) {

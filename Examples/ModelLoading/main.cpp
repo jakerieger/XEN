@@ -5,7 +5,10 @@
 #include "Resources.h"
 #include "GameApp.h"
 #include "InputCodes.h"
-#include "Monke.h"
+#include "SkyDome.h"
+#include "TV.h"
+
+#include <fmt/format.h>
 
 const FSize SCREEN_720P  = {1280, 720};
 const FSize SCREEN_792P  = {1408, 792};
@@ -23,23 +26,35 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
+    bool m_HideCursor = false;
 };
 
 void DemoApp::Startup() {
     auto demoScene = AScene::Create("Demo");
     auto floor     = IGameObject::Create<Floor>("Floor");
-    auto monke     = IGameObject::Create<Monke>("Monke");
+    auto skydome   = IGameObject::Create<SkyDome>("SkyDome");
     auto mainCam   = IGameObject::Create<ACamera>("MainCamera");
 
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
+    skydome->GetTransform()->SetScale(0.3f, 0.3f, 0.3f);
+
     mainCam->SetActive(true);
-    mainCam->GetTransform()->SetPosition(0.f, 0.f, -5.f);
-    demoScene->GetSun().GetTransform().SetPosition(0.f, 0.f, -5.f);
+    mainCam->GetTransform()->SetPosition(0.f, 0.f, 5.f);
 
+    demoScene->GetSun().GetTransform().SetPosition(2.f, 0.f, 5.f);
     demoScene->AddGameObject(floor);
-    demoScene->AddGameObject(monke);
-    demoScene->AddGameObject(mainCam);
 
+    for (u8 i = 0; i < 10; i++) {
+        for (u8 j = 0; j < 10; j++) {
+            auto tv =
+              IGameObject::Create<TV>(fmt::format("TV_{}.{}", i, j).c_str());
+            tv->GetTransform()->SetPosition(i * 8, 0.f, j * 8);
+            demoScene->AddGameObject(tv);
+        }
+    }
+
+    demoScene->AddGameObject(skydome);
+    demoScene->AddGameObject(mainCam);
     AddScene(demoScene);
     LoadScene("Demo");
 }
@@ -65,6 +80,19 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
         case KeyCode::Tab:
             Graphics::ToggleWireframe();
             break;
+        case KeyCode::Space: {
+            if (m_HideCursor) {
+                glfwSetInputMode(Graphics::GetWindow(),
+                                 GLFW_CURSOR,
+                                 GLFW_CURSOR_NORMAL);
+            } else {
+                glfwSetInputMode(Graphics::GetWindow(),
+                                 GLFW_CURSOR,
+                                 GLFW_CURSOR_DISABLED);
+            }
+
+            m_HideCursor = !m_HideCursor;
+        } break;
         default:
             break;
     }
@@ -74,7 +102,7 @@ int main(int, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
-    Application::InitializeApp(app, SCREEN_792P, "XEN | ModelLoading");
+    Application::InitializeApp(app, SCREEN_792P, "XEN | ModelLoading", true);
     Utilities::SetWindowIcon(
       Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str());
     Application::RunApp(app);

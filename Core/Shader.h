@@ -42,7 +42,8 @@ public:
     void SetVec3(const eastl::string& name, const glm::vec3& value) const;
     void SetVec3(const eastl::string& name, float x, float y, float z) const;
     void SetVec4(const eastl::string& name, const glm::vec4& value) const;
-    void SetVec4(const eastl::string& name, float x, float y, float z, float w) const;
+    void SetVec4(
+      const eastl::string& name, float x, float y, float z, float w) const;
     void SetMat2(const eastl::string& name, const glm::mat2& mat) const;
     void SetMat3(const eastl::string& name, const glm::mat3& mat) const;
     void SetMat4(const eastl::string& name, const glm::mat4& mat) const;
@@ -64,5 +65,8 @@ namespace BuiltinShaders {
       ;
     const inline eastl::string BlinnPhong =
 #include "Shaders/BlinnPhong.glsl"
+      ;
+    const inline eastl::string SkyDome =
+#include "Shaders/SkyDome.glsl"
       ;
 }  // namespace BuiltinShaders

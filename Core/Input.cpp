@@ -3,13 +3,8 @@
 //
 
 #include "Input.h"
-
 #include "GameApp.h"
-#include "Interfaces/GameObject.h"
 #include "Interfaces/InputListener.h"
-
-#include <typeinfo>
-#include <iostream>
 
 #define GLFW_KEY_NONE 0
 
@@ -27,12 +22,16 @@ namespace Input {
                 listener->OnKeyDown(event);
             } else if (action == GLFW_RELEASE) {
                 listener->OnKeyUp(event);
+            } else if (action == GLFW_REPEAT) {
+                listener->OnKey(event);
             }
         }
     }
 
-    void
-    MouseCallback(GLFWwindow*, const int button, const int action, const int) {
+    void MouseButtonCallback(GLFWwindow*,
+                             const int button,
+                             const int action,
+                             const int) {
         const u32 _button = static_cast<u32>(button);
         FMouseEvent event {_button};
 
@@ -42,6 +41,14 @@ namespace Input {
             } else if (action == GLFW_RELEASE) {
                 listener->OnMouseUp(event);
             }
+        }
+    }
+
+    void
+    MouseMovementCallback(GLFWwindow*, const double xPos, const double yPos) {
+        FMouseMoveEvent event {xPos, yPos};
+        for (const auto listener : g_Listeners) {
+            listener->OnMouseMove(event);
         }
     }
 
@@ -56,7 +63,8 @@ namespace Input {
 
     void Initialize(GLFWwindow* window) {
         glfwSetKeyCallback(window, KeyCallback);
-        glfwSetMouseButtonCallback(window, MouseCallback);
+        glfwSetMouseButtonCallback(window, MouseButtonCallback);
+        glfwSetCursorPosCallback(window, MouseMovementCallback);
         glfwSetScrollCallback(window, ScrollCallback);
     }
 
@@ -64,9 +72,9 @@ namespace Input {
         g_Listeners.push_back(listener);
     }
 
-    void UnregisterSceneListeners(IInputListener* listener) {
+    void UnregisterSceneListeners(IInputListener* appListener) {
         g_Listeners.erase(g_Listeners.begin(), g_Listeners.end());
-        RegisterListener(listener);
+        RegisterListener(appListener);
     }
 
 }  // namespace Input

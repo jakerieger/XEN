@@ -37,18 +37,24 @@ namespace DebugUI {
             ImGui::NewFrame();
 
             ImGui::SetNextWindowPos(ImVec2(10, 10));
-            ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove);
+            ImGui::Begin("Debug",
+                         nullptr,
+                         ImGuiWindowFlags_AlwaysAutoResize |
+                           ImGuiWindowFlags_NoMove);
 
             ImGui::Text("FPS          : %0.2f", g_FPS);
             ImGui::Text("Time         : %0.2fms", g_FrameTime);
+            ImGui::Text("Draw Calls   : %d", Graphics::GetDrawCalls());
 
             if (ImGui::CollapsingHeader("GPU")) {
                 ImGui::Text("GPU Vendor   : %s", Profiler::GpuVendor.c_str());
                 ImGui::Text("GPU Renderer : %s", Profiler::GpuRenderer.c_str());
                 ImGui::Text("Total Mem    : %0.2f MB",
                             Profiler::TotalMemory / 1000);
-                ImGui::Text("Used Mem     : %0.2f MB", Profiler::UsedMemory / 1000);
-                ImGui::Text("Free Mem     : %0.2f MB", Profiler::FreeMemory / 1000);
+                ImGui::Text("Used Mem     : %0.2f MB",
+                            Profiler::UsedMemory / 1000);
+                ImGui::Text("Free Mem     : %0.2f MB",
+                            Profiler::FreeMemory / 1000);
             }
 
             if (g_ActiveScene) {

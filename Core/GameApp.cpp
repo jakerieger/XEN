@@ -12,7 +12,10 @@
 namespace Application {
     FColor g_ClearColor = FColor(0xFF11131C);
 
-    void InitializeApp(IGameApp& app, const FSize& size, const char* title) {
+    void InitializeApp(IGameApp& app,
+                       const FSize& size,
+                       const char* title,
+                       bool launchFullscreen) {
         Graphics::Initialize(size, title);
         Input::Initialize(Graphics::GetWindow());
         Profiler::Initialize();
@@ -23,17 +26,43 @@ namespace Application {
 #endif
 
         Profiler::Start();
+
+        if (launchFullscreen) {
+            Graphics::ToggleFullscreen();
+        }
+
         app.Startup();
     }
 
     bool UpdateApp(IGameApp& app) {
-        // Update first
+        Graphics::ResetDrawCalls();
+        Graphics::UpdateFrameTime();
+
+        // FixedUpdate time step is a constant 1000 FPS
+        // Used for polling IO events and physics simulations
+        constexpr float FIXED_TIME_STEP = 1.0 / 1000.0;
+        static float accumulatedTime    = 0.0;
+        const float frameTime           = Graphics::GetDeltaTime();
+        accumulatedTime += frameTime;
+
         const auto activeScene = app.GetActiveScene();
-        const float frameTime  = Graphics::GetFrameTime();
+
+        // Fixed update loop
+        while (accumulatedTime >= FIXED_TIME_STEP) {
+            if (activeScene) {
+                activeScene->FixedUpdated();
+                glfwPollEvents();
+            }
+
+            accumulatedTime -= FIXED_TIME_STEP;
+        }
+
+        // Update scene
         if (activeScene) {
             activeScene->Update(frameTime);
         }
 
+        // Update engine analytics
         Profiler::Update();
         DebugUI::Update(frameTime, activeScene);
 
@@ -44,8 +73,12 @@ namespace Application {
                      g_ClearColor.Alpha);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Execute user-defined render logic
+        // Render scene + UI
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_MULTISAMPLE);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CW);
         if (activeScene) {
             activeScene->Render();
         }
@@ -53,15 +86,11 @@ namespace Application {
 
         // Swap buffers and poll events
         glfwSwapBuffers(Graphics::GetWindow());
-        glfwPollEvents();
 
         // Execute user late update logic
         if (activeScene) {
             activeScene->LateUpdate();
         }
-
-        // TODO: implement a fixed update loop
-        // app.FixedUpdate();
 
         return !glfwWindowShouldClose(Graphics::GetWindow());
     }

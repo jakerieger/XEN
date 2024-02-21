@@ -3,6 +3,9 @@
 //
 
 #include "Mesh.h"
+
+#include "GraphicsContext.h"
+
 #include <glad/glad.h>
 
 void AMesh::Initialize() {
@@ -54,6 +57,7 @@ void AMesh::Draw() const {
     glBindVertexArray(m_VAO);
     glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
+    Graphics::AddDrawCall();
 }
 
 void AMesh::Destroy() const {

@@ -36,6 +36,7 @@ in vec3 ObjectColor;
 uniform vec3 u_LightColor;
 uniform vec3 u_LightPosition;
 uniform vec3 u_ViewPosition;
+uniform float u_UV_Scale;
 
 uniform sampler2D u_DiffuseMap;
 
@@ -57,10 +58,10 @@ void main() {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
     vec3 specular = specularStrength * spec * u_LightColor;
 
-    vec4 diffMap = texture(u_DiffuseMap, TexCoord * 4);
-    vec3 result = (ambient + diffuse + specular) * diffMap.xyz;
+    vec4 diffMap = texture(u_DiffuseMap, TexCoord * u_UV_Scale);
+    vec3 result = (ambient + diffuse + specular) * (ObjectColor * diffMap.xyz);
 
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result /* * brightness */, 1.0);
 }
 #undef FRAGMENT
 )"";

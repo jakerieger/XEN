@@ -8,10 +8,10 @@
 #include "Interfaces/GameObject.h"
 #include "MeshRenderer.h"
 
-class Monke final : public IGameObject,
-                    public IDrawable {
+class TV final : public IGameObject,
+                 public IDrawable {
 public:
-    explicit Monke(const eastl::string& name);
+    explicit TV(const eastl::string& name);
 
     // IDrawable
     void Draw(FSceneContext& sceneContext) override;
@@ -21,8 +21,5 @@ public:
     void Update(float deltaTime, FSceneContext& sceneContext) override;
     void Destroyed(FSceneContext& sceneContext) override;
 
-    // IInputListener
-    void OnKeyDown(FKeyEvent& event) override;
-
-    eastl::unique_ptr<AMeshRenderer> m_MonkeMesh;
+    eastl::unique_ptr<AMeshRenderer> m_TV;
 };

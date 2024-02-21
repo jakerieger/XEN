@@ -15,9 +15,7 @@ struct FSceneContext;
 class IGameObject : public ILifetime,
                     public IInputListener {
 public:
-    explicit IGameObject(const eastl::string& name) : m_Name(name) {
-        // Input::RegisterListener(this);
-    }
+    explicit IGameObject(const eastl::string& name) : m_Name(name) {}
 
     template<typename T>
     static eastl::unique_ptr<T> Create(const eastl::string& name) {

@@ -8,7 +8,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if (WIN32)
     set(RC_FILE ../res/app.rc)
 else ()
-    set(RC_FILE "")
+    set(RC_FILE ""
+            SkyDome.cpp
+            SkyDome.h
+            SkyDome.h)
 endif ()
 
 include_directories(
@@ -21,10 +24,12 @@ if (WIN32)
 endif ()
 
 find_package(EASTL CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
-add_executable(ModelLoading main.cpp Monke.cpp ${RC_FILE}
+add_executable(ModelLoading main.cpp TV.cpp ${RC_FILE}
         Floor.cpp
-        Floor.h)
-target_link_libraries(ModelLoading PRIVATE XEN-Core EASTL)
+        SkyDome.h
+        SkyDome.cpp)
+target_link_libraries(ModelLoading PRIVATE XEN-Core EASTL fmt::fmt)
 
 file(COPY ../../Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

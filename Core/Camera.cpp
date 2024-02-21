@@ -3,37 +3,48 @@
 //
 
 #include "Camera.h"
+#include "GraphicsContext.h"
+#include "InputCodes.h"
 #include "SceneContext.h"
 
-ACamera::ACamera(
-  const eastl::string& name, glm::vec3 up, float yaw, float pitch, float fov)
+ACamera::ACamera(const eastl::string& name,
+                 const glm::vec3& up,
+                 const float yaw,
+                 const float pitch,
+                 const float fov)
     : IGameObject(name), m_Front({0.f, 0.f, -1.f}), m_FOV(fov) {
     m_WorldUp = up;
     m_Yaw     = yaw;
     m_Pitch   = pitch;
     UpdateCameraVectors();
+    m_LastX = Graphics::GetWindowSize().Width / 2;
+    m_LastY = Graphics::GetWindowSize().Height / 2;
 }
 
 ACamera::ACamera(const eastl::string& name,
                  float upX,
                  float upY,
                  float upZ,
-                 float yaw,
-                 float pitch,
-                 float fov)
+                 const float yaw,
+                 const float pitch,
+                 const float fov)
     : IGameObject(name), m_Front({0.f, 0.f, -1.f}), m_FOV(fov) {
     m_WorldUp = {upX, upY, upZ};
     m_Yaw     = yaw;
     m_Pitch   = pitch;
     UpdateCameraVectors();
+    m_LastX = Graphics::GetWindowSize().Width / 2;
+    m_LastY = Graphics::GetWindowSize().Height / 2;
 }
 
 glm::mat4 ACamera::GetViewMatrix() {
-    return lookAt(GetTransform()->GetPosition(), m_Front, m_Up);
+    return lookAt(GetTransform()->GetPosition(),
+                  GetTransform()->GetPosition() + m_Front,
+                  m_Up);
 }
 
 glm::mat4 ACamera::GetProjectionMatrix(const float aspect) const {
-    return glm::perspective(glm::radians(m_FOV), aspect, 0.1f, 100.f);
+    return glm::perspective(glm::radians(m_FOV), aspect, 0.1f, 1000.f);
 }
 
 void ACamera::Update(const float deltaTime, FSceneContext& sceneContext) {
@@ -45,9 +56,56 @@ void ACamera::OnScroll(FScrollEvent& event) {
     IGameObject::OnScroll(event);
 
     if (event.Y > 0) {
-        m_FOV += 1;
+        m_FOV += 4;
     } else {
-        m_FOV -= 1;
+        m_FOV -= 4;
+    }
+}
+
+void ACamera::OnMouseMove(FMouseMoveEvent& event) {
+    IGameObject::OnMouseMove(event);
+
+    const float xPos = event.X;
+    const float yPos = event.Y;
+
+    if (m_FirstMouse) {
+        m_LastX      = xPos;
+        m_LastY      = yPos;
+        m_FirstMouse = false;
+    }
+
+    const float xOffset = (xPos - m_LastX) * m_MouseSensitivity;
+    const float yOffset = (m_LastY - yPos) * m_MouseSensitivity;
+    m_LastX             = xPos;
+    m_LastY             = yPos;
+
+    m_Yaw += xOffset;
+    m_Pitch += yOffset;
+
+    // Contrain pitch
+    if (m_Pitch > 89.f) {
+        m_Pitch = 89.f;
+    }
+    if (m_Pitch < -89.f) {
+        m_Pitch = -89.f;
+    }
+}
+
+void ACamera::OnKey(FKeyEvent& event) {
+    IGameObject::OnKey(event);
+
+    const float velocity = 100.f * Graphics::GetDeltaTime();
+    if (event.KeyCode == KeyCode::W) {
+        GetTransform()->Translate(m_Front * velocity);
+    }
+    if (event.KeyCode == KeyCode::A) {
+        // GetTransform()->Translate((m_Front * -velocity));
+    }
+    if (event.KeyCode == KeyCode::S) {
+        // GetTransform()->Translate(m_Front * velocity);
+    }
+    if (event.KeyCode == KeyCode::D) {
+        // GetTransform()->Translate(m_Front * velocity);
     }
 }
 

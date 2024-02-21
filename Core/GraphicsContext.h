@@ -18,8 +18,12 @@ namespace Graphics {
     void MarkWindowForClose();
     FSize GetWindowSize();
     float GetWindowAspect();
-    float GetFrameTime();
+    void UpdateFrameTime();
     float GetFrameRate();
+    float GetDeltaTime();
+    void AddDrawCall();
+    u32 GetDrawCalls();
+    void ResetDrawCalls();
     bool Initialize(const FSize& size, const char* title);
     void Shutdown();
 

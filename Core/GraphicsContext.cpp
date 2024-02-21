@@ -11,6 +11,8 @@ namespace Graphics {
     FSize g_InitWindowSize;
     FSize g_CurrentWindowSize;
     const char* g_WindowTitle;
+    float g_DeltaTime = 0.f;
+    u32 g_DrawCalls   = 0;
 
     // Graphics state
     float g_LastFrame   = 0.f;
@@ -22,15 +24,30 @@ namespace Graphics {
         return g_Window.get();
     }
 
-    float GetFrameTime() {
+    void UpdateFrameTime() {
         const auto currentFrame = static_cast<float>(glfwGetTime());
-        const float deltaTime   = currentFrame - g_LastFrame;
+        g_DeltaTime             = currentFrame - g_LastFrame;
         g_LastFrame             = currentFrame;
-        return deltaTime;
+    }
+
+    float GetDeltaTime() {
+        return g_DeltaTime;
+    }
+
+    void AddDrawCall() {
+        g_DrawCalls++;
+    }
+
+    void ResetDrawCalls() {
+        g_DrawCalls = 0;
+    }
+
+    u32 GetDrawCalls() {
+        return g_DrawCalls;
     }
 
     float GetFrameRate() {
-        return 1.f / GetFrameTime();
+        return 1.f / GetDeltaTime();
     }
 
     void ToggleWireframe() {
@@ -105,6 +122,7 @@ namespace Graphics {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_SAMPLES, 4);
 
         // Defined in CMakeLists.txt
         // Remove to disable OpenGL debug output

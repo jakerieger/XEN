@@ -28,6 +28,7 @@ void AMeshRenderer::Draw(FSceneContext& sceneContext,
 
     m_Material->Use();
     if (activeCamera) {
+        // Update MVP Uniforms (required by all Shaders used by MeshRenderer
         m_Material->GetShader()->SetMat4(
           "u_Projection",
           activeCamera->GetProjectionMatrix(Graphics::GetWindowAspect()));
@@ -35,16 +36,9 @@ void AMeshRenderer::Draw(FSceneContext& sceneContext,
                                          activeCamera->GetViewMatrix());
         m_Material->GetShader()->SetMat4("u_Model",
                                          transform->GetModelMatrix());
-        m_Material->GetShader()->SetVec3("u_LightColor",
-                                         sceneContext.m_Sun.GetColor());
-        m_Material->GetShader()->SetVec3(
-          "u_LightPosition",
-          sceneContext.m_Sun.GetTransform().GetPosition());
-        m_Material->GetShader()->SetVec3(
-          "u_ViewPosition",
-          activeCamera->GetTransform()->GetPosition());
 
-        m_Material->UpdateUniforms();
+        // Update material-specific uniforms
+        m_Material->UpdateUniforms(sceneContext, activeCamera);
     }
 
     for (auto& mesh : m_Meshes) {
