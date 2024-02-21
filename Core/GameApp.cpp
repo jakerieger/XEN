@@ -76,7 +76,7 @@ namespace Application {
 }  // namespace Application
 
 void IGameApp::AddScene(eastl::unique_ptr<AScene>& scene) {
-    m_Scenes.push_back(eastl::move(scene));
+    m_Scenes.push_back(move(scene));
 }
 
 void IGameApp::LoadScene(const eastl::string& name) {
@@ -84,5 +84,9 @@ void IGameApp::LoadScene(const eastl::string& name) {
     if (scene) {
         scene->SetActive(true);
         scene->Start();
+
+        for (auto& go : scene->GetContext().m_GameObjects) {
+            Input::RegisterListener(go.get());
+        }
     }
 }

@@ -74,7 +74,7 @@ int main(int, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
-    Application::InitializeApp(app, SCREEN_792P, "XEN | DemoApp <OpenGL 4.6>");
+    Application::InitializeApp(app, SCREEN_792P, "XEN | ModelLoading");
     Utilities::SetWindowIcon(
       Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str());
     Application::RunApp(app);

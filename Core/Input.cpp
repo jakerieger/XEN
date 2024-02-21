@@ -3,7 +3,13 @@
 //
 
 #include "Input.h"
+
+#include "GameApp.h"
+#include "Interfaces/GameObject.h"
 #include "Interfaces/InputListener.h"
+
+#include <typeinfo>
+#include <iostream>
 
 #define GLFW_KEY_NONE 0
 
@@ -56,6 +62,11 @@ namespace Input {
 
     void RegisterListener(IInputListener* listener) {
         g_Listeners.push_back(listener);
+    }
+
+    void UnregisterSceneListeners(IInputListener* listener) {
+        g_Listeners.erase(g_Listeners.begin(), g_Listeners.end());
+        RegisterListener(listener);
     }
 
 }  // namespace Input
