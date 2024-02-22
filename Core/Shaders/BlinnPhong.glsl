@@ -20,11 +20,11 @@ out vec3 ObjectColor;
 out vec3 LightPosition;
 out vec3 ViewPosition;
 
-out TBNPos {
+out TangentBitangent {
     vec3 TangentLightPos;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
-} tbn_pos;
+} TBN;
 
 void main() {
     mat3 normalMatrix = transpose(inverse(mat3(u_Model)));
@@ -39,10 +39,10 @@ void main() {
     LightPosition = u_LightPosition;
     ViewPosition = u_ViewPosition;
 
-    mat3 TBN = transpose(mat3(T, B, N));
-    tbn_pos.TangentLightPos = TBN * LightPosition;
-    tbn_pos.TangentViewPos = TBN * ViewPosition;
-    tbn_pos.TangentFragPos = TBN * FragCoord;
+    mat3 tbnMat = transpose(mat3(T, B, N));
+    TBN.TangentLightPos = tbnMat * LightPosition;
+    TBN.TangentViewPos = tbnMat * ViewPosition;
+    TBN.TangentFragPos = tbnMat * FragCoord;
 
     mat4 MVP = u_Projection * u_View * u_Model;
     gl_Position = MVP * vec4(aPos, 1.0);
@@ -57,11 +57,11 @@ in vec3 ObjectColor;
 in vec3 LightPosition;
 in vec3 ViewPosition;
 
-in TBNPos {
+in TangentBitangent {
     vec3 TangentLightPos;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
-} tbn_in;
+} TBN;
 
 
 uniform vec3 u_LightColor;
@@ -82,14 +82,14 @@ void main() {
     float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
 
-    vec3 lightDirection = normalize(tbn_in.TangentLightPos - tbn_in.TangentFragPos);
+    vec3 lightDirection = normalize(TBN.TangentLightPos - TBN.TangentFragPos);
 
     vec3 color = texture(u_DiffuseMap, texCoord).rgb;
     float diff = max(dot(lightDirection, norm), 0.0);
     vec3 diffuse = diff * color;
 
     float specularStrength = 1.0;
-    vec3 viewDir = normalize(tbn_in.TangentViewPos - tbn_in.TangentFragPos);
+    vec3 viewDir = normalize(TBN.TangentViewPos - TBN.TangentFragPos);
     vec3 reflectDir = reflect(-lightDirection, norm);
     vec3 halfwayDir = normalize(lightDirection + viewDir);
     float spec = pow(max(dot(norm, halfwayDir), 0.0), 32.0);
