@@ -57,9 +57,10 @@ void AMeshRenderer::Destroyed(FSceneContext& sceneContext) {
 
 void AMeshRenderer::LoadModel(const eastl::string& path) {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(
-      path.c_str(),
-      aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    constexpr u8 processFlags = aiProcess_Triangulate | aiProcess_FlipUVs |
+                                aiProcess_CalcTangentSpace |
+                                aiProcess_JoinIdenticalVertices;
+    const aiScene* scene = import.ReadFile(path.c_str(), processFlags);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
         !scene->mRootNode) {
