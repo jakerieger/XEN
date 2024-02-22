@@ -25,4 +25,4 @@ and the XEN project reconfigured before the project can be compiled.
 ## ⚖️ License
 
 XEN is licensed under the [ISC License](LICENSE). Third party files included are all licensed
-under their respective licenses.
+under their respective licenses, viewable [here](Licenses).
