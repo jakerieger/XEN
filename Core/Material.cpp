@@ -57,7 +57,7 @@ namespace Materials {
             int width, height, nrChannels;
             stbi_set_flip_vertically_on_load(true);
             u8* data =
-              stbi_load(m_DiffuseMapSource, &width, &height, &nrChannels, 0);
+              stbi_load(m_NormalMapSource, &width, &height, &nrChannels, 0);
             if (data) {
                 glTexImage2D(GL_TEXTURE_2D,
                              0,

@@ -24,12 +24,12 @@ const eastl::vector g_SkyboxVertices = {
   1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
 
 ASkybox::ASkybox() : m_VAO(0), m_VBO(0) {
-    auto right  = "Resources/Textures/Simple/right.jpg";
-    auto left   = "Resources/Textures/Simple/left.jpg";
-    auto top    = "Resources/Textures/Simple/top.jpg";
-    auto bottom = "Resources/Textures/Simple/bottom.jpg";
-    auto front  = "Resources/Textures/Simple/front.jpg";
-    auto back   = "Resources/Textures/Simple/back.jpg";
+    auto right  = "Resources/Textures/BlueSunset/right.jpg";
+    auto left   = "Resources/Textures/BlueSunset/left.jpg";
+    auto top    = "Resources/Textures/BlueSunset/top.jpg";
+    auto bottom = "Resources/Textures/BlueSunset/bottom.jpg";
+    auto front  = "Resources/Textures/BlueSunset/front.jpg";
+    auto back   = "Resources/Textures/BlueSunset/back.jpg";
 
     m_CubemapTexture = LoadCubemap({right, left, top, bottom, front, back});
     m_Shader         = eastl::make_unique<AShader>(BuiltinShaders::Skybox);

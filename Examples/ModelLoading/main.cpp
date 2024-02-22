@@ -35,7 +35,7 @@ void DemoApp::Startup() {
     unique_ptr<Demon> demon      = IGameObject::Create<Demon>("Demon");
 
     unique_ptr<ADirectionalLight> sun =
-      ADirectionalLight::Create({0.f, 0.f, -10.f});
+      ADirectionalLight::Create({0.f, 0.f, 3.f});
 
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
 

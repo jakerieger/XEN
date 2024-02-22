@@ -30,3 +30,4 @@ add_executable(ModelLoading main.cpp Demon.cpp ${RC_FILE}
 target_link_libraries(ModelLoading PRIVATE XEN-Core EASTL fmt::fmt)
 
 file(COPY ../../Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY ../../Sponza DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

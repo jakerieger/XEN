@@ -15,9 +15,7 @@ Demon::Demon(const eastl::string& name) : IGameObject(name) {
                                 "Resources/Textures/MetalBronzeWorn001/"
                                 "MetalBronzeWorn001_NRM_2K_METALNESS.png"));
 
-    m_Demon = make_unique<AMeshRenderer>(
-      Resources::GetResource(RES_3D_MODEL, "Snowden.fbx").c_str(),
-      mat);
+    m_Demon = make_unique<AMeshRenderer>("Resources/Models/Snowden.fbx", mat);
     GetTransform()->SetScale(0.3, 0.3, 0.3);
 }
 
