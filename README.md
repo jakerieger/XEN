@@ -1,7 +1,10 @@
-# XEN
+![](Docs/XENEngineBanner.png)
 
-Just another game engine project based on OpenGL. Provides a [Core](Core) static library that can
-be linked against to build games and other 3D tools.
+## What is XEN?
+
+**XEN** is just another game engine project based on OpenGL (4.6). It provides a [Core](Core) static library (XEN-Core)
+that
+can be linked against to build games and other 3D tools.
 
 #### ▶️ To see XEN in action, you can browse and build the projects provided in the [Examples](Examples) directory.
 
