@@ -5,9 +5,9 @@ be linked against to build games and other 3D tools.
 
 #### ▶️ To see XEN in action, you can browse and build the projects provided in the [Examples](Examples) directory.
 
-![](Docs/monke.png)
+![](Docs/ModelLoading.png)
 
-*(Example "ModelLoading" renders a floor and Suzanne from Blender with basic lighting)*
+*(Example "ModelLoading" renders a floor and statue with basic lighting)*
 
 ## 📚 Third Party Dependencies
 
