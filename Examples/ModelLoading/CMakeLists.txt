@@ -24,7 +24,7 @@ endif ()
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
-add_executable(ModelLoading main.cpp Demon.cpp ${RC_FILE}
+add_executable(ModelLoading main.cpp Statue.cpp ${RC_FILE}
         Floor.cpp
 )
 target_link_libraries(ModelLoading PRIVATE XEN-Core EASTL fmt::fmt)

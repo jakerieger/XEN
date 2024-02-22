@@ -5,7 +5,7 @@
 #include "Resources.h"
 #include "GameApp.h"
 #include "InputCodes.h"
-#include "Demon.h"
+#include "Statue.h"
 
 const FSize SCREEN_720P  = {1280, 720};
 const FSize SCREEN_792P  = {1408, 792};
@@ -30,9 +30,9 @@ void DemoApp::Startup() {
     using namespace eastl;
 
     unique_ptr<AScene> demoScene = AScene::Create("Demo");
-    unique_ptr<Floor> floor      = IGameObject::Create<Floor>("Floor");
     unique_ptr<ACamera> mainCam  = IGameObject::Create<ACamera>("MainCamera");
-    unique_ptr<Demon> demon      = IGameObject::Create<Demon>("Demon");
+    unique_ptr<Floor> floor      = IGameObject::Create<Floor>("Floor");
+    unique_ptr<Statue> statue    = IGameObject::Create<Statue>("Demon");
 
     unique_ptr<ADirectionalLight> sun =
       ADirectionalLight::Create({0.f, 0.f, 3.f});
@@ -44,7 +44,7 @@ void DemoApp::Startup() {
 
     demoScene->SetSun(sun);
     demoScene->AddGameObject(floor);
-    demoScene->AddGameObject(demon);
+    demoScene->AddGameObject(statue);
     demoScene->AddGameObject(mainCam);
 
     AddScene(demoScene);

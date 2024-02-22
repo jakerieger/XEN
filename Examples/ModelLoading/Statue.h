@@ -8,10 +8,10 @@
 #include "Interfaces/GameObject.h"
 #include "MeshRenderer.h"
 
-class Demon final : public IGameObject,
-                    public IDrawable {
+class Statue final : public IGameObject,
+                     public IDrawable {
 public:
-    explicit Demon(const eastl::string& name);
+    explicit Statue(const eastl::string& name);
 
     // IDrawable
     void Draw(FSceneContext& sceneContext) override;
@@ -21,5 +21,5 @@ public:
     void Update(float deltaTime, FSceneContext& sceneContext) override;
     void Destroyed(FSceneContext& sceneContext) override;
 
-    eastl::unique_ptr<AMeshRenderer> m_Demon;
+    eastl::unique_ptr<AMeshRenderer> m_Mesh;
 };
