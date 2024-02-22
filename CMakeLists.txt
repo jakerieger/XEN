@@ -91,6 +91,12 @@ add_library(XEN-Core STATIC
         Core/PostProcessing/ToneMapper.h
         Core/PostProcessing/Bloom.cpp
         Core/PostProcessing/Bloom.h
+        Core/Skybox.cpp
+        Core/Skybox.h
+        Core/PointLight.cpp
+        Core/PointLight.h
+        Core/SpotLight.cpp
+        Core/SpotLight.h
 )
 target_link_libraries(XEN-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 

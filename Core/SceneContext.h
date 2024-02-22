@@ -10,5 +10,5 @@
 
 struct FSceneContext {
     eastl::vector<eastl::unique_ptr<IGameObject>> m_GameObjects;
-    ADirectionalLight m_Sun;
+    eastl::unique_ptr<ADirectionalLight> m_Sun;
 };

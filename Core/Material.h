@@ -48,7 +48,7 @@ protected:
 namespace Materials {
     class BlinnPhong final : public IMaterial {
     public:
-        BlinnPhong();
+        explicit BlinnPhong(const char* diffuseMap, const char* normalMap);
         void Initialize() override;
         void Destroy() override;
         void Use() override;
@@ -64,29 +64,14 @@ namespace Materials {
         }
 
     private:
-        glm::vec3 m_DiffuseColor  = {0.5f, 0.5f, 0.5f};
+        glm::vec3 m_DiffuseColor  = {0.0f, 0.0f, 0.0f};
         glm::vec3 m_SpecularColor = {1.f, 1.f, 1.f};
         float m_SpecularStrength  = 1.f;
-        u32 m_DiffuseTexture      = 0;
+        u32 m_DiffuseMap          = 0;
+        u32 m_NormalMap           = 0;
         float m_UVScale           = 1.f;
-    };
-
-    class SkyDome final : public IMaterial {
-    public:
-        SkyDome();
-        void Initialize() override;
-        void Destroy() override;
-        void Use() override;
-        void UpdateUniforms(FSceneContext& sceneContext,
-                            ACamera* camera) override;
-
-        void SetUVScale(const float scale) {
-            m_UVScale = scale;
-        }
-
-    private:
-        u32 m_Texture   = 0;
-        float m_UVScale = 1.f;
+        const char* m_DiffuseMapSource;
+        const char* m_NormalMapSource;
     };
 
     class Unlit final : public IMaterial {

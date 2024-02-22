@@ -5,10 +5,7 @@
 #include "Resources.h"
 #include "GameApp.h"
 #include "InputCodes.h"
-#include "SkyDome.h"
-#include "TV.h"
-
-#include <fmt/format.h>
+#include "Demon.h"
 
 const FSize SCREEN_720P  = {1280, 720};
 const FSize SCREEN_792P  = {1408, 792};
@@ -26,35 +23,30 @@ private:
     //====================================//
     // Put application-specific data here //
     //====================================//
-    bool m_HideCursor = false;
+    bool m_HideCursor = true;
 };
 
 void DemoApp::Startup() {
-    auto demoScene = AScene::Create("Demo");
-    auto floor     = IGameObject::Create<Floor>("Floor");
-    auto skydome   = IGameObject::Create<SkyDome>("SkyDome");
-    auto mainCam   = IGameObject::Create<ACamera>("MainCamera");
+    using namespace eastl;
+
+    unique_ptr<AScene> demoScene = AScene::Create("Demo");
+    unique_ptr<Floor> floor      = IGameObject::Create<Floor>("Floor");
+    unique_ptr<ACamera> mainCam  = IGameObject::Create<ACamera>("MainCamera");
+    unique_ptr<Demon> demon      = IGameObject::Create<Demon>("Demon");
+
+    unique_ptr<ADirectionalLight> sun =
+      ADirectionalLight::Create({0.f, 0.f, -10.f});
 
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
-    skydome->GetTransform()->SetScale(0.3f, 0.3f, 0.3f);
 
     mainCam->SetActive(true);
-    mainCam->GetTransform()->SetPosition(0.f, 0.f, 5.f);
+    mainCam->GetTransform()->SetPosition(0.f, 0.f, 3.f);
 
-    demoScene->GetSun().GetTransform().SetPosition(2.f, 0.f, 5.f);
+    demoScene->SetSun(sun);
     demoScene->AddGameObject(floor);
-
-    for (u8 i = 0; i < 10; i++) {
-        for (u8 j = 0; j < 10; j++) {
-            auto tv =
-              IGameObject::Create<TV>(fmt::format("TV_{}.{}", i, j).c_str());
-            tv->GetTransform()->SetPosition(i * 8, 0.f, j * 8);
-            demoScene->AddGameObject(tv);
-        }
-    }
-
-    demoScene->AddGameObject(skydome);
+    demoScene->AddGameObject(demon);
     demoScene->AddGameObject(mainCam);
+
     AddScene(demoScene);
     LoadScene("Demo");
 }
@@ -76,6 +68,9 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
             break;
         case KeyCode::F12:
             DebugUI::ToggleVisible();
+            break;
+        case KeyCode::Tab:
+            Graphics::ToggleWireframe();
             break;
         case KeyCode::Space: {
             if (m_HideCursor) {
@@ -99,7 +94,7 @@ int main(int, char* argv[]) {
     Resources::SetCwd(argv[0]);
 
     DemoApp app;
-    Application::InitializeApp(app, SCREEN_792P, "XEN | ModelLoading", true);
+    Application::InitializeApp(app, SCREEN_792P, "XEN | ModelLoading", false);
     Utilities::SetWindowIcon(
       Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str());
     Application::RunApp(app);

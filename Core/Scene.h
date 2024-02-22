@@ -35,8 +35,12 @@ public:
         return m_Name;
     }
 
-    ADirectionalLight& GetSun() {
-        return m_SceneContext.m_Sun;
+    void SetSun(eastl::unique_ptr<ADirectionalLight>& sun) {
+        m_SceneContext.m_Sun = move(sun);
+    }
+
+    ADirectionalLight* GetSun() const {
+        return m_SceneContext.m_Sun.get();
     }
 
     FSceneContext& GetContext() {

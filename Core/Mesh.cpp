@@ -3,9 +3,7 @@
 //
 
 #include "Mesh.h"
-
 #include "GraphicsContext.h"
-
 #include <glad/glad.h>
 
 void AMesh::Initialize() {
@@ -42,13 +40,27 @@ void AMesh::Initialize() {
                           sizeof(FVertex),
                           reinterpret_cast<void*>(offsetof(FVertex, Normal)));
     glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2,
+                          2,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(FVertex),
+                          reinterpret_cast<void*>(offsetof(FVertex, TexCoord)));
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(FVertex),
+                          reinterpret_cast<void*>(offsetof(FVertex, Tangent)));
+    glEnableVertexAttribArray(4);
     glVertexAttribPointer(
-      2,
-      2,
+      4,
+      3,
       GL_FLOAT,
       GL_FALSE,
       sizeof(FVertex),
-      reinterpret_cast<void*>(offsetof(FVertex, TexCoords)));
+      reinterpret_cast<void*>(offsetof(FVertex, Bitangent)));
 
     glBindVertexArray(0);
 }

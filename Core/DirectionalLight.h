@@ -5,22 +5,34 @@
 #pragma once
 #include "Transform.h"
 
+#include <EASTL/unique_ptr.h>
+
 class ADirectionalLight {
 public:
-    explicit ADirectionalLight(const glm::vec3& color = {1.f, 1.f, 1.f},
-                               const float strength   = 100.f)
-        : m_Color(color), m_Strength(strength) {}
+    explicit ADirectionalLight(const glm::vec3& direction,
+                               const glm::vec3& color = {1.f, 1.f, 1.f},
+                               const float strength   = 1.f)
+        : m_Direction(direction), m_Color(color), m_Strength(strength) {}
 
-    ATransform& GetTransform() {
-        return m_Transform;
+    static eastl::unique_ptr<ADirectionalLight>
+    Create(const glm::vec3& direction) {
+        return eastl::make_unique<ADirectionalLight>(direction);
+    }
+
+    glm::vec3& GetDirection() {
+        return m_Direction;
     }
 
     glm::vec3 GetColor() {
         return m_Color;
     }
 
+    float GetStrength() const {
+        return m_Strength;
+    }
+
 private:
-    ATransform m_Transform;
+    glm::vec3 m_Direction;
     glm::vec3 m_Color;
     float m_Strength;
 };

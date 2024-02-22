@@ -9,9 +9,7 @@ if (WIN32)
     set(RC_FILE ../res/app.rc)
 else ()
     set(RC_FILE ""
-            SkyDome.cpp
-            SkyDome.h
-            SkyDome.h)
+    )
 endif ()
 
 include_directories(
@@ -26,10 +24,9 @@ endif ()
 find_package(EASTL CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
-add_executable(ModelLoading main.cpp TV.cpp ${RC_FILE}
+add_executable(ModelLoading main.cpp Demon.cpp ${RC_FILE}
         Floor.cpp
-        SkyDome.h
-        SkyDome.cpp)
+)
 target_link_libraries(ModelLoading PRIVATE XEN-Core EASTL fmt::fmt)
 
 file(COPY ../../Resources DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

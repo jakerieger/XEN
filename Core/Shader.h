@@ -69,4 +69,7 @@ namespace BuiltinShaders {
     const inline eastl::string SkyDome =
 #include "Shaders/SkyDome.glsl"
       ;
+    const inline eastl::string Skybox =
+#include "Shaders/Skybox.glsl"
+      ;
 }  // namespace BuiltinShaders

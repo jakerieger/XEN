@@ -9,7 +9,11 @@
 #include "MeshRenderer.h"
 
 Floor::Floor(const eastl::string& name) : IGameObject(name) {
-    auto mat = IMaterial::Create<Materials::BlinnPhong>();
+    auto mat = eastl::unique_ptr<IMaterial>(new Materials::BlinnPhong(
+      "Resources/Textures/ConcreteBlocksPavingSquareStack001/"
+      "ConcreteBlocksPavingSquareStack001_COL_2K.png",
+      "Resources/Textures/ConcreteBlocksPavingSquareStack001/"
+      "ConcreteBlocksPavingSquareStack001_NRM_2K.png"));
 
     m_FloorMesh = make_unique<AMeshRenderer>(
       Resources::GetResource(RES_3D_MODEL, "Floor.fbx").c_str(),
@@ -23,7 +27,7 @@ void Floor::Draw(FSceneContext& sceneContext) {
 void Floor::Start(FSceneContext& sceneContext) {
     IGameObject::Start(sceneContext);
     m_FloorMesh->Start(sceneContext);
-    m_FloorMesh->GetMaterialAs<Materials::BlinnPhong>()->SetUVScale(200.f);
+    m_FloorMesh->GetMaterialAs<Materials::BlinnPhong>()->SetUVScale(600.f);
     m_FloorMesh->GetMaterialAs<Materials::BlinnPhong>()->SetColor(
       glm::vec3(1.f));
 }

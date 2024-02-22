@@ -57,8 +57,9 @@ void AMeshRenderer::Destroyed(FSceneContext& sceneContext) {
 
 void AMeshRenderer::LoadModel(const eastl::string& path) {
     Assimp::Importer import;
-    const aiScene* scene =
-      import.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = import.ReadFile(
+      path.c_str(),
+      aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
         !scene->mRootNode) {
@@ -99,13 +100,25 @@ AMesh ProcessMesh(aiMesh* mesh, const aiScene* scene) {
         normal.z      = mesh->mNormals[i].z;
         vertex.Normal = normal;
 
+        glm::vec3 tangent;
+        tangent.x      = mesh->mTangents[i].x;
+        tangent.y      = mesh->mTangents[i].y;
+        tangent.z      = mesh->mTangents[i].z;
+        vertex.Tangent = tangent;
+
+        glm::vec3 bitangent;
+        bitangent.x      = mesh->mBitangents[i].x;
+        bitangent.y      = mesh->mBitangents[i].y;
+        bitangent.z      = mesh->mBitangents[i].z;
+        vertex.Bitangent = bitangent;
+
         if (mesh->mTextureCoords[0]) {
             glm::vec2 tex;
-            tex.x            = mesh->mTextureCoords[0][i].x;
-            tex.y            = mesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = tex;
+            tex.x           = mesh->mTextureCoords[0][i].x;
+            tex.y           = mesh->mTextureCoords[0][i].y;
+            vertex.TexCoord = tex;
         } else {
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+            vertex.TexCoord = glm::vec2(0.0f, 0.0f);
         }
 
         vertices.push_back(vertex);

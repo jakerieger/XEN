@@ -32,7 +32,7 @@ vec3 aces(vec3 x) {
 
 void main() {
     vec4 tex = texture(u_Texture, TexCoords);
-    FragColor = vec4(aces(tex.xyz), 1.0);
+    FragColor = tex;
 }
 #undef FRAGMENT
 )"";

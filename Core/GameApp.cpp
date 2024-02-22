@@ -9,15 +9,13 @@
 #include "DebugUI.h"
 #include "Framebuffer.h"
 #include "Profiler.h"
+#include "Skybox.h"
 
 #include <Shader.h>
 
 namespace Application {
     FColor g_ClearColor = FColor(0xFF11131C);
 
-    // All of the below variables are used for post processing
-    AFramebuffer g_PPBuffer;
-    AShader* g_PPShader;
     float g_QuadVertices[] = {-1.0f, 1.0f, 0.0f, 1.0f,  -1.0f, -1.0f,
                               0.0f,  0.0f, 1.0f, -1.0f, 1.0f,  0.0f,
 
@@ -25,6 +23,14 @@ namespace Application {
                               1.0f,  0.0f, 1.0f, 1.0f,  1.0f,  1.0f};
     u32 g_QuadVAO;
     u32 g_QuadVBO;
+
+    u32 g_DepthMapFBO;
+    u32 g_DepthMap;
+
+    constexpr u32 SHADOW_WIDTH  = 1024;
+    constexpr u32 SHADOW_HEIGHT = 1024;
+
+    ASkybox* g_Skybox;
     // =========================================================
 
     void InitializeApp(IGameApp& app,
@@ -39,30 +45,37 @@ namespace Application {
         Profiler::Initialize();
         DebugUI::Initialize();
 
-        g_PPBuffer.Initialize();
-        g_PPShader = new AShader(BuiltinShaders::Quad);
-        glGenVertexArrays(1, &g_QuadVAO);
-        glGenBuffers(1, &g_QuadVBO);
-        glBindVertexArray(g_QuadVAO);
-        glBindBuffer(GL_ARRAY_BUFFER, g_QuadVBO);
-        glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(g_QuadVertices),
-                     &g_QuadVertices,
-                     GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0,
-                              2,
-                              GL_FLOAT,
-                              GL_FALSE,
-                              4 * sizeof(float),
-                              (void*)0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1,
-                              2,
-                              GL_FLOAT,
-                              GL_FALSE,
-                              4 * sizeof(float),
-                              (void*)(2 * sizeof(float)));
+        g_Skybox = new ASkybox();
+        g_Skybox->Init();
+
+        //================= SHADOW MAPS =================//
+        // glGenFramebuffers(1, &g_DepthMapFBO);
+        // glGenTextures(1, &g_DepthMap);
+        // glBindTexture(GL_TEXTURE_2D, g_DepthMap);
+        // glTexImage2D(GL_TEXTURE_2D,
+        //              0,
+        //              GL_DEPTH_COMPONENT,
+        //              SHADOW_WIDTH,
+        //              SHADOW_HEIGHT,
+        //              0,
+        //              GL_DEPTH_COMPONENT,
+        //              GL_FLOAT,
+        //              nullptr);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        //
+        // glBindFramebuffer(GL_FRAMEBUFFER, g_DepthMapFBO);
+        // glFramebufferTexture2D(GL_FRAMEBUFFER,
+        //                        GL_DEPTH_ATTACHMENT,
+        //                        GL_TEXTURE_2D,
+        //                        g_DepthMap,
+        //                        0);
+        // glDrawBuffer(GL_NONE);
+        // glReadBuffer(GL_NONE);
+        // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        //===============================================//
 
 #ifdef _DEBUG_GRAPHICS
         Graphics::Error::EnableDebugOutput();
@@ -108,7 +121,6 @@ namespace Application {
         //=======================================//
         // Render to post-processing framebuffer //
         //=======================================//
-        g_PPBuffer.Bind();
 
         // Clear buffers
         glClearColor(g_ClearColor.Red,
@@ -126,27 +138,12 @@ namespace Application {
 
         if (activeScene) {
             activeScene->Render();
+            g_Skybox->Draw(AScene::GetActiveCamera(activeScene->GetContext()));
         }
 
         //==============================//
         // Render to screen framebuffer //
         //==============================//
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glDisable(GL_DEPTH_TEST);
-        glClearColor(
-          1.0f,
-          1.0f,
-          1.0f,
-          1.0f);  // set clear color to white (not really necessary actually,
-                  // since we won't be able to see behind the quad anyways)
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // Enable PP Shader
-        g_PPShader->Use();
-        glBindVertexArray(g_QuadVAO);
-        glBindTexture(GL_TEXTURE_2D, g_PPBuffer.GetTextureBuffer());
-        g_PPShader->SetInt("u_Texture", 0);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         DebugUI::Draw();
 
@@ -163,11 +160,14 @@ namespace Application {
 
     void RunApp(IGameApp& app) {
         while (UpdateApp(app)) {}
+
         app.Cleanup();
         Graphics::Shutdown();
         DebugUI::Shutdown();
         Profiler::Shutdown();
-        delete g_PPShader;
+
+        g_Skybox->Destroy();
+        delete g_Skybox;
     }
 }  // namespace Application
 
