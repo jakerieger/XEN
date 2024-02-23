@@ -1,4 +1,4 @@
-![](Docs/XENEngineBanner.png)
+![](Docs/img/XENEngineBanner.png)
 
 ## What is XEN?
 
