@@ -9,7 +9,7 @@ should not be used for any real game development.
 
 #### ▶️ To see XEN in action, you can browse and build the projects provided in the [Examples](Examples) directory.
 
-![](Docs/ModelLoading.png)
+![](Docs/img/ModelLoading.png)
 
 *(Example "ModelLoading" renders a floor and statue with basic lighting)*
 
