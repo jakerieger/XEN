@@ -3,7 +3,6 @@
 #include <assimp/postprocess.h>
 #include <stdint.h>
 #include <filesystem>
-#include <format>
 #include <assimp/scene.h>
 #include <rapidjson/document.h>
 
@@ -32,7 +31,8 @@ static int Convert(const std::string& file, std::string& outFilename) {
         fprintf(stderr, "ERROR::ASSIMP::%s\n", importer.GetErrorString());
         return 1;
     }
-    exporter.Export(scene, "assbin", outputFile);
+    exporter.Export(scene, "assbin", outFilename);
+    printf("  => %s\n", outFilename.c_str());
 
     return 0;
 }
@@ -59,14 +59,17 @@ static void ParseManifest(const std::string& json) {
             continue;
         }
 
-        printf("  => %s\n", outFile.c_str());
         converted++;
     }
 
-    printf("\nDone! Successfully converted %d file(s)\n", converted);
+    if (converted > 0) {
+        printf("\nDone! Successfully converted %d file(s)\n", converted);
+    } else {
+        fprintf(stderr, "\nNo files could be converted\n");
+    }
 }
 
-static std::string ReadFile(const char* path);
+static std::string ReadManifest();
 
 int main(const int argc, char* argv[]) {
     // Check if a file was passed as an argument first
@@ -78,8 +81,11 @@ int main(const int argc, char* argv[]) {
 
         printf("Converting 1 file:\n");
         printf("  - %s\n", argv[1]);
-        std::string outFile;
-        Convert(argv[1], outFile);
+        if (std::string outFile; Convert(argv[1], outFile) != 0) {
+            return 1;
+        }
+        printf("\nDone! Successfully converted 1 file\n");
+        return 0;
     }
 
     // If no file was passed, look for manifest.json in program path
@@ -88,7 +94,7 @@ int main(const int argc, char* argv[]) {
         return 1;
     }
 
-    auto manifestJson = ReadFile("manifest.json");
+    auto manifestJson = ReadManifest();
     if (manifestJson == "") {
         fprintf(stderr, "Error reading manifest file\n");
     }
@@ -97,8 +103,8 @@ int main(const int argc, char* argv[]) {
     return 0;
 }
 
-std::string ReadFile(const char* path) {
-    if (FILE* fp = fopen(path, "rb")) {
+std::string ReadManifest() {
+    if (FILE* fp = fopen("manifest.json", "rb")) {
         std::string contents;
         fseek(fp, 0, SEEK_END);
         contents.resize(ftell(fp));
