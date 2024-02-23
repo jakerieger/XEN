@@ -12,9 +12,9 @@ const FSize SCREEN_792P  = {1408, 792};
 const FSize SCREEN_900P  = {1600, 900};
 const FSize SCREEN_1080P = {1920, 1080};
 
-class DemoApp final : public IGameApp {
+class ModelLoading final : public IGameApp {
 public:
-    DemoApp() = default;
+    ModelLoading() = default;
     void Startup() override;
     void Cleanup() override;
     void OnKeyDown(FKeyEvent& event) override;
@@ -26,16 +26,14 @@ private:
     bool m_HideCursor = true;
 };
 
-void DemoApp::Startup() {
+void ModelLoading::Startup() {
     using namespace eastl;
 
-    unique_ptr<AScene> demoScene = AScene::Create("Demo");
-    unique_ptr<ACamera> mainCam  = IGameObject::Create<ACamera>("MainCamera");
-    unique_ptr<Floor> floor      = IGameObject::Create<Floor>("Floor");
-    unique_ptr<Statue> statue    = IGameObject::Create<Statue>("Statue");
-
-    unique_ptr<ADirectionalLight> sun =
-      ADirectionalLight::Create({0.f, 2.f, 3.f});
+    auto demoScene = AScene::Create("Demo");
+    auto mainCam   = IGameObject::Create<ACamera>("MainCamera");
+    auto floor     = IGameObject::Create<Floor>("Floor");
+    auto sun       = ADirectionalLight::Create({0.f, 2.f, 3.f});
+    auto statue    = IGameObject::Create<Statue>("Statue");
 
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
 
@@ -51,9 +49,9 @@ void DemoApp::Startup() {
     LoadScene("Demo");
 }
 
-void DemoApp::Cleanup() {}
+void ModelLoading::Cleanup() {}
 
-void DemoApp::OnKeyDown(FKeyEvent& event) {
+void ModelLoading::OnKeyDown(FKeyEvent& event) {
     IInputListener::OnKeyDown(event);
 
     switch (event.KeyCode) {
@@ -90,14 +88,4 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
     }
 }
 
-int main(int, char* argv[]) {
-    Resources::SetCwd(argv[0]);
-
-    DemoApp app;
-    Application::InitializeApp(app, SCREEN_792P, "XEN | ModelLoading", false);
-    Utilities::SetWindowIcon(
-      Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str());
-    Application::RunApp(app);
-
-    return 0;
-}
+CREATE_AND_RUN(ModelLoading, SCREEN_792P, true)

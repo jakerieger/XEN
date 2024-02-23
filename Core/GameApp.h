@@ -53,3 +53,14 @@ namespace Application {
     bool UpdateApp(IGameApp& app);
     void RunApp(IGameApp& app);
 }  // namespace Application
+
+#define CREATE_AND_RUN(appClass, size, fullscreen)                             \
+    int main(int argc, char* argv[]) {                                         \
+        Resources::SetCwd(argv[0]);                                            \
+        appClass app;                                                          \
+        Application::InitializeApp(app, size, #appClass, fullscreen);          \
+        Utilities::SetWindowIcon(                                              \
+          Resources::GetResource(RES_ROOT, "APP_ICON.png").c_str());           \
+        Application::RunApp(app);                                              \
+        return 0;                                                              \
+    }
