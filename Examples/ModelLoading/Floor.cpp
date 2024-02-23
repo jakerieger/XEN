@@ -16,7 +16,7 @@ Floor::Floor(const eastl::string& name) : IGameObject(name) {
       "ConcreteBlocksPavingSquareStack001_NRM_2K.png"));
 
     m_FloorMesh = make_unique<AMeshRenderer>(
-      Resources::GetResource(RES_3D_MODEL, "Floor.fbx").c_str(),
+      Resources::GetResource(RES_3D_MODEL, "Floor.assbin").c_str(),
       mat);
 }
 
