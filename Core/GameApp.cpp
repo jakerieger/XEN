@@ -103,7 +103,6 @@ namespace Application {
         while (accumulatedTime >= FIXED_TIME_STEP) {
             if (activeScene) {
                 activeScene->FixedUpdated();
-                glfwPollEvents();
             }
 
             accumulatedTime -= FIXED_TIME_STEP;
@@ -155,6 +154,7 @@ namespace Application {
             activeScene->LateUpdate();
         }
 
+        glfwPollEvents();
         return !glfwWindowShouldClose(Graphics::GetWindow());
     }
 
@@ -177,6 +177,11 @@ void IGameApp::AddScene(eastl::unique_ptr<AScene>& scene) {
 
 void IGameApp::LoadScene(const eastl::string& name) {
     const auto scene = GetScene(name);
+    const auto currentScene = GetActiveScene();
+    if (currentScene) {
+        UnloadScene(currentScene);
+    }
+
     if (scene) {
         scene->SetActive(true);
         scene->Start();
@@ -185,4 +190,15 @@ void IGameApp::LoadScene(const eastl::string& name) {
             Input::RegisterListener(go.get());
         }
     }
+}
+
+void IGameApp::UnloadScene(AScene* scene) {
+    Input::UnregisterSceneListeners(this);
+
+    // TODO: Intead of initializing gameobjects in their constructor,
+    // move the logic to the Awake method so that gameobjects
+    // can be reinitialized on scene load and not permanently
+    // destroyed when unloading a scene
+    // scene->Destroyed();
+    scene->SetActive(false);
 }

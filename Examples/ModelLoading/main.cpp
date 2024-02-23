@@ -32,7 +32,7 @@ void DemoApp::Startup() {
     unique_ptr<AScene> demoScene = AScene::Create("Demo");
     unique_ptr<ACamera> mainCam  = IGameObject::Create<ACamera>("MainCamera");
     unique_ptr<Floor> floor      = IGameObject::Create<Floor>("Floor");
-    unique_ptr<Statue> statue    = IGameObject::Create<Statue>("Demon");
+    unique_ptr<Statue> statue    = IGameObject::Create<Statue>("Statue");
 
     unique_ptr<ADirectionalLight> sun =
       ADirectionalLight::Create({0.f, 2.f, 3.f});
@@ -40,7 +40,7 @@ void DemoApp::Startup() {
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
 
     mainCam->SetActive(true);
-    mainCam->GetTransform()->SetPosition(0.f, 2.f, 3.f);
+    mainCam->GetTransform()->SetPosition(0.f, 0.f, 3.f);
 
     demoScene->SetSun(sun);
     demoScene->AddGameObject(floor);
@@ -48,6 +48,26 @@ void DemoApp::Startup() {
     demoScene->AddGameObject(mainCam);
 
     AddScene(demoScene);
+
+    unique_ptr<AScene> demoScene2 = AScene::Create("Demo2");
+    unique_ptr<ACamera> mainCam2  = IGameObject::Create<ACamera>("MainCamera2");
+    unique_ptr<Floor> floor2      = IGameObject::Create<Floor>("Floor2");
+    unique_ptr<Statue> statue2    = IGameObject::Create<Statue>("Statue2");
+
+    unique_ptr<ADirectionalLight> sun2 =
+      ADirectionalLight::Create({0.f, 4.f, 3.f});
+
+    floor2->GetTransform()->SetPosition(0.f, -1.f, 0.f);
+
+    mainCam2->SetActive(true);
+    mainCam2->GetTransform()->SetPosition(0.f, 0.f, 10.f);
+
+    demoScene2->SetSun(sun2);
+    demoScene2->AddGameObject(floor2);
+    demoScene2->AddGameObject(statue2);
+    demoScene2->AddGameObject(mainCam2);
+
+    AddScene(demoScene2);
     LoadScene("Demo");
 }
 
@@ -85,6 +105,9 @@ void DemoApp::OnKeyDown(FKeyEvent& event) {
 
             m_HideCursor = !m_HideCursor;
         } break;
+        case KeyCode::Enter:
+            LoadScene("Demo2");
+            break;
         default:
             break;
     }

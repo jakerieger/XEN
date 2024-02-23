@@ -18,11 +18,11 @@ namespace Input {
         FKeyEvent event {_key, _mods};
 
         for (const auto listener : g_Listeners) {
-            if (action == GLFW_PRESS) {
+            if (action == GLFW_PRESS && listener) {
                 listener->OnKeyDown(event);
-            } else if (action == GLFW_RELEASE) {
+            } else if (action == GLFW_RELEASE && listener) {
                 listener->OnKeyUp(event);
-            } else if (action == GLFW_REPEAT) {
+            } else if (action == GLFW_REPEAT && listener) {
                 listener->OnKey(event);
             }
         }
@@ -36,9 +36,9 @@ namespace Input {
         FMouseEvent event {_button};
 
         for (const auto listener : g_Listeners) {
-            if (action == GLFW_PRESS) {
+            if (action == GLFW_PRESS && listener) {
                 listener->OnMouseDown(event);
-            } else if (action == GLFW_RELEASE) {
+            } else if (action == GLFW_RELEASE && listener) {
                 listener->OnMouseUp(event);
             }
         }
@@ -48,7 +48,8 @@ namespace Input {
     MouseMovementCallback(GLFWwindow*, const double xPos, const double yPos) {
         FMouseMoveEvent event {xPos, yPos};
         for (const auto listener : g_Listeners) {
-            listener->OnMouseMove(event);
+            if (listener)
+                listener->OnMouseMove(event);
         }
     }
 
@@ -57,7 +58,8 @@ namespace Input {
         FScrollEvent event {xOffset, yOffset};
 
         for (const auto listener : g_Listeners) {
-            listener->OnScroll(event);
+            if (listener)
+                listener->OnScroll(event);
         }
     }
 
@@ -73,7 +75,14 @@ namespace Input {
     }
 
     void UnregisterSceneListeners(IInputListener* appListener) {
-        g_Listeners.erase(g_Listeners.begin(), g_Listeners.end());
+        // Hack for .clear() not clearing pointers for some reason (probably
+        // just dumb). It will leave the pointers in the array and only clear
+        // the memory associated with those pointers leading to 'Invalid
+        // address' errors
+        for (u32 i = 0; i < g_Listeners.size(); i++) {
+            g_Listeners[i] = nullptr;
+        }
+        g_Listeners.clear();
         RegisterListener(appListener);
     }
 

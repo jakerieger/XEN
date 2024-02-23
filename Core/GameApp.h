@@ -21,6 +21,7 @@ public:
 
     void AddScene(eastl::unique_ptr<AScene>& scene);
     void LoadScene(const eastl::string& name);
+    void UnloadScene(AScene* scene);
 
     AScene* GetActiveScene() {
         for (const auto& scene : m_Scenes) {
