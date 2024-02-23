@@ -15,4 +15,3 @@ find_package(RapidJSON CONFIG REQUIRED)
 
 add_executable(ModelConverter main.cpp app.rc)
 target_link_libraries(ModelConverter PRIVATE assimp::assimp rapidjson)
-file(COPY manifest.json DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
