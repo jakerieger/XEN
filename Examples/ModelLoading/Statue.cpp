@@ -15,7 +15,7 @@ Statue::Statue(const eastl::string& name) : IGameObject(name) {
                                 "Resources/Textures/MetalBronzeWorn001/"
                                 "MetalBronzeWorn001_NRM_2K_METALNESS.png"));
 
-    m_Mesh = make_unique<AMeshRenderer>("Resources/Models/Snowden.fbx", mat);
+    m_Mesh = make_unique<AMeshRenderer>("Resources/Models/Snowden.assbin", mat);
     GetTransform()->SetScale(0.3, 0.3, 0.3);
 }
 
