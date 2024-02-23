@@ -59,7 +59,31 @@ public:
         return dynamic_cast<T*>(this);
     }
 
+    template<typename T>
+    void RegisterComponent(T* component) {
+        static_assert(std::is_base_of_v<IComponent, T>,
+                      "T must be a subclass of IComponent");
+
+        m_Components.push_back(component);
+    }
+
+    template<typename T>
+    T* GetComponent() {
+        static_assert(std::is_base_of_v<IComponent, T>,
+                      "T must be a subclass of IComponent");
+
+        for (auto& component : m_Components) {
+            auto casted = dynamic_cast<T*>(component);
+            if (casted) {
+                return casted;
+            }
+        }
+
+        return nullptr;
+    }
+
 protected:
     eastl::string m_Name;
     ATransform m_Transform;
+    eastl::vector<IComponent*> m_Components;
 };

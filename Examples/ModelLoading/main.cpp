@@ -35,12 +35,12 @@ void DemoApp::Startup() {
     unique_ptr<Statue> statue    = IGameObject::Create<Statue>("Demon");
 
     unique_ptr<ADirectionalLight> sun =
-      ADirectionalLight::Create({0.f, 0.f, 3.f});
+      ADirectionalLight::Create({0.f, 2.f, 3.f});
 
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
 
     mainCam->SetActive(true);
-    mainCam->GetTransform()->SetPosition(0.f, 0.f, 3.f);
+    mainCam->GetTransform()->SetPosition(0.f, 2.f, 3.f);
 
     demoScene->SetSun(sun);
     demoScene->AddGameObject(floor);

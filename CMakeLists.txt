@@ -112,7 +112,7 @@ if (BUILD_EXAMPLES)
     add_subdirectory(Examples/ModelLoading)
 endif ()
 
-add_subdirectory(ModelConverter)
+#add_subdirectory(ModelConverter)
 
 # Put active project(s) in this file
 include(Projects.cmake)

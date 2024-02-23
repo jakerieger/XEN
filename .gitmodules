@@ -4,4 +4,4 @@
 
 [submodule "Sponza"]
 	path = Sponza
-	url = https://github.com/jimmiebergmann/Sponza
+	url = https://github.com/jimmiebergmann/Sponza.git
