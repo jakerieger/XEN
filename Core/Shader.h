@@ -7,14 +7,17 @@
 struct FShaderSource {
     eastl::string m_Vertex;
     eastl::string m_Fragment;
+    eastl::string m_Geometry;
 };
 
 enum class EReadShaderError {
     READ_SHADER_IO,
     READ_SHADER_ERROR_SYNTAX_VS,
     READ_SHADER_ERROR_SYNTAX_FS,
+    READ_SHADER_ERROR_SYNTAX_GS,
     READ_SHADER_ERROR_COMPILE_VS,
     READ_SHADER_ERROR_COMPILE_FS,
+    READ_SHADER_ERROR_COMPILE_GS,
     READ_SHADER_ERROR_LINK,
 };
 

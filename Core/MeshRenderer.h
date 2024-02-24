@@ -13,12 +13,14 @@
 #include <assimp/scene.h>
 
 struct FSceneContext;
+class ACamera;
 
 class AMeshRenderer final : public IComponent {
 public:
     explicit AMeshRenderer(const char* path,
                            eastl::unique_ptr<IMaterial>& material);
 
+    void Start(FSceneContext& sceneContext) override;
     void Update(float deltaTime, FSceneContext& sceneContext) override;
     void Draw(FSceneContext& sceneContext, const ATransform* transform);
     void Destroyed(FSceneContext& sceneContext) override;
@@ -39,6 +41,7 @@ public:
 private:
     eastl::vector<AMesh> m_Meshes;
     eastl::unique_ptr<IMaterial> m_Material;
+    bool m_ReceivesShadows = true;
 
 private:
     void LoadModel(const eastl::string& path);

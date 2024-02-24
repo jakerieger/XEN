@@ -16,4 +16,15 @@ public:
     virtual void LateUpdate(FSceneContext& sceneContext) {}
     virtual void FixedUpdated(FSceneContext& sceneContext) {}
     virtual void Destroyed(FSceneContext& sceneContext) {}
+
+    void SetParent(IGameObject* parent) {
+        m_Parent = parent;
+    }
+
+    IGameObject* GetParent() const {
+        return m_Parent;
+    }
+
+private:
+    IGameObject* m_Parent = nullptr;
 };

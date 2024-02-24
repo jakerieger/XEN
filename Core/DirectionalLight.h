@@ -19,8 +19,8 @@ public:
         return eastl::make_unique<ADirectionalLight>(direction);
     }
 
-    glm::vec3& GetDirection() {
-        return m_Direction;
+    glm::vec3 GetDirection() const {
+        return normalize(m_Direction);
     }
 
     glm::vec3 GetColor() {

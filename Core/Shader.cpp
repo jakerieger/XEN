@@ -83,10 +83,13 @@ ReadShaderFromFile(const char* path) noexcept {
 
 static cpp::result<const FShaderSource, EReadShaderError>
 ReadShaderFromSource(const eastl::string& source) noexcept {
-    const auto VERTEX_START   = "#define VERTEX\n";
-    const auto VERTEX_END     = "#undef VERTEX\n";
-    const auto FRAGMENT_START = "#define FRAGMENT\n";
-    const auto FRAGMENT_END   = "#undef FRAGMENT\n";
+    constexpr auto VERTEX_START   = "#define VERTEX\n";
+    constexpr auto VERTEX_END     = "#undef VERTEX\n";
+    constexpr auto FRAGMENT_START = "#define FRAGMENT\n";
+    constexpr auto FRAGMENT_END   = "#undef FRAGMENT\n";
+    constexpr auto GEOMETRY_START = "#define GEOMETRY\n";
+    constexpr auto GEOMETRY_END   = "#undef GEOMETRY\n";
+    FShaderSource sources;
 
     // Check syntax is correct
     // =======================
@@ -116,11 +119,26 @@ ReadShaderFromSource(const eastl::string& source) noexcept {
 
     const eastl::string vertexCode   = source.substr(vertStart, vertEnd);
     const eastl::string fragmentCode = source.substr(fragStart, fragEnd);
+    sources.m_Vertex                 = vertexCode;
+    sources.m_Fragment               = fragmentCode;
+    sources.m_Geometry               = "";
 
-    return FShaderSource {
-      vertexCode,
-      fragmentCode,
-    };
+    size_t geoStart = source.find(GEOMETRY_START);
+    if (geoStart == eastl::string::npos) {
+        return sources;
+    }
+    geoStart += strlen(GEOMETRY_START);
+
+    size_t geoEnd = source.find(GEOMETRY_END);
+    if (geoEnd == eastl::string::npos) {
+        return cpp::fail(EReadShaderError::READ_SHADER_ERROR_SYNTAX_GS);
+    }
+    geoEnd = geoEnd - geoStart;
+
+    const eastl::string geometryCode = source.substr(geoStart, geoEnd);
+    sources.m_Geometry               = geometryCode;
+
+    return sources;
 }
 
 void AShader::CompileShaders(const FShaderSource& sources) {
@@ -152,6 +170,25 @@ void AShader::CompileShaders(const FShaderSource& sources) {
     m_ShaderProgram = glCreateProgram();
     glAttachShader(m_ShaderProgram, vertexShader);
     glAttachShader(m_ShaderProgram, fragmentShader);
+
+    u32* geoShader = nullptr;
+    if (!sources.m_Geometry.empty()) {
+        const auto geometryCode = sources.m_Geometry.c_str();
+        u32 geometryShader      = glCreateShader(GL_GEOMETRY_SHADER);
+        glShaderSource(geometryShader, 1, &geometryCode, nullptr);
+        glCompileShader(geometryShader);
+        if (const auto geoCompileResult =
+              CheckCompileErrors(fragmentShader, "GS");
+            geoCompileResult.has_error()) {
+            fprintf(stderr,
+                    "ERROR::SHADER::GS::COMPILE - %s\n",
+                    geoCompileResult.error());
+            return;
+        }
+        glAttachShader(m_ShaderProgram, geometryShader);
+        geoShader = std::move(&geometryShader);
+    }
+
     glLinkProgram(m_ShaderProgram);
     if (const auto linkShaderResult =
           CheckCompileErrors(m_ShaderProgram, "PROGRAM");
@@ -162,6 +199,9 @@ void AShader::CompileShaders(const FShaderSource& sources) {
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    if (geoShader) {
+        glDeleteShader(*geoShader);
+    }
 }
 
 AShader::AShader(const char* path) {

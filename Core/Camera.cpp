@@ -17,8 +17,12 @@ ACamera::ACamera(const eastl::string& name,
     m_Yaw     = yaw;
     m_Pitch   = pitch;
     UpdateCameraVectors();
-    m_LastX = Graphics::GetWindowSize().Width / 2;
-    m_LastY = Graphics::GetWindowSize().Height / 2;
+    m_LastX               = Graphics::GetWindowSize().Width / 2;
+    m_LastY               = Graphics::GetWindowSize().Height / 2;
+    m_ShadowCascadeLevels = {m_FarClip / 50.f,
+                             m_FarClip / 25.f,
+                             m_FarClip / 10.f,
+                             m_FarClip / 2.f};
 }
 
 ACamera::ACamera(const eastl::string& name,
@@ -33,8 +37,12 @@ ACamera::ACamera(const eastl::string& name,
     m_Yaw     = yaw;
     m_Pitch   = pitch;
     UpdateCameraVectors();
-    m_LastX = Graphics::GetWindowSize().Width / 2;
-    m_LastY = Graphics::GetWindowSize().Height / 2;
+    m_LastX               = Graphics::GetWindowSize().Width / 2;
+    m_LastY               = Graphics::GetWindowSize().Height / 2;
+    m_ShadowCascadeLevels = {m_FarClip / 50.f,
+                             m_FarClip / 25.f,
+                             m_FarClip / 10.f,
+                             m_FarClip / 2.f};
 }
 
 glm::mat4 ACamera::GetViewMatrix() {
@@ -44,7 +52,13 @@ glm::mat4 ACamera::GetViewMatrix() {
 }
 
 glm::mat4 ACamera::GetProjectionMatrix(const float aspect) const {
-    return glm::perspective(glm::radians(m_FOV), aspect, 0.1f, 1000.f);
+    return glm::perspective(glm::radians(m_FOV), aspect, m_NearClip, m_FarClip);
+}
+
+glm::mat4 ACamera::GetProjectionMatrix(const float aspect,
+                                       const float zNear,
+                                       const float zFar) const {
+    return glm::perspective(glm::radians(m_FOV), aspect, zNear, zFar);
 }
 
 void ACamera::Update(const float deltaTime, FSceneContext& sceneContext) {

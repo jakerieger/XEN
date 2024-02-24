@@ -17,6 +17,7 @@ Statue::Statue(const eastl::string& name) : IGameObject(name) {
 
     m_Mesh = make_unique<AMeshRenderer>("Resources/Models/Snowden.assbin", mat);
     GetTransform()->SetScale(0.3, 0.3, 0.3);
+    m_Mesh->SetParent(this);
 
     RegisterComponent(m_Mesh.get());
 }

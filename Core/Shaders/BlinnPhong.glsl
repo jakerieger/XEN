@@ -19,6 +19,8 @@ out vec2 TexCoord;
 out vec3 ObjectColor;
 out vec3 LightPosition;
 out vec3 ViewPosition;
+out mat4 View;
+out vec3 Normal;
 
 out TangentBitangent {
     vec3 TangentLightPos;
@@ -38,6 +40,8 @@ void main() {
     ObjectColor = u_ObjectColor;
     LightPosition = u_LightPosition;
     ViewPosition = u_ViewPosition;
+    View = u_View;
+    Normal = aNormal;
 
     mat3 tbnMat = transpose(mat3(T, B, N));
     TBN.TangentLightPos = tbnMat * LightPosition;
@@ -56,6 +60,8 @@ in vec2 TexCoord;
 in vec3 ObjectColor;
 in vec3 LightPosition;
 in vec3 ViewPosition;
+in mat4 View;
+in vec3 Normal;
 
 in TangentBitangent {
     vec3 TangentLightPos;
@@ -67,7 +73,6 @@ in TangentBitangent {
 uniform vec3 u_LightColor;
 uniform float u_LightStrength;
 uniform float u_UV_Scale;
-
 uniform sampler2D u_DiffuseMap;
 uniform sampler2D u_NormalMap;
 
@@ -95,7 +100,9 @@ void main() {
     float spec = pow(max(dot(norm, halfwayDir), 0.0), 32.0);
     vec3 specular = vec3(0.2 * spec);
 
-    vec3 result = (ambient + diffuse + specular);
+    //    vec3 result = (ambient + diffuse + specular);
+    float shadow = 0.0;
+    vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular));
 
     FragColor = vec4(result, 1.0);
 }

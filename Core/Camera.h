@@ -36,6 +36,15 @@ public:
 
     glm::mat4 GetViewMatrix();
     glm::mat4 GetProjectionMatrix(float aspect) const;
+    glm::mat4 GetProjectionMatrix(float aspect, float zNear, float zFar) const;
+
+    /**
+     * \brief Get camera near and far clipping planes
+     * \return Clipping planes as <Near, Far>
+     */
+    eastl::tuple<float, float> GetClippingPlanes() const {
+        return eastl::make_tuple(m_NearClip, m_FarClip);
+    }
 
     void Update(const float deltaTime, FSceneContext& sceneContext) override;
     void OnScroll(FScrollEvent& event) override;
@@ -47,6 +56,8 @@ private:
     glm::vec3 m_Up;
     glm::vec3 m_Right;
     glm::vec3 m_WorldUp;
+    float m_NearClip = 0.1f;
+    float m_FarClip  = 1000.f;
     float m_Yaw;
     float m_Pitch;
     bool m_IsActiveCamera = false;
@@ -55,6 +66,7 @@ private:
     float m_LastX            = 0.f;
     float m_LastY            = 0.f;
     float m_MouseSensitivity = 0.4f;
+    eastl::vector<float> m_ShadowCascadeLevels;
     // float m_AspectRatio;
 
     void UpdateCameraVectors();

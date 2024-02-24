@@ -18,6 +18,7 @@ Floor::Floor(const eastl::string& name) : IGameObject(name) {
     m_FloorMesh = make_unique<AMeshRenderer>(
       Resources::GetResource(RES_3D_MODEL, "Floor.assbin").c_str(),
       mat);
+    m_FloorMesh->SetParent(this);
 
     RegisterComponent(m_FloorMesh.get());
 }

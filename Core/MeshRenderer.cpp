@@ -6,6 +6,7 @@
 #include "GraphicsContext.h"
 #include "Scene.h"
 #include "SceneContext.h"
+#include "Camera.h"
 
 #include <assimp/postprocess.h>
 
@@ -16,6 +17,10 @@ AMeshRenderer::AMeshRenderer(const char* path,
     : m_Material(move(material)) {
     LoadModel(path);
     m_Material->Initialize();
+}
+
+void AMeshRenderer::Start(FSceneContext& sceneContext) {
+    IComponent::Start(sceneContext);
 }
 
 void AMeshRenderer::Update(const float deltaTime, FSceneContext& sceneContext) {
@@ -58,17 +63,11 @@ void AMeshRenderer::Destroyed(FSceneContext& sceneContext) {
 void AMeshRenderer::LoadModel(const eastl::string& path) {
     Assimp::Importer import;
 
-    constexpr u8 processFlags =
+    constexpr i32 processFlags =
       aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace |
       aiProcess_JoinIdenticalVertices | aiProcess_SortByPType;
 
-    bool isAssbin = false;
-    if (path.find(".assbin") != eastl::string::npos) {
-        isAssbin = true;
-    }
-
-    const aiScene* scene =
-      import.ReadFile(path.c_str(), isAssbin ? 0 : processFlags);
+    const aiScene* scene = import.ReadFile(path.c_str(), processFlags);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
         !scene->mRootNode) {

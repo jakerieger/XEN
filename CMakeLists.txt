@@ -5,7 +5,6 @@ project(XEN)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(BUILD_TESTS "Build unit tests" OFF)
 option(BUILD_EXAMPLES "Build example projects" ON)
 
 include_directories(
@@ -100,13 +99,7 @@ add_library(XEN-Core STATIC
 )
 target_link_libraries(XEN-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 
-if (BUILD_TESTS)
-    find_package(Catch2 3 REQUIRED)
-    add_executable(Tests Tests/test_gameobject.cpp
-            Tests/test_scene.cpp
-    )
-    target_link_libraries(Tests PRIVATE XEN-Core EASTL Catch2::Catch2WithMain)
-endif ()
+#add_subdirectory(Tests)
 
 if (BUILD_EXAMPLES)
     add_subdirectory(Examples/ModelLoading)
