@@ -61,7 +61,11 @@ void ASkybox::Draw(ACamera* camera) const {
     m_Shader->Use();
     m_Shader->SetMat4("u_Projection",
                       camera->GetProjectionMatrix(Graphics::GetWindowAspect()));
-    m_Shader->SetMat4("u_View", glm::mat4(glm::mat3(camera->GetViewMatrix())));
+    auto view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+    // Rotate skybox 180 degress so sun is in the same position as directional
+    // light in scene
+    view = glm::rotate(view, glm::radians(180.f), {0.f, 1.f, 0.f});
+    m_Shader->SetMat4("u_View", view);
 
     glBindVertexArray(m_VAO);
     glActiveTexture(GL_TEXTURE0);

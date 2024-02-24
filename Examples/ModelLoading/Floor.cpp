@@ -10,10 +10,10 @@
 
 Floor::Floor(const eastl::string& name) : IGameObject(name) {
     auto mat = eastl::unique_ptr<IMaterial>(new Materials::BlinnPhong(
-      "Resources/Textures/ConcreteBlocksPavingSquareStack001/"
-      "ConcreteBlocksPavingSquareStack001_COL_2K.png",
-      "Resources/Textures/ConcreteBlocksPavingSquareStack001/"
-      "ConcreteBlocksPavingSquareStack001_NRM_2K.png"));
+      "Resources/Textures/ConcretePrecastPlates004/"
+      "ConcretePrecastPlates004_COL_2K_METALNESS.png",
+      "Resources/Textures/ConcretePrecastPlates004/"
+      "ConcretePrecastPlates004_NRM_2K_METALNESS.png"));
 
     m_FloorMesh = make_unique<AMeshRenderer>(
       Resources::GetResource(RES_3D_MODEL, "Floor.assbin").c_str(),

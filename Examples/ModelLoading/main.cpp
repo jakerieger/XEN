@@ -32,7 +32,7 @@ void ModelLoading::Startup() {
     auto demoScene = AScene::Create("Demo");
     auto mainCam   = IGameObject::Create<ACamera>("MainCamera");
     auto floor     = IGameObject::Create<Floor>("Floor");
-    auto sun       = ADirectionalLight::Create({0.f, 2.f, 3.f});
+    auto sun       = ADirectionalLight::Create({0.f, 0.f, 3.f});
     auto statue    = IGameObject::Create<Statue>("Statue");
 
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
