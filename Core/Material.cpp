@@ -3,7 +3,7 @@
 //
 
 #include "Material.h"
-#include "Resources.h"
+#include "Engine/Resources.h"
 #include "SceneContext.h"
 #include "Camera.h"
 #include <glad/glad.h>
@@ -86,12 +86,12 @@ namespace Materials {
 
     void BlinnPhong::UpdateUniforms(FSceneContext& sceneContext,
                                     ACamera* camera) {
-        if (sceneContext.m_Sun.get()) {
-            m_Shader->SetVec3("u_LightColor", sceneContext.m_Sun->GetColor());
+        if (sceneContext.Sun.get()) {
+            m_Shader->SetVec3("u_LightColor", sceneContext.Sun->GetColor());
             m_Shader->SetVec3("u_LightPosition",
-                              sceneContext.m_Sun->GetDirection());
+                              sceneContext.Sun->GetDirection());
             m_Shader->SetFloat("u_LightStrength",
-                               sceneContext.m_Sun->GetStrength());
+                               sceneContext.Sun->GetStrength());
         }
 
         m_Shader->SetVec3("u_ViewPosition",
@@ -99,6 +99,7 @@ namespace Materials {
         m_Shader->SetVec3("u_ObjectColor", m_DiffuseColor);
         m_Shader->SetInt("u_DiffuseMap", 0);
         m_Shader->SetInt("u_NormalMap", 1);
+        m_Shader->SetInt("u_ShadowMap", 2);
         m_Shader->SetFloat("u_UV_Scale", m_UVScale);
     }
 

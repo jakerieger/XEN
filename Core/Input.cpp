@@ -3,7 +3,7 @@
 //
 
 #include "Input.h"
-#include "GameApp.h"
+#include "Engine/GameApp.h"
 #include "Interfaces/InputListener.h"
 
 #define GLFW_KEY_NONE 0

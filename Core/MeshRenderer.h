@@ -14,6 +14,12 @@
 
 struct FSceneContext;
 class ACamera;
+class AShader;
+
+enum class EDrawPass : u8 {
+    PASS_DEPTH,
+    PASS_MAIN,
+};
 
 class AMeshRenderer final : public IComponent {
 public:
@@ -22,7 +28,9 @@ public:
 
     void Start(FSceneContext& sceneContext) override;
     void Update(float deltaTime, FSceneContext& sceneContext) override;
-    void Draw(FSceneContext& sceneContext, const ATransform* transform);
+    void Draw(FSceneContext& sceneContext,
+              const ATransform* transform,
+              EDrawPass drawPass);
     void Destroyed(FSceneContext& sceneContext) override;
 
     eastl::vector<AMesh>& GetMeshes() {
@@ -41,6 +49,7 @@ public:
 private:
     eastl::vector<AMesh> m_Meshes;
     eastl::unique_ptr<IMaterial> m_Material;
+    eastl::unique_ptr<AShader> m_DepthShader;
     bool m_ReceivesShadows = true;
 
 private:

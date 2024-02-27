@@ -1,9 +1,9 @@
+#include "Engine/DebugUI.h"
+#include "Engine/GraphicsContext.h"
+#include "Engine/Resources.h"
+#include "Engine/GameApp.h"
 #include "Color.h"
-#include "DebugUI.h"
 #include "Floor.h"
-#include "GraphicsContext.h"
-#include "Resources.h"
-#include "GameApp.h"
 #include "InputCodes.h"
 #include "Statue.h"
 
@@ -32,7 +32,7 @@ void ModelLoading::Startup() {
     auto demoScene = AScene::Create("Demo");
     auto mainCam   = IGameObject::Create<ACamera>("MainCamera");
     auto floor     = IGameObject::Create<Floor>("Floor");
-    auto sun       = ADirectionalLight::Create({0.f, 0.f, 3.f});
+    auto sun       = ADirectionalLight::Create({0.f, 1.f, 3.f});
     auto statue    = IGameObject::Create<Statue>("Statue");
 
     floor->GetTransform()->SetPosition(0.f, -1.f, 0.f);
@@ -88,4 +88,4 @@ void ModelLoading::OnKeyDown(FKeyEvent& event) {
     }
 }
 
-CREATE_AND_RUN(ModelLoading, SCREEN_792P, true)
+CREATE_AND_RUN(ModelLoading, SCREEN_792P, false)

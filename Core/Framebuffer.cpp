@@ -4,7 +4,7 @@
 
 #include "Framebuffer.h"
 
-#include "GraphicsContext.h"
+#include "Engine/GraphicsContext.h"
 
 #include <iostream>
 #include <glad/glad.h>

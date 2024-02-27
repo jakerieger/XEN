@@ -8,9 +8,11 @@
 #include "Camera.h"
 #include "STL.h"
 
+constexpr u32 SHADOW_SIZE = 1024;
+
 class AScene final : public ILifetime {
 public:
-    explicit AScene(const eastl::string& name) : m_Name(name) {}
+    explicit AScene(const eastl::string& name);
 
     void Awake() override;
     void Start() override;
@@ -36,11 +38,11 @@ public:
     }
 
     void SetSun(eastl::unique_ptr<ADirectionalLight>& sun) {
-        m_SceneContext.m_Sun = move(sun);
+        m_SceneContext.Sun = move(sun);
     }
 
     ADirectionalLight* GetSun() const {
-        return m_SceneContext.m_Sun.get();
+        return m_SceneContext.Sun.get();
     }
 
     FSceneContext& GetContext() {
@@ -56,7 +58,7 @@ public:
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
         eastl::vector<T*> found;
-        for (auto& go : context.m_GameObjects) {
+        for (auto& go : context.GameObjects) {
             if (auto casted = dynamic_cast<T*>(go.get()); casted) {
                 found.push_back(casted);
             }
@@ -70,7 +72,7 @@ public:
                                const eastl::string& name) {
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
-        for (auto& go : context.m_GameObjects) {
+        for (auto& go : context.GameObjects) {
             if (auto casted = dynamic_cast<T*>(go.get());
                 casted && casted->GetName() == name) {
                 return casted;
@@ -87,11 +89,14 @@ public:
     void AddGameObject(eastl::unique_ptr<T>& gameObject) {
         static_assert(std::is_base_of_v<IGameObject, T>,
                       "T must be a subclass of IGameObject");
-        m_SceneContext.m_GameObjects.push_back(move(gameObject));
+        m_SceneContext.GameObjects.push_back(move(gameObject));
     }
 
 private:
     FSceneContext m_SceneContext;
     eastl::string m_Name;
     bool m_Active = false;
+
+    void DrawDepthPass();
+    void DrawMainPass();
 };

@@ -3,10 +3,10 @@
 //
 
 #include "Skybox.h"
-#include "Resources.h"
+#include "Engine/Resources.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "GraphicsContext.h"
+#include "Engine/GraphicsContext.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>

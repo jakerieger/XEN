@@ -3,7 +3,7 @@
 //
 
 #include "Statue.h"
-#include "Resources.h"
+#include "Engine/Resources.h"
 #include "SceneContext.h"
 
 #include "STL.h"
@@ -22,8 +22,12 @@ Statue::Statue(const eastl::string& name) : IGameObject(name) {
     RegisterComponent(m_Mesh.get());
 }
 
+void Statue::DrawDepth(FSceneContext& sceneContext) {
+    m_Mesh->Draw(sceneContext, GetTransform(), EDrawPass::PASS_DEPTH);
+}
+
 void Statue::Draw(FSceneContext& sceneContext) {
-    m_Mesh->Draw(sceneContext, GetTransform());
+    m_Mesh->Draw(sceneContext, GetTransform(), EDrawPass::PASS_MAIN);
 }
 
 void Statue::Start(FSceneContext& sceneContext) {

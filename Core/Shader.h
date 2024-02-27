@@ -75,4 +75,7 @@ namespace BuiltinShaders {
     const inline eastl::string Skybox =
 #include "Shaders/Skybox.glsl"
       ;
+    const inline eastl::string ShadowDepth =
+#include "Shaders/ShadowDepth.glsl"
+      ;
 }  // namespace BuiltinShaders

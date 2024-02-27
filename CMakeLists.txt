@@ -35,33 +35,33 @@ add_library(XEN-Core STATIC
         Vendor/glad.c
         Vendor/stb_image.cpp
         Core/Shader.cpp
-        Core/GameApp.cpp
-        Core/GameApp.h
-        Core/GraphicsContext.cpp
-        Core/GraphicsContext.h
+        Core/Engine/GameApp.cpp
+        Core/Engine/GameApp.h
+        Core/Engine/GraphicsContext.cpp
+        Core/Engine/GraphicsContext.h
         Core/Size.cpp
         Core/Size.h
         Core/Utilities.inl
         Core/Color.cpp
         Core/Color.h
         Core/STL.h
-        Core/Resources.h
+        Core/Engine/Resources.h
         Core/STL.cpp
         Core/Input.cpp
         Core/Input.h
-        Core/Resources.cpp
-        Core/GraphicsError.cpp
-        Core/GraphicsError.h
+        Core/Engine/Resources.cpp
+        Core/Engine/GraphicsError.cpp
+        Core/Engine/GraphicsError.h
         Core/PostProcessing/PostProcessing.cpp
         Core/PostProcessing/PostProcessing.h
-        Core/Profiler.cpp
-        Core/Profiler.h
+        Core/Engine/Profiler.cpp
+        Core/Engine/Profiler.h
         Core/Mesh.cpp
         Core/Mesh.h
         Core/Camera.cpp
         Core/Camera.h
-        Core/DebugUI.cpp
-        Core/DebugUI.h
+        Core/Engine/DebugUI.cpp
+        Core/Engine/DebugUI.h
         Core/Transform.cpp
         Core/Transform.h
         Core/DirectionalLight.cpp
@@ -96,6 +96,10 @@ add_library(XEN-Core STATIC
         Core/PointLight.h
         Core/SpotLight.cpp
         Core/SpotLight.h
+        Core/Interfaces/RenderPass.h
+        Core/SkyboxRenderPass.h
+        Core/Quad.h
+        Core/GraphicsTesting.h
 )
 target_link_libraries(XEN-Core PRIVATE glfw assimp::assimp EASTL fmt::fmt msgpack-cxx)
 

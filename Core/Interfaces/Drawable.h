@@ -9,8 +9,9 @@ struct FSceneContext;
 
 class IDrawable {
 public:
-    virtual ~IDrawable()                           = default;
-    virtual void Draw(FSceneContext& sceneContext) = 0;
+    virtual ~IDrawable()                                = default;
+    virtual void DrawDepth(FSceneContext& sceneContext) = 0;
+    virtual void Draw(FSceneContext& sceneContext)      = 0;
 
     void SetMeshRenderer(AMeshRenderer* mesh) {
         m_MeshRenderer = mesh;

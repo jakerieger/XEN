@@ -65,7 +65,7 @@ namespace DebugUI {
                     ImGui::Text(
                       "Game Objects : %d",
                       static_cast<int>(
-                        g_ActiveScene->GetContext().m_GameObjects.size()));
+                        g_ActiveScene->GetContext().GameObjects.size()));
                     ImGui::Text("Triangles    : %d",
                                 Profiler::GetTotalTriangles(g_ActiveScene));
                 }

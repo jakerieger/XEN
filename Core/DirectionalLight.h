@@ -20,7 +20,7 @@ public:
     }
 
     glm::vec3 GetDirection() const {
-        return normalize(m_Direction);
+        return m_Direction;
     }
 
     glm::vec3 GetColor() {

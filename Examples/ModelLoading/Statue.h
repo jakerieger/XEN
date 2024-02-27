@@ -15,6 +15,7 @@ public:
 
     // IDrawable
     void Draw(FSceneContext& sceneContext) override;
+    void DrawDepth(FSceneContext& sceneContext) override;
 
     // IGameObject
     void Start(FSceneContext& sceneContext) override;

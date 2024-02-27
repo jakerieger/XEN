@@ -5,7 +5,7 @@
 #include "Floor.h"
 
 #include "Material.h"
-#include "Resources.h"
+#include "Engine/Resources.h"
 #include "MeshRenderer.h"
 
 Floor::Floor(const eastl::string& name) : IGameObject(name) {
@@ -23,8 +23,12 @@ Floor::Floor(const eastl::string& name) : IGameObject(name) {
     RegisterComponent(m_FloorMesh.get());
 }
 
+void Floor::DrawDepth(FSceneContext& sceneContext) {
+    m_FloorMesh->Draw(sceneContext, GetTransform(), EDrawPass::PASS_DEPTH);
+}
+
 void Floor::Draw(FSceneContext& sceneContext) {
-    m_FloorMesh->Draw(sceneContext, GetTransform());
+    m_FloorMesh->Draw(sceneContext, GetTransform(), EDrawPass::PASS_MAIN);
 }
 
 void Floor::Start(FSceneContext& sceneContext) {

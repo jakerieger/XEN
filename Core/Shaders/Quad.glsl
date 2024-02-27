@@ -20,19 +20,18 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2D u_Texture;
+uniform float u_NearZ;
+uniform float u_FarZ;
 
-vec3 aces(vec3 x) {
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
-    return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+float LinearDepth(float depth) {
+    float z = depth * 2.0 - 1.0;
+    return (2.0 * u_NearZ * u_FarZ) / (u_FarZ + u_NearZ - z * (u_FarZ - u_NearZ));
 }
 
 void main() {
-    vec4 tex = texture(u_Texture, TexCoords);
-    FragColor = tex;
+    float depthValue = texture(u_Texture, TexCoords).r;
+    FragColor = vec4(vec3(depthValue), 1.0);
+    //    FragColor = vec4(vec3(LinearDepth(depthValue) / u_FarZ), 1.0);
 }
 #undef FRAGMENT
 )"";

@@ -13,14 +13,18 @@ uniform mat4 u_Projection;
 uniform vec3 u_ObjectColor;
 uniform vec3 u_LightPosition;
 uniform vec3 u_ViewPosition;
+uniform mat4 u_LSM;
 
-out vec3 FragCoord;
-out vec2 TexCoord;
-out vec3 ObjectColor;
-out vec3 LightPosition;
-out vec3 ViewPosition;
-out mat4 View;
-out vec3 Normal;
+out VS_OUT {
+    vec3 FragCoord;
+    vec2 TexCoord;
+    vec3 ObjectColor;
+    vec3 LightPosition;
+    vec3 ViewPosition;
+    mat4 View;
+    vec3 Normal;
+    vec4 FragPosLightSpace;
+} VSOut;
 
 out TangentBitangent {
     vec3 TangentLightPos;
@@ -35,18 +39,19 @@ void main() {
     T = normalize(T - dot(T, N) * N);
     vec3 B = cross(N, T);
 
-    FragCoord = vec3(u_Model * vec4(aPos, 1.0));
-    TexCoord = aTexCoord;
-    ObjectColor = u_ObjectColor;
-    LightPosition = u_LightPosition;
-    ViewPosition = u_ViewPosition;
-    View = u_View;
-    Normal = aNormal;
+    VSOut.FragCoord     = vec3(u_Model * vec4(aPos, 1.0));
+    VSOut.TexCoord      = aTexCoord;
+    VSOut.ObjectColor   = u_ObjectColor;
+    VSOut.LightPosition = u_LightPosition;
+    VSOut.ViewPosition  = u_ViewPosition;
+    VSOut.View          = u_View;
+    VSOut.Normal        = normalMatrix * aNormal;
+    VSOut.FragPosLightSpace = u_LSM * vec4(VSOut.FragCoord, 1.0);
 
     mat3 tbnMat = transpose(mat3(T, B, N));
-    TBN.TangentLightPos = tbnMat * LightPosition;
-    TBN.TangentViewPos = tbnMat * ViewPosition;
-    TBN.TangentFragPos = tbnMat * FragCoord;
+    TBN.TangentLightPos = tbnMat * VSOut.LightPosition;
+    TBN.TangentViewPos  = tbnMat * VSOut.ViewPosition;
+    TBN.TangentFragPos  = tbnMat * VSOut.FragCoord;
 
     mat4 MVP = u_Projection * u_View * u_Model;
     gl_Position = MVP * vec4(aPos, 1.0);
@@ -55,13 +60,16 @@ void main() {
 
 #define FRAGMENT
 #version 460 core
-in vec3 FragCoord;
-in vec2 TexCoord;
-in vec3 ObjectColor;
-in vec3 LightPosition;
-in vec3 ViewPosition;
-in mat4 View;
-in vec3 Normal;
+in VS_OUT {
+    vec3 FragCoord;
+    vec2 TexCoord;
+    vec3 ObjectColor;
+    vec3 LightPosition;
+    vec3 ViewPosition;
+    mat4 View;
+    vec3 Normal;
+    vec4 FragPosLightSpace;
+} FSIn;
 
 in TangentBitangent {
     vec3 TangentLightPos;
@@ -75,11 +83,22 @@ uniform float u_LightStrength;
 uniform float u_UV_Scale;
 uniform sampler2D u_DiffuseMap;
 uniform sampler2D u_NormalMap;
+uniform sampler2D u_ShadowMap;
+uniform bool u_ReceivesShadows = true;
 
 out vec4 FragColor;
 
+float CalculateShadows(vec4 fragPosLightSpace) {
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    float closestDepth = texture(u_ShadowMap, projCoords.xy).r;
+    float currentDepth = projCoords.z;
+    float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+    return shadow;
+}
+
 void main() {
-    vec2 texCoord = TexCoord * u_UV_Scale;
+    vec2 texCoord = FSIn.TexCoord * u_UV_Scale;
     vec3 norm = texture(u_NormalMap, texCoord).rgb;
     norm = normalize(norm * 2.0 - 1.0);
 
@@ -101,7 +120,10 @@ void main() {
     vec3 specular = vec3(0.2 * spec);
 
     //    vec3 result = (ambient + diffuse + specular);
-    float shadow = 0.0;
+    float shadow = CalculateShadows(FSIn.FragPosLightSpace);
+    if (u_ReceivesShadows) {
+        shadow = CalculateShadows(FSIn.FragPosLightSpace);
+    }
     vec3 result = (ambient + (1.0 - shadow) * (diffuse + specular));
 
     FragColor = vec4(result, 1.0);

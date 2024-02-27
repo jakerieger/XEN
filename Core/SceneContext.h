@@ -9,6 +9,8 @@
 #include "STL.h"
 
 struct FSceneContext {
-    eastl::vector<eastl::unique_ptr<IGameObject>> m_GameObjects;
-    eastl::unique_ptr<ADirectionalLight> m_Sun;
+    eastl::vector<eastl::unique_ptr<IGameObject>> GameObjects;
+    eastl::unique_ptr<ADirectionalLight> Sun;
+    u32 DepthFBO = 0;
+    u32 DepthMap = 0;
 };

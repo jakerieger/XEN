@@ -3,10 +3,11 @@
 //
 
 #include "MeshRenderer.h"
-#include "GraphicsContext.h"
+#include "Engine/GraphicsContext.h"
 #include "Scene.h"
 #include "SceneContext.h"
 #include "Camera.h"
+#include "Shader.h"
 
 #include <assimp/postprocess.h>
 
@@ -17,6 +18,8 @@ AMeshRenderer::AMeshRenderer(const char* path,
     : m_Material(move(material)) {
     LoadModel(path);
     m_Material->Initialize();
+    m_DepthShader =
+      eastl::unique_ptr<AShader>(new AShader(BuiltinShaders::ShadowDepth));
 }
 
 void AMeshRenderer::Start(FSceneContext& sceneContext) {
@@ -27,27 +30,64 @@ void AMeshRenderer::Update(const float deltaTime, FSceneContext& sceneContext) {
     IComponent::Update(deltaTime, sceneContext);
 }
 
+static glm::mat4 GetLightSpaceMatrix(const float zNear,
+                                     const float zFar,
+                                     const glm::vec3& lightPosition) {
+    const glm::mat4 lightProjection =
+      glm::ortho(-10.f, 10.f, -10.f, 10.f, zNear, zFar);
+    const glm::mat4 lightView =
+      glm::lookAt(lightPosition, {0.f, 0.f, 0.f}, {0.f, 1.f, 0.f});
+    return lightProjection * lightView;
+}
+
+// TODO: Find a better way to switch drawing passes without the need
+// for game object classes to explicitly supply a flag
 void AMeshRenderer::Draw(FSceneContext& sceneContext,
-                         const ATransform* transform) {
+                         const ATransform* transform,
+                         const EDrawPass drawPass) {
     ACamera* activeCamera = AScene::GetActiveCamera(sceneContext);
 
-    m_Material->Use();
-    if (activeCamera) {
-        // Update MVP Uniforms (required by all Shaders used by MeshRenderer
-        m_Material->GetShader()->SetMat4(
-          "u_Projection",
-          activeCamera->GetProjectionMatrix(Graphics::GetWindowAspect()));
-        m_Material->GetShader()->SetMat4("u_View",
-                                         activeCamera->GetViewMatrix());
-        m_Material->GetShader()->SetMat4("u_Model",
-                                         transform->GetModelMatrix());
+    switch (drawPass) {
+        case EDrawPass::PASS_DEPTH: {
+            m_DepthShader->Use();
+            m_DepthShader->SetMat4("u_Model", transform->GetModelMatrix());
 
-        // Update material-specific uniforms
-        m_Material->UpdateUniforms(sceneContext, activeCamera);
-    }
+            const auto lightPosition = sceneContext.Sun->GetDirection();
+            m_DepthShader->SetMat4(
+              "u_LSM",
+              GetLightSpaceMatrix(1.f, 7.5f, lightPosition));
 
-    for (auto& mesh : m_Meshes) {
-        mesh.Draw();
+            for (auto& mesh : m_Meshes) {
+                mesh.Draw();
+            }
+        } break;
+        case EDrawPass::PASS_MAIN: {
+            m_Material->Use();
+            if (activeCamera) {
+                // Update MVP Uniforms (required by all Shaders used by
+                // MeshRenderer
+                m_Material->GetShader()->SetMat4(
+                  "u_Projection",
+                  activeCamera->GetProjectionMatrix(
+                    Graphics::GetWindowAspect()));
+                m_Material->GetShader()->SetMat4("u_View",
+                                                 activeCamera->GetViewMatrix());
+                m_Material->GetShader()->SetMat4("u_Model",
+                                                 transform->GetModelMatrix());
+
+                const auto lightPosition = sceneContext.Sun->GetDirection();
+                m_Material->GetShader()->SetMat4(
+                  "u_LSM",
+                  GetLightSpaceMatrix(1.f, 7.5f, lightPosition));
+
+                // Update material-specific uniforms
+                m_Material->UpdateUniforms(sceneContext, activeCamera);
+            }
+
+            for (auto& mesh : m_Meshes) {
+                mesh.Draw();
+            }
+        } break;
     }
 }
 

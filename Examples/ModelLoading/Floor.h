@@ -13,6 +13,7 @@ public:
     explicit Floor(const eastl::string& name);
 
     void Draw(FSceneContext& sceneContext) override;
+    void DrawDepth(FSceneContext& sceneContext) override;
     void Start(FSceneContext& sceneContext) override;
     void Update(float deltaTime, FSceneContext& sceneContext) override;
     void Destroyed(FSceneContext& sceneContext) override;

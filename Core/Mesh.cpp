@@ -3,7 +3,7 @@
 //
 
 #include "Mesh.h"
-#include "GraphicsContext.h"
+#include "Engine/GraphicsContext.h"
 #include <glad/glad.h>
 
 void AMesh::Initialize() {
